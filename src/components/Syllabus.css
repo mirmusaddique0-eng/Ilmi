@@ -1,0 +1,578 @@
+/* =========================
+   SYLLABUS PAGE
+========================= */
+
+.syllabus-page {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 45px 6%;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.syllabus-header {
+  margin-bottom: 42px;
+}
+
+.syllabus-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #2563eb;
+}
+
+.syllabus-header h1 {
+  margin: 8px 0 10px;
+  font-size: 38px;
+  color: #111827;
+}
+
+.syllabus-header p {
+  max-width: 650px;
+  margin: 0;
+  color: #6b7280;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+
+/* =========================
+   SECTION
+========================= */
+
+.syllabus-section h2 {
+  margin-bottom: 20px;
+  font-size: 21px;
+  color: #111827;
+}
+
+
+/* =========================
+   YEAR GRID
+========================= */
+
+.year-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  max-width: 900px;
+}
+
+
+/* =========================
+   YEAR CARD
+========================= */
+
+.year-card {
+  min-height: 125px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 22px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  text-align: left;
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.year-card:hover {
+  border-color: #bfdbfe;
+  background: #f8fbff;
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================
+   YEAR NUMBER
+========================= */
+
+.year-number {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  background: #eff6ff;
+  color: #2563eb;
+
+  font-size: 19px;
+  font-weight: 700;
+}
+
+
+/* =========================
+   YEAR CONTENT
+========================= */
+
+.year-content {
+  flex: 1;
+}
+
+.year-content h3 {
+  margin: 0 0 6px;
+
+  color: #111827;
+
+  font-size: 18px;
+}
+
+.year-content p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================
+   YEAR ARROW
+========================= */
+
+.year-arrow {
+  font-size: 20px;
+
+  color: #9ca3af;
+
+  transition: 0.25s ease;
+}
+
+.year-card:hover .year-arrow {
+  color: #2563eb;
+
+  transform: translateX(4px);
+}
+
+
+/* =========================
+   SEMESTER PAGE
+========================= */
+
+.semester-page {
+  max-width: 950px;
+}
+
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.syllabus-back-button {
+  margin-bottom: 28px;
+
+  padding: 9px 15px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #475569;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.syllabus-back-button:hover {
+  border-color: #2563eb;
+
+  background: #f8fbff;
+
+  color: #2563eb;
+}
+
+
+/* =========================
+   SEMESTER HEADER
+========================= */
+
+.semester-header {
+  margin-bottom: 28px;
+}
+
+.semester-label {
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.3px;
+
+  color: #2563eb;
+
+  text-transform: uppercase;
+}
+
+.semester-header h2 {
+  margin: 7px 0 8px;
+
+  font-size: 30px;
+
+  color: #111827;
+}
+
+.semester-header p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 15px;
+}
+
+
+/* =========================
+   SEMESTER GRID
+========================= */
+
+.semester-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 20px;
+}
+
+
+/* =========================
+   SEMESTER CARD
+========================= */
+
+.semester-card {
+  min-height: 145px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 24px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.semester-card:hover {
+  border-color: #93c5fd;
+
+  background: #f8fbff;
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 28px rgba(37, 99, 235, 0.08);
+}
+
+
+/* =========================
+   SEMESTER NUMBER
+========================= */
+
+.semester-number {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 14px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  font-size: 18px;
+
+  font-weight: 700;
+}
+
+
+/* =========================
+   SEMESTER CONTENT
+========================= */
+
+.semester-content {
+  flex: 1;
+}
+
+.semester-content h3 {
+  margin: 0 0 7px;
+
+  color: #111827;
+
+  font-size: 19px;
+}
+
+.semester-content p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================
+   SEMESTER ARROW
+========================= */
+
+.semester-arrow {
+  font-size: 21px;
+
+  color: #9ca3af;
+
+  transition: 0.25s ease;
+}
+
+.semester-card:hover .semester-arrow {
+  color: #2563eb;
+
+  transform: translateX(5px);
+}
+
+
+/* =========================
+   SUBJECTS PAGE
+========================= */
+
+.subjects-page {
+  width: 100%;
+
+  max-width: 950px;
+
+  margin-top: 10px;
+}
+
+
+/* =========================
+   SUBJECTS GRID
+========================= */
+
+.subjects-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 20px;
+
+  width: 100%;
+}
+
+
+/* =========================
+   SUBJECT CARD
+========================= */
+
+.subject-card {
+  width: 100%;
+
+  min-height: 135px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 22px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
+}
+
+
+/* =========================
+   SUBJECT HOVER
+========================= */
+
+.subject-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #93c5fd;
+
+  background: #f8fbff;
+
+  box-shadow:
+    0 12px 28px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================
+   SUBJECT ICON
+========================= */
+
+.subject-icon {
+  width: 52px;
+
+  height: 52px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  font-size: 22px;
+
+  transition: 0.25s ease;
+}
+
+.subject-card:hover .subject-icon {
+  transform: scale(1.08);
+}
+
+
+/* =========================
+   SUBJECT CONTENT
+========================= */
+
+.subject-content {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.subject-content h3 {
+  margin: 0 0 7px;
+
+  color: #111827;
+
+  font-size: 18px;
+
+  font-weight: 700;
+}
+
+.subject-content p {
+  margin: 0;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================
+   SUBJECT ARROW
+========================= */
+
+.subject-arrow {
+  flex-shrink: 0;
+
+  color: #9ca3af;
+
+  font-size: 22px;
+
+  transition: 0.25s ease;
+}
+
+.subject-card:hover .subject-arrow {
+  color: #2563eb;
+
+  transform: translateX(5px);
+}
+
+
+/* =========================
+   SUBJECT PRESS
+========================= */
+
+.subject-card:active {
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 750px) {
+
+  .year-grid,
+  .semester-grid,
+  .subjects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .syllabus-page {
+    padding: 35px 5%;
+  }
+
+  .syllabus-header h1 {
+    font-size: 30px;
+  }
+
+  .semester-header h2 {
+    font-size: 26px;
+  }
+
+  .subject-card {
+    min-height: 120px;
+  }
+
+}

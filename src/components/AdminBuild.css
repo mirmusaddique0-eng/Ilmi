@@ -1,0 +1,714 @@
+
+/* =========================================
+   ADMIN BUILD
+========================================= */
+
+.admin-build {
+  width: 100%;
+  min-height: 100%;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.admin-build-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.admin-build-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2563eb;
+  letter-spacing: 1px;
+}
+
+.admin-build-header h1 {
+  margin: 6px 0;
+  font-size: 30px;
+}
+
+.admin-build-header p {
+  margin: 0;
+  color: #666;
+}
+
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.admin-build-back {
+  order: -1;
+  padding: 10px 16px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-build-back:hover {
+  background: #f5f5f5;
+}
+
+
+/* =========================================
+   STATS
+========================================= */
+
+.admin-build-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 25px;
+}
+
+.admin-build-stat {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.admin-build-stat span {
+  display: block;
+  color: #666;
+  font-size: 14px;
+}
+
+.admin-build-stat strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 28px;
+}
+
+
+/* =========================================
+   TABS
+========================================= */
+
+.admin-build-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.admin-build-tabs button {
+  padding: 11px 18px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-build-tabs button:hover {
+  background: #f5f5f5;
+}
+
+.admin-build-tabs button.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.admin-build-content {
+  background: transparent;
+}
+
+
+/* =========================================
+   TOOLBAR
+========================================= */
+
+.admin-build-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.admin-build-toolbar h2 {
+  margin: 0 0 5px;
+}
+
+.admin-build-toolbar p {
+  margin: 0;
+  color: #666;
+}
+
+.admin-build-toolbar-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.admin-build-toolbar-actions input {
+  width: 220px;
+  padding: 11px 13px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.admin-build-toolbar-actions input:focus {
+  border-color: #2563eb;
+}
+
+.admin-build-add-btn {
+  padding: 11px 17px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-build-add-btn:hover {
+  background: #1d4ed8;
+}
+
+
+/* =========================================
+   BUILD LIST
+========================================= */
+
+.admin-build-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+
+/* =========================================
+   BUILD ITEM
+========================================= */
+
+.admin-build-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  transition: 0.2s;
+}
+
+.admin-build-item:hover {
+  border-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.admin-build-item-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-build-item-top {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.admin-build-id {
+  font-size: 13px;
+  color: #777;
+}
+
+.admin-build-item h3 {
+  margin: 5px 0 8px;
+  font-size: 20px;
+}
+
+.admin-build-item p {
+  margin: 0 0 12px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.admin-build-technologies {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #555;
+}
+
+
+/* =========================================
+   DIFFICULTY
+========================================= */
+
+.admin-build-difficulty,
+.admin-build-status {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-build-difficulty.beginner {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.admin-build-difficulty.intermediate {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.admin-build-difficulty.advanced {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.admin-build-status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.admin-build-status.inactive {
+  background: #f3f4f6;
+  color: #666;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.admin-build-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-build-actions button {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-build-actions button:hover {
+  background: #f5f5f5;
+}
+
+.admin-build-actions .delete-btn {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.admin-build-actions .delete-btn:hover {
+  background: #fef2f2;
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+.admin-build-loading {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+.admin-build-error {
+  padding: 14px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.admin-build-empty {
+  background: white;
+  border: 1px dashed #ddd;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+}
+
+.admin-build-empty h3 {
+  margin-top: 0;
+}
+
+.admin-build-empty p {
+  color: #666;
+}
+
+
+/* =========================================
+   DETAIL
+========================================= */
+
+.admin-build-detail-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.admin-build-detail-card > div {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.admin-build-detail-card strong {
+  display: block;
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 7px;
+}
+
+.admin-build-detail-card span {
+  font-weight: 600;
+}
+
+
+/* =========================================
+   DETAIL SECTION
+========================================= */
+
+.admin-build-detail-section {
+  margin-bottom: 30px;
+}
+
+.admin-build-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.admin-build-section-header h2 {
+  margin: 0 0 5px;
+}
+
+.admin-build-section-header p {
+  margin: 0;
+  color: #666;
+}
+
+
+/* =========================================
+   PHASE LIST
+========================================= */
+
+.admin-build-phase-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-build-phase {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+}
+
+.admin-build-phase:hover,
+.admin-build-phase.selected {
+  border-color: #2563eb;
+}
+
+.admin-build-phase-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.admin-build-order {
+  color: #777;
+  font-size: 13px;
+  min-width: 25px;
+}
+
+.admin-build-phase h3 {
+  margin: 0 0 5px;
+}
+
+.admin-build-phase p {
+  margin: 0 0 8px;
+  color: #666;
+}
+
+
+/* =========================================
+   CONTENT LIST
+========================================= */
+
+.admin-build-content-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-build-content-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.admin-build-content-item h3 {
+  margin: 8px 0;
+}
+
+.admin-build-content-item p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+
+/* =========================================
+   MODAL
+========================================= */
+
+.admin-build-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.admin-build-modal {
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 14px;
+  padding: 25px;
+  box-sizing: border-box;
+}
+
+.admin-build-modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.admin-build-modal-header h2 {
+  margin: 0 0 5px;
+}
+
+.admin-build-modal-header p {
+  margin: 0;
+  color: #666;
+}
+
+.admin-build-modal-header > button {
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 7px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.admin-build-form-group {
+  margin-bottom: 18px;
+}
+
+.admin-build-form-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 600;
+}
+
+.admin-build-form-group input,
+.admin-build-form-group textarea,
+.admin-build-form-group select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  font-family: inherit;
+}
+
+.admin-build-form-group input:focus,
+.admin-build-form-group textarea:focus,
+.admin-build-form-group select:focus {
+  border-color: #2563eb;
+}
+
+.admin-build-form-group textarea {
+  resize: vertical;
+}
+
+.admin-build-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+
+/* =========================================
+   CHECKBOX
+========================================= */
+
+.admin-build-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+
+/* =========================================
+   MODAL ACTIONS
+========================================= */
+
+.admin-build-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.admin-build-modal-actions button {
+  padding: 10px 17px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-build-modal-actions button:hover {
+  background: #f5f5f5;
+}
+
+.admin-build-modal-actions button[type="submit"] {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.admin-build-modal-actions button[type="submit"]:hover {
+  background: #1d4ed8;
+}
+
+.admin-build-modal-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+
+  .admin-build {
+    padding: 20px;
+  }
+
+  .admin-build-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-build-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-build-toolbar-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-build-toolbar-actions input {
+    width: 100%;
+  }
+
+  .admin-build-item,
+  .admin-build-content-item,
+  .admin-build-phase {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-build-detail-card {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-build-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-build-actions {
+    justify-content: flex-start;
+  }
+
+}

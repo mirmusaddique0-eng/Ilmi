@@ -1,0 +1,204 @@
+/* =========================
+   GROW PAGE
+========================= */
+
+.grow-page {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 45px 6%;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.grow-header {
+  margin-bottom: 35px;
+}
+
+.grow-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #2563eb;
+}
+
+.grow-header h1 {
+  margin: 8px 0 8px;
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.grow-header p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+
+/* =========================
+   SECTION
+========================= */
+
+.grow-section {
+  min-height: 150px;
+  padding: 24px 28px;
+  margin-bottom: 18px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  transition: 0.25s ease;
+}
+
+.grow-section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.grow-section-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.grow-icon {
+  width: 54px;
+  height: 54px;
+
+  flex-shrink: 0;
+
+  border-radius: 14px;
+
+  background: #f1f5ff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 26px;
+}
+
+
+/* =========================
+   TEXT
+========================= */
+
+.grow-section h2 {
+  margin: 0 0 7px;
+
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.grow-section p {
+  margin: 0 0 12px;
+
+  color: #666;
+
+  line-height: 1.5;
+}
+
+
+/* =========================
+   META
+========================= */
+
+.grow-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.grow-meta span {
+  padding: 5px 10px;
+
+  border-radius: 7px;
+
+  background: #f8fafc;
+
+  color: #64748b;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.grow-action-btn {
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 10px;
+
+  padding: 11px 18px;
+
+  background: #2563eb;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.grow-action-btn:hover {
+  background: #1d4ed8;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+
+  .grow-section {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .grow-action-btn {
+    width: fit-content;
+  }
+}
+
+
+@media (max-width: 500px) {
+
+  .grow-page {
+    padding: 35px 5%;
+  }
+
+  .grow-header h1 {
+    font-size: 30px;
+  }
+
+  .grow-section {
+    padding: 22px;
+  }
+
+  .grow-section-content {
+    align-items: flex-start;
+  }
+}
