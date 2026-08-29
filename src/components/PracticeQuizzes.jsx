@@ -6,18 +6,14 @@ function PracticeQuizzes() {
   const [practiceType, setPracticeType] = useState(null);
   const [questions, setQuestions] = useState([]);
 
-  const [currentQuestion, setCurrentQuestion] =
-    useState(0);
-
-  const [selectedAnswer, setSelectedAnswer] =
-    useState(null);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
 
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [savingResult, setSavingResult] =
-    useState(false);
+  const [savingResult, setSavingResult] = useState(false);
 
   // =========================================
   // START PRACTICE
@@ -42,7 +38,7 @@ function PracticeQuizzes() {
     }
 
     // =========================================
-    // FETCH QUESTIONS FROM SUPABASE
+    // FETCH QUESTIONS
     // =========================================
 
     const { data, error } = await supabase
@@ -84,14 +80,45 @@ function PracticeQuizzes() {
   };
 
   // =========================================
-  // SAVE PRACTICE RESULT
+  // SAVE RESULT
   // =========================================
 
-  const savePracticeResult = async (
-    finalScore
-  ) => {
+  const savePracticeResult = async (finalScore) => {
     try {
       setSavingResult(true);
+
+      // =========================================
+      // GET CURRENT USER
+      // =========================================
+
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error(
+          "User fetch error:",
+          userError
+        );
+        return;
+      }
+
+      if (!user) {
+        console.error(
+          "No logged-in user found."
+        );
+
+        alert(
+          "Please login before completing a quiz."
+        );
+
+        return;
+      }
+
+      // =========================================
+      // CALCULATE RESULT
+      // =========================================
 
       const totalQuestions =
         questions.length;
@@ -103,50 +130,47 @@ function PracticeQuizzes() {
         totalQuestions -
         correctAnswers;
 
-      const scorePercent =
-        totalQuestions > 0
-          ? Math.round(
-              (correctAnswers /
-                totalQuestions) *
-                100
-            )
-          : 0;
+      // =========================================
+      // SAVE INTO quiz_attempts
+      // =========================================
 
-      const { error } =
-        await supabase
-          .from("practice_results")
-          .insert({
-            practice_type:
-              practiceType,
+      const { data, error } = await supabase
+        .from("quiz_attempts")
+        .insert({
+          user_id: user.id,
 
-            total_questions:
-              totalQuestions,
+          score: correctAnswers,
 
-            correct_answers:
-              correctAnswers,
+          total_marks: totalQuestions,
 
-            wrong_answers:
-              wrongAnswers,
+          correct_answers: correctAnswers,
 
-            score_percent:
-              scorePercent,
-          });
+          wrong_answers: wrongAnswers,
+
+          completed_at: new Date().toISOString(),
+        })
+        .select();
 
       if (error) {
         console.error(
-          "Practice result save error:",
+          "Quiz attempt save error:",
           error
+        );
+
+        alert(
+          `Unable to save quiz attempt.\n\n${error.message}`
         );
 
         return;
       }
 
       console.log(
-        "Practice result saved successfully!"
+        "Quiz attempt saved successfully:",
+        data
       );
     } catch (error) {
       console.error(
-        "Practice result error:",
+        "Quiz result error:",
         error
       );
     } finally {
@@ -222,7 +246,7 @@ function PracticeQuizzes() {
   };
 
   // =========================================
-  // LOADING QUESTIONS
+  // LOADING
   // =========================================
 
   if (
@@ -522,7 +546,6 @@ function PracticeQuizzes() {
 
           </div>
 
-
           {/* =================================
               QUIZZES
           ================================= */}
@@ -552,7 +575,6 @@ function PracticeQuizzes() {
             </button>
 
           </div>
-
 
           {/* =================================
               CODING PRACTICE

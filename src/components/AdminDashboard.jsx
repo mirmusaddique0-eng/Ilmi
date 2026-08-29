@@ -173,6 +173,8 @@ function AdminDashboard({ user, onLogout }) {
       "Untitled Course"
     );
   };
+  const [studentCount, setStudentCount] = useState(0);
+  const [quizAttemptCount, setQuizAttemptCount] = useState(0);
 
   const getCourseNameField = (course) => {
     if (Object.prototype.hasOwnProperty.call(course, "name")) {
@@ -862,6 +864,47 @@ function AdminDashboard({ user, onLogout }) {
     }
   }, [activeSection, selectedModule]);
 
+  useEffect(() => {
+  const fetchStudentCount = async () => {
+    const { count, error } = await supabase
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .eq("role", "student");
+
+    if (error) {
+      console.error("Student Count Error:", error);
+      return;
+    }
+
+    setStudentCount(count || 0);
+  };
+
+  fetchStudentCount();
+}, []);
+
+
+
+
+useEffect(() => {
+  const fetchQuizAttemptCount = async () => {
+    const { count, error } = await supabase
+      .from("quiz_attempts")
+      .select("*", {
+        count: "exact",
+        head: true,
+      });
+
+    if (error) {
+      console.error("Quiz Attempt Count Error:", error);
+      return;
+    }
+
+    setQuizAttemptCount(count || 0);
+  };
+
+  fetchQuizAttemptCount();
+}, []);
+
   const filteredTopics = courseTopics.filter((topic) => {
     const searchText = topicSearch.toLowerCase().trim();
 
@@ -1277,20 +1320,19 @@ function AdminDashboard({ user, onLogout }) {
           </div>
 
           <div className="admin-stat-card">
-            <div className="admin-stat-icon">👥</div>
-            <div>
-              <span>Students</span>
-              <strong>1</strong>
-            </div>
-          </div>
-
-          <div className="admin-stat-card">
-            <div className="admin-stat-icon">📝</div>
-            <div>
-              <span>Quiz Attempts</span>
-              <strong>3</strong>
-            </div>
-          </div>
+  <div className="admin-stat-icon">👥</div>
+  <div>
+    <span>Students</span>
+    <strong>{studentCount}</strong>
+  </div>
+</div>
+         <div className="admin-stat-card">
+  <div className="admin-stat-icon">📝</div>
+  <div>
+    <span>Quiz Attempts</span>
+    <strong>{quizAttemptCount}</strong>
+  </div>
+</div>
         </div>
 
         <section className="admin-section">

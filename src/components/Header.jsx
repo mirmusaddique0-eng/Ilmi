@@ -1,5 +1,5 @@
 import { useState } from "react";
-import eduvantaLogo from "../assets/eduvanta-logo.png";
+
 
 function Header({
   darkMode,
@@ -88,10 +88,11 @@ function Header({
       <div className="logo-container">
 
         <img
-          src={eduvantaLogo}
-          alt="EDUVANTA"
-          className="header-logo"
-        />
+  src="/web-logo.png?v=2"
+  alt="Ilmi"
+  className="header-logo"
+/>
+      
 
       </div>
 

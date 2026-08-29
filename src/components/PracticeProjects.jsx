@@ -1,234 +1,310 @@
-import { useEffect, useState } from "react";
-import "./FeaturePage.css";
+import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import "./FeaturePage.css";
 
-function PracticeProjects() {
-  const [projects, setProjects] = useState([]);
-  const [phases, setPhases] = useState([]);
-  const [contents, setContents] = useState([]);
+function PracticeQuizzes() {
+  const [practiceType, setPracticeType] = useState(null);
+  const [questions, setQuestions] = useState([]);
 
-  const [selectedProject, setSelectedProject] =
+  const [currentQuestion, setCurrentQuestion] =
+    useState(0);
+
+  const [selectedAnswer, setSelectedAnswer] =
     useState(null);
 
-  const [selectedPhase, setSelectedPhase] =
-    useState(null);
+  const [score, setScore] = useState(0);
+  const [finished, setFinished] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-  const [contentLoading, setContentLoading] =
+  const [loading, setLoading] = useState(false);
+  const [savingResult, setSavingResult] =
     useState(false);
 
   // =========================================
-  // FETCH PRACTICE PROJECTS + PHASES
+  // START PRACTICE
   // =========================================
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+  const startPractice = async (type) => {
+    setPracticeType(type);
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setScore(0);
+    setFinished(false);
+    setLoading(true);
 
-      // PRACTICE PROJECTS
-      const {
-        data: projectData,
-        error: projectError,
-      } = await supabase
-        .from("build_practice_projects")
-        .select("*")
-        .eq("is_active", true)
-        .order("display_order", {
-          ascending: true,
-        });
+    let questionType = "quiz";
 
-      if (projectError) {
-        console.error(
-          "Practice projects fetch error:",
-          projectError
-        );
+    if (type === "Syllabus Questions") {
+      questionType = "syllabus";
+    }
 
-        setProjects([]);
-        setLoading(false);
-        return;
-      }
+    if (type === "Coding Practice") {
+      questionType = "coding";
+    }
 
-      console.log(
-        "Practice Projects from Supabase:",
-        projectData
-      );
+    // =========================================
+    // FETCH QUESTIONS
+    // =========================================
 
-      setProjects(projectData || []);
-
-      // PHASES
-      const {
-        data: phaseData,
-        error: phaseError,
-      } = await supabase
-        .from("build_practice_project_phases")
-        .select("*")
-        .eq("is_active", true)
-        .order("display_order", {
-          ascending: true,
-        });
-
-      if (phaseError) {
-        console.error(
-          "Practice project phases fetch error:",
-          phaseError
-        );
-
-        setPhases([]);
-        setLoading(false);
-        return;
-      }
-
-      console.log(
-        "Practice Project Phases from Supabase:",
-        phaseData
-      );
-
-      setPhases(phaseData || []);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
-  // =========================================
-  // GET PROJECT PHASES
-  // =========================================
-
-  const getProjectPhases = (projectId) => {
-    return phases.filter(
-      (phase) =>
-        phase.practice_project_id === projectId
-    );
-  };
-
-  // =========================================
-  // LOAD PHASE CONTENT
-  // =========================================
-
-  const loadPhaseContent = async (
-    project,
-    phase
-  ) => {
-    setSelectedProject(project);
-    setSelectedPhase(phase);
-
-    setContentLoading(true);
-    setContents([]);
-
-    const {
-      data,
-      error,
-    } = await supabase
-      .from(
-        "build_practice_project_phase_content"
-      )
-      .select("*")
-      .eq("phase_id", phase.id)
+    const { data, error } = await supabase
+      .from("practice_questions")
+      .select(`
+        id,
+        question,
+        option_a,
+        option_b,
+        option_c,
+        option_d,
+        correct_option,
+        explanation
+      `)
+      .eq("question_type", questionType)
       .eq("is_active", true)
-      .order("display_order", {
+      .order("id", {
         ascending: true,
       });
 
     if (error) {
       console.error(
-        "Practice project phase content error:",
+        "Practice questions error:",
         error
       );
 
-      setContents([]);
-      setContentLoading(false);
+      setQuestions([]);
+      setLoading(false);
       return;
     }
 
     console.log(
-      "Practice Project Phase Content from Supabase:",
+      "Practice Questions:",
       data
     );
 
-    setContents(data || []);
-    setContentLoading(false);
+    setQuestions(data || []);
+    setLoading(false);
   };
 
   // =========================================
-  // WHOLE PROJECT CLICK
+  // SAVE PRACTICE RESULT
   // =========================================
 
-  const handleProjectClick = (project) => {
-    const projectPhases =
-      getProjectPhases(project.id);
+  const savePracticeResult = async (finalScore) => {
+    try {
+      setSavingResult(true);
 
-    if (projectPhases.length === 0) {
-      setSelectedProject(project);
-      setSelectedPhase(null);
-      setContents([]);
+      const totalQuestions =
+        questions.length;
+
+      const correctAnswers =
+        finalScore;
+
+      const wrongAnswers =
+        totalQuestions -
+        correctAnswers;
+
+      const scorePercent =
+        totalQuestions > 0
+          ? Math.round(
+              (correctAnswers /
+                totalQuestions) *
+                100
+            )
+          : 0;
+
+      // =========================================
+      // GET LOGGED-IN USER
+      // =========================================
+
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error(
+          "Get user error:",
+          userError
+        );
+        return;
+      }
+
+      if (!user) {
+        console.error(
+          "No logged-in user found."
+        );
+
+        alert(
+          "Please login before completing a quiz."
+        );
+
+        return;
+      }
+
+      console.log(
+        "Logged-in user:",
+        user.id
+      );
+
+      // =========================================
+      // SAVE INTO quiz_attempts
+      // =========================================
+
+      const startedAt =
+        new Date().toISOString();
+
+      const completedAt =
+        new Date().toISOString();
+
+      const { data, error } =
+        await supabase
+          .from("quiz_attempts")
+          .insert({
+            quiz_id: null,
+
+            user_id: user.id,
+
+            score: scorePercent,
+
+            total_marks:
+              totalQuestions,
+
+            correct_answers:
+              correctAnswers,
+
+            wrong_answers:
+              wrongAnswers,
+
+            started_at:
+              startedAt,
+
+            completed_at:
+              completedAt,
+          })
+          .select();
+
+      if (error) {
+        console.error(
+          "Quiz attempt save error:",
+          error
+        );
+
+        alert(
+          `Unable to save quiz attempt.\n\n${error.message}`
+        );
+
+        return;
+      }
+
+      console.log(
+        "Quiz attempt saved successfully:",
+        data
+      );
+
+    } catch (error) {
+      console.error(
+        "Quiz attempt error:",
+        error
+      );
+    } finally {
+      setSavingResult(false);
+    }
+  };
+
+  // =========================================
+  // NEXT / FINISH
+  // =========================================
+
+  const handleNext = async () => {
+    if (selectedAnswer === null) {
       return;
     }
 
-    const learnPhase =
-      projectPhases.find(
-        (phase) =>
-          phase.phase_name?.toLowerCase() ===
-          "learn"
-      ) || projectPhases[0];
+    const question =
+      questions[currentQuestion];
 
-    loadPhaseContent(
-      project,
-      learnPhase
+    if (!question) {
+      return;
+    }
+
+    const selectedOption =
+      String.fromCharCode(
+        65 + selectedAnswer
+      );
+
+    const isCorrect =
+      selectedOption ===
+      question.correct_option;
+
+    const updatedScore =
+      score +
+      (isCorrect ? 1 : 0);
+
+    setScore(updatedScore);
+
+    // =========================================
+    // LAST QUESTION
+    // =========================================
+
+    if (
+      currentQuestion ===
+      questions.length - 1
+    ) {
+      await savePracticeResult(
+        updatedScore
+      );
+
+      setFinished(true);
+
+      return;
+    }
+
+    // =========================================
+    // NEXT QUESTION
+    // =========================================
+
+    setCurrentQuestion(
+      currentQuestion + 1
     );
+
+    setSelectedAnswer(null);
   };
 
   // =========================================
-  // PHASE CLICK
+  // RESTART
   // =========================================
 
-  const handlePhaseClick = (
-    event,
-    project,
-    phase
-  ) => {
-    event.stopPropagation();
-
-    loadPhaseContent(
-      project,
-      phase
-    );
+  const restart = () => {
+    setPracticeType(null);
+    setQuestions([]);
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setScore(0);
+    setFinished(false);
+    setSavingResult(false);
   };
 
   // =========================================
-  // BACK
+  // LOADING QUESTIONS
   // =========================================
 
-  const handleBack = () => {
-    setSelectedProject(null);
-    setSelectedPhase(null);
-    setContents([]);
-  };
-
-  // =========================================
-  // LOADING
-  // =========================================
-
-  if (loading) {
+  if (
+    practiceType &&
+    loading
+  ) {
     return (
       <div className="feature-page">
 
         <div className="feature-header">
-          <span>BUILD</span>
+
+          <span>LEARN</span>
 
           <h1>
-            Practice Projects
+            {practiceType}
           </h1>
 
           <p>
-            Strengthen your skills with small
-            hands-on projects.
+            Loading questions...
           </p>
-        </div>
 
-        <div className="feature-content">
-          <p>
-            Loading practice projects...
-          </p>
         </div>
 
       </div>
@@ -236,165 +312,119 @@ function PracticeProjects() {
   }
 
   // =========================================
-  // DETAIL PAGE
+  // NO QUESTIONS
   // =========================================
 
-  if (selectedProject) {
+  if (
+    practiceType &&
+    !loading &&
+    questions.length === 0
+  ) {
     return (
       <div className="feature-page">
 
         <div className="feature-header">
 
-          <span>BUILD</span>
+          <span>LEARN</span>
 
           <h1>
-            {selectedProject.title}
+            {practiceType}
           </h1>
 
           <p>
-            {selectedProject.description}
+            No questions available.
           </p>
 
         </div>
 
-        <div className="feature-content">
+        <button
+          className="practice-primary-btn"
+          onClick={restart}
+        >
+          Back to Practice
+        </button>
+
+      </div>
+    );
+  }
+
+  // =========================================
+  // RESULT
+  // =========================================
+
+  if (
+    practiceType &&
+    finished
+  ) {
+    const percentage =
+      questions.length > 0
+        ? Math.round(
+            (score /
+              questions.length) *
+              100
+          )
+        : 0;
+
+    return (
+      <div className="feature-page">
+
+        <div className="feature-header">
+
+          <span>LEARN</span>
+
+          <h1>
+            Practice Completed
+          </h1>
+
+          <p>
+            You have completed your
+            practice session.
+          </p>
+
+        </div>
+
+        <div className="practice-result">
+
+          <h2>
+            Your Score
+          </h2>
+
+          <div className="practice-score">
+            {score} / {questions.length}
+          </div>
+
+          <p>
+            Correct Answers:{" "}
+            {score}
+          </p>
+
+          <p>
+            Wrong Answers:{" "}
+            {questions.length - score}
+          </p>
+
+          <p>
+            Score: {percentage}%
+          </p>
+
+          {savingResult && (
+            <p>
+              Saving result...
+            </p>
+          )}
+
+          {!savingResult && (
+            <p>
+              Result saved successfully.
+            </p>
+          )}
 
           <button
             className="practice-primary-btn"
-            onClick={handleBack}
+            onClick={restart}
           >
-            ← Back to Practice Projects
+            Back to Practice
           </button>
-
-          {/* PHASE BUTTONS */}
-
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              marginTop: "25px",
-              marginBottom: "25px",
-              flexWrap: "wrap",
-            }}
-          >
-
-            {getProjectPhases(
-              selectedProject.id
-            ).map((phase) => (
-
-              <button
-                key={phase.id}
-                onClick={() =>
-                  loadPhaseContent(
-                    selectedProject,
-                    phase
-                  )
-                }
-                style={{
-                  padding: "8px 16px",
-                  border:
-                    selectedPhase?.id === phase.id
-                      ? "1px solid #2563eb"
-                      : "1px solid #ddd",
-                  borderRadius: "8px",
-                  background:
-                    selectedPhase?.id === phase.id
-                      ? "#eff6ff"
-                      : "#fff",
-                  cursor: "pointer",
-                  fontWeight: "600",
-                }}
-              >
-
-                {selectedPhase?.id === phase.id
-                  ? "✓ "
-                  : ""}
-
-                {phase.phase_name}
-
-              </button>
-
-            ))}
-
-          </div>
-
-          {/* PHASE DESCRIPTION */}
-
-          {selectedPhase && (
-
-            <div
-              style={{
-                marginBottom: "25px",
-              }}
-            >
-
-              <h2>
-                {selectedPhase.phase_name}
-              </h2>
-
-              <p>
-                {selectedPhase.phase_description}
-              </p>
-
-            </div>
-
-          )}
-
-          {/* CONTENT */}
-
-          {contentLoading ? (
-
-            <div className="feature-row">
-              <div>
-                <p>
-                  Loading content...
-                </p>
-              </div>
-            </div>
-
-          ) : contents.length === 0 ? (
-
-            <div className="feature-row">
-
-              <div>
-                <h2>
-                  Content Coming Soon
-                </h2>
-
-                <p>
-                  Content for this phase will
-                  be added from the Admin Panel.
-                </p>
-              </div>
-
-            </div>
-
-          ) : (
-
-            contents.map((content) => (
-
-              <div
-                className="feature-row"
-                key={content.id}
-              >
-
-                <div>
-
-                  <h2>
-                    {content.title}
-                  </h2>
-
-                  <p>
-                    {content.content}
-                  </p>
-
-                </div>
-
-              </div>
-
-            ))
-
-          )}
 
         </div>
 
@@ -403,7 +433,121 @@ function PracticeProjects() {
   }
 
   // =========================================
-  // MAIN LIST
+  // QUESTION PAGE
+  // =========================================
+
+  if (practiceType) {
+    const question =
+      questions[currentQuestion];
+
+    if (!question) {
+      return (
+        <div className="feature-page">
+          <div className="feature-header">
+            <h1>
+              Question not found
+            </h1>
+          </div>
+
+          <button
+            className="practice-primary-btn"
+            onClick={restart}
+          >
+            Back to Practice
+          </button>
+        </div>
+      );
+    }
+
+    const options = [
+      question.option_a,
+      question.option_b,
+      question.option_c,
+      question.option_d,
+    ];
+
+    return (
+      <div className="feature-page">
+
+        <div className="feature-header">
+
+          <span>LEARN</span>
+
+          <h1>
+            {practiceType}
+          </h1>
+
+          <p>
+            Question{" "}
+            {currentQuestion + 1} of{" "}
+            {questions.length}
+          </p>
+
+        </div>
+
+        <div className="practice-question">
+
+          <h2>
+            {question.question}
+          </h2>
+
+          <div className="practice-options">
+
+            {options.map(
+              (option, index) => (
+
+                <button
+                  key={index}
+                  className={
+                    selectedAnswer ===
+                    index
+                      ? "practice-option selected"
+                      : "practice-option"
+                  }
+                  onClick={() =>
+                    setSelectedAnswer(
+                      index
+                    )
+                  }
+                >
+
+                  <span>
+                    {String.fromCharCode(
+                      65 + index
+                    )}
+                  </span>
+
+                  {option}
+
+                </button>
+
+              )
+            )}
+
+          </div>
+
+          <button
+            className="practice-primary-btn"
+            onClick={handleNext}
+            disabled={
+              selectedAnswer === null ||
+              savingResult
+            }
+          >
+            {currentQuestion ===
+            questions.length - 1
+              ? "Finish"
+              : "Next →"}
+          </button>
+
+        </div>
+
+      </div>
+    );
+  }
+
+  // =========================================
+  // MAIN PAGE
   // =========================================
 
   return (
@@ -411,119 +555,123 @@ function PracticeProjects() {
 
       <div className="feature-header">
 
-        <span>BUILD</span>
+        <span>LEARN</span>
 
         <h1>
-          Practice Projects
+          Practice & Quizzes
         </h1>
 
         <p>
-          Strengthen your skills with small
-          hands-on projects.
+          Practice what you learn and
+          test your knowledge.
         </p>
 
       </div>
 
       <div className="feature-content">
 
-        {projects.map((project) => {
+        <h2>
+          Choose Practice
+        </h2>
 
-          const projectPhases =
-            getProjectPhases(project.id);
+        <div className="practice-list">
 
-          return (
+          {/* =================================
+              SYLLABUS QUESTIONS
+          ================================= */}
 
-            <div
-              className="feature-row"
-              key={project.id}
-              onClick={() =>
-                handleProjectClick(project)
-              }
-              style={{
-                cursor: "pointer",
-              }}
-            >
+          <div className="practice-item">
 
-              <div>
+            <div>
 
-                <h2>
-                  {project.title}
-                </h2>
+              <h3>
+                Syllabus Questions
+              </h3>
 
-                <p>
-                  {project.description}
-                </p>
-
-                <span className="feature-tag">
-                  {project.technologies}
-                </span>
-
-                {/* PHASE BUTTONS */}
-
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "8px",
-                    marginTop: "15px",
-                    flexWrap: "wrap",
-                  }}
-                >
-
-                  {projectPhases.map(
-                    (phase) => (
-
-                      <button
-                        key={phase.id}
-                        onClick={(event) =>
-                          handlePhaseClick(
-                            event,
-                            project,
-                            phase
-                          )
-                        }
-                        style={{
-                          padding:
-                            "6px 12px",
-                          border:
-                            "1px solid #ddd",
-                          borderRadius:
-                            "7px",
-                          background:
-                            "#fff",
-                          cursor:
-                            "pointer",
-                          fontWeight:
-                            "600",
-                        }}
-                      >
-                        {phase.phase_name}
-                      </button>
-
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-              <span
-                className={`difficulty ${
-                  project.difficulty ===
-                  "Beginner"
-                    ? "beginner"
-                    : project.difficulty ===
-                      "Intermediate"
-                    ? "intermediate"
-                    : "advanced"
-                }`}
-              >
-                {project.difficulty}
-              </span>
+              <p>
+                Practice questions based
+                on your college syllabus
+                and subjects.
+              </p>
 
             </div>
 
-          );
-        })}
+            <button
+              className="practice-primary-btn"
+              onClick={() =>
+                startPractice(
+                  "Syllabus Questions"
+                )
+              }
+            >
+              Start
+            </button>
+
+          </div>
+
+          {/* =================================
+              QUIZZES
+          ================================= */}
+
+          <div className="practice-item">
+
+            <div>
+
+              <h3>
+                Quizzes
+              </h3>
+
+              <p>
+                Test your knowledge with
+                random course questions.
+              </p>
+
+            </div>
+
+            <button
+              className="practice-primary-btn"
+              onClick={() =>
+                startPractice("Quiz")
+              }
+            >
+              Start
+            </button>
+
+          </div>
+
+          {/* =================================
+              CODING PRACTICE
+          ================================= */}
+
+          <div className="practice-item">
+
+            <div>
+
+              <h3>
+                Coding Practice
+              </h3>
+
+              <p>
+                Improve your programming
+                skills with coding questions.
+              </p>
+
+            </div>
+
+            <button
+              className="practice-primary-btn"
+              onClick={() =>
+                startPractice(
+                  "Coding Practice"
+                )
+              }
+            >
+              Start
+            </button>
+
+          </div>
+
+        </div>
 
       </div>
 
@@ -531,4 +679,4 @@ function PracticeProjects() {
   );
 }
 
-export default PracticeProjects;
+export default PracticeQuizzes;

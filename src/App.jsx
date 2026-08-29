@@ -5,7 +5,6 @@ import Courses from "./components/Courses";
 import Explore from "./components/Explore";
 import Learn from "./components/Learn";
 
-
 import ContinueLearning from "./components/ContinueLearning";
 import CollegeSyllabus from "./components/CollegeSyllabus";
 
@@ -22,10 +21,14 @@ import Challenges from "./components/Challenges";
 import Roadmaps from "./components/Roadmaps";
 import Resources from "./components/Resources";
 
-
 import Auth from "./components/Auth";
 import Profile from "./components/Profile";
 import AdminDashboard from "./components/AdminDashboard";
+
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 import { supabase } from "./lib/supabaseClient";
 
@@ -33,17 +36,18 @@ import { supabase } from "./lib/supabaseClient";
 function App() {
 
   const [darkMode, setDarkMode] = useState(false);
-  
 
   const [searchQuery, setSearchQuery] = useState("");
 
   const [currentPage, setCurrentPage] = useState("home");
+
 
   // =========================================
   // AUTH USER
   // =========================================
 
   const [user, setUser] = useState(null);
+
   const [userRole, setUserRole] = useState(null);
 
   const [authLoading, setAuthLoading] = useState(true);
@@ -56,9 +60,12 @@ function App() {
   const fetchUserRole = async (currentUser) => {
 
     if (!currentUser) {
+
       setUserRole(null);
+
       return null;
     }
+
 
     const {
       data: profile,
@@ -68,6 +75,7 @@ function App() {
       .select("role")
       .eq("user_id", currentUser.id)
       .single();
+
 
     if (error) {
 
@@ -81,8 +89,10 @@ function App() {
       return "student";
     }
 
+
     const role =
       profile?.role || "student";
+
 
     setUserRole(role);
 
@@ -97,6 +107,7 @@ function App() {
   useEffect(() => {
 
     let mounted = true;
+
 
     const getCurrentUser = async () => {
 
@@ -118,7 +129,9 @@ function App() {
           );
 
           if (mounted) {
+
             setAuthLoading(false);
+
           }
 
           return;
@@ -126,12 +139,18 @@ function App() {
 
 
         if (!mounted) {
+
           return;
+
         }
 
 
         setUser(currentUser);
 
+
+        // =====================================
+        // INITIAL SESSION
+        // =====================================
 
         if (currentUser) {
 
@@ -142,37 +161,45 @@ function App() {
 
 
           if (!mounted) {
+
             return;
+
           }
 
 
-          // =================================
-          // ADMIN SESSION
-          // =================================
+          // ===================================
+          // ADMIN
+          // ===================================
 
           if (role === "admin") {
 
             setCurrentPage("admin");
 
-          } else {
+          }
 
-            // =================================
-            // STUDENT SESSION
-            // =================================
+          // ===================================
+          // STUDENT
+          // ===================================
+
+          else {
 
             setCurrentPage("home");
 
           }
 
-        } else {
+        }
+
+        else {
 
           setUserRole(null);
+
           setCurrentPage("home");
 
         }
 
 
         setAuthLoading(false);
+
 
       } catch (error) {
 
@@ -181,8 +208,11 @@ function App() {
           error
         );
 
+
         if (mounted) {
+
           setAuthLoading(false);
+
         }
 
       }
@@ -202,55 +232,90 @@ function App() {
         subscription
       }
     } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
 
         const currentUser =
           session?.user ?? null;
 
 
         if (!mounted) {
+
           return;
+
         }
 
 
-        setUser(currentUser);
+        // =====================================
+        // SIGNED OUT
+        // =====================================
 
+        if (event === "SIGNED_OUT") {
 
-        if (!currentUser) {
+          setUser(null);
 
           setUserRole(null);
+
           setCurrentPage("home");
+
           setSearchQuery("");
+
           setAuthLoading(false);
 
           return;
-        }
-
-
-        const role =
-          await fetchUserRole(
-            currentUser
-          );
-
-
-        if (!mounted) {
-          return;
-        }
-
-
-        if (role === "admin") {
-
-          setCurrentPage("admin");
-
-        } else {
-
-          setCurrentPage("home");
 
         }
 
 
-        setSearchQuery("");
-        setAuthLoading(false);
+        // =====================================
+        // SIGNED IN
+        // =====================================
+
+        if (event === "SIGNED_IN") {
+
+          setUser(currentUser);
+
+
+          if (currentUser) {
+
+            const role =
+              await fetchUserRole(
+                currentUser
+              );
+
+
+            if (!mounted) {
+
+              return;
+
+            }
+
+
+            // =================================
+            // ADMIN LOGIN
+            // =================================
+
+            if (role === "admin") {
+
+              setCurrentPage("admin");
+
+            }
+
+            // =================================
+            // STUDENT LOGIN
+            // =================================
+            // Student ko yahan Home par
+            // force nahi kar rahe.
+            // handleLoginSuccess already
+            // Home set karta hai.
+
+          }
+
+
+          setSearchQuery("");
+
+          setAuthLoading(false);
+
+        }
 
       }
     );
@@ -272,6 +337,23 @@ function App() {
   // =========================================
 
   const getParentPage = (page) => {
+
+
+    // =========================================
+    // FOOTER PAGES
+    // =========================================
+
+    if (
+      page === "about" ||
+      page === "contact" ||
+      page === "privacy" ||
+      page === "terms"
+    ) {
+
+      return "home";
+
+    }
+
 
     // =========================================
     // MAIN NAVIGATION
@@ -340,10 +422,20 @@ function App() {
     if (
       page === "roadmaps" ||
       page === "resources"
-      
     ) {
 
       return "grow";
+
+    }
+
+
+    // =========================================
+    // PROFILE
+    // =========================================
+
+    if (page === "profile") {
+
+      return "home";
 
     }
 
@@ -358,10 +450,6 @@ function App() {
   // =========================================
 
   const navigateTo = (page) => {
-
-    if (page === currentPage) {
-      return;
-    }
 
     setCurrentPage(page);
 
@@ -389,10 +477,13 @@ function App() {
     if (!loggedInUser) {
 
       setUser(null);
+
       setUserRole(null);
+
       setCurrentPage("home");
 
       return;
+
     }
 
 
@@ -414,6 +505,7 @@ function App() {
       setCurrentPage("admin");
 
       return;
+
     }
 
 
@@ -445,6 +537,7 @@ function App() {
       );
 
       return;
+
     }
 
 
@@ -466,7 +559,9 @@ function App() {
   const goBack = () => {
 
     if (currentPage === "home") {
+
       return;
+
     }
 
 
@@ -481,6 +576,7 @@ function App() {
       setSearchQuery("");
 
       return;
+
     }
 
 
@@ -489,7 +585,9 @@ function App() {
     // =========================================
 
     if (currentPage === "admin") {
+
       return;
+
     }
 
 
@@ -577,9 +675,6 @@ function App() {
     );
 
 
-
-
-
   // =========================================
   // AUTH LOADING
   // =========================================
@@ -647,15 +742,15 @@ function App() {
 
 
       {/* =====================================
-          STUDENT HEADER
+          HEADER
       ===================================== */}
 
       <Header
 
         darkMode={darkMode}
+
         setDarkMode={setDarkMode}
 
-        
         onSearch={handleSearch}
 
         onSignIn={() =>
@@ -674,7 +769,7 @@ function App() {
 
 
       {/* =====================================
-          STUDENT NAVIGATION
+          NAVIGATION
       ===================================== */}
 
       <nav className="navigation">
@@ -769,10 +864,46 @@ function App() {
 
 
         {/* =====================================
-            AUTH
+            ABOUT
         ===================================== */}
 
-        {currentPage === "auth" ? (
+        {currentPage === "about" ? (
+
+          <About />
+
+
+        /* =====================================
+            CONTACT
+        ===================================== */
+
+        ) : currentPage === "contact" ? (
+
+          <Contact />
+
+
+        /* =====================================
+            PRIVACY
+        ===================================== */
+
+        ) : currentPage === "privacy" ? (
+
+          <Privacy />
+
+
+        /* =====================================
+            TERMS
+        ===================================== */
+
+        ) : currentPage === "terms" ? (
+
+          <Terms />
+
+
+        /* =====================================
+            AUTH
+        ===================================== */
+
+        ) : currentPage === "auth" ? (
 
           <Auth
             onLogin={handleLoginSuccess}
@@ -893,8 +1024,6 @@ function App() {
         ) : currentPage === "resources" ? (
 
           <Resources />
-
-
 
 
         /* =====================================
@@ -1123,15 +1252,66 @@ function App() {
       <footer className="footer">
 
         <p>
-          © 2026  Ilmi. All rights reserved.
+          © 2026 Ilmi. All rights reserved.
         </p>
+
 
         <div>
 
-<a href="#">About</a>
-<a href="#">Contact</a>
-<a href="#">Privacy</a>
-<a href="#">Terms</a>
+          <a
+            href="#"
+            onClick={(e) => {
+
+              e.preventDefault();
+
+              navigateTo("about");
+
+            }}
+          >
+            About
+          </a>
+
+
+          <a
+            href="#"
+            onClick={(e) => {
+
+              e.preventDefault();
+
+              navigateTo("contact");
+
+            }}
+          >
+            Contact
+          </a>
+
+
+          <a
+            href="#"
+            onClick={(e) => {
+
+              e.preventDefault();
+
+              navigateTo("privacy");
+
+            }}
+          >
+            Privacy
+          </a>
+
+
+          <a
+            href="#"
+            onClick={(e) => {
+
+              e.preventDefault();
+
+              navigateTo("terms");
+
+            }}
+          >
+            Terms
+          </a>
 
         </div>
 
