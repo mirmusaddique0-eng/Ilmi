@@ -2,6 +2,79 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import "./CourseLearning.css";
 
+
+
+
+const formatLessonContent = (content) => {
+  if (!content) return null;
+
+  let text = String(content);
+
+  // Convert escaped line breaks into real line breaks
+  text = text
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n");
+
+  // If database content has no real line breaks,
+  // separate important lesson sections automatically
+  text = text.replace(
+    /(?=\bDefinition\s)/g,
+    "\n\n"
+  );
+
+  text = text.replace(
+    /(?=\bSimple Explanation\s)/g,
+    "\n\n"
+  );
+
+  text = text.replace(
+    /(?=\bFor example,\s)/g,
+    "\n\n"
+  );
+
+  text = text.replace(
+    /(?=\bAll of these\s)/g,
+    "\n\n"
+  );
+
+  text = text.replace(
+    /(?=\bExample:\s)/g,
+    "\n\n"
+  );
+
+  text = text.replace(
+    /(?=\bKey Point\s)/g,
+    "\n\n"
+  );
+
+  text = text.replace(
+    /(?=\bUser\s*↓)/g,
+    "\n\n"
+  );
+
+  return text
+    .split(/\n/)
+    .map((line, index) => {
+      const cleanLine = line.trim();
+
+      if (!cleanLine) {
+        return <div key={index} className="lesson-content-space" />;
+      }
+
+      return (
+        <div
+          key={index}
+          className="lesson-content-line"
+        >
+          {cleanLine}
+        </div>
+      );
+    });
+};
+
+
 function CourseLearning({ course, onBack }) {
   const [topics, setTopics] = useState([]);
   const [lessons, setLessons] = useState([]);
@@ -33,8 +106,9 @@ function CourseLearning({ course, onBack }) {
         // -----------------------------------------
 
         const moduleIds =
-          course.sections?.flatMap((section) =>
-            section.modules?.map((module) => module.id) || []
+          course.sections?.flatMap(
+            (section) =>
+              section.modules?.map((module) => module.id) || []
           ) || [];
 
         console.log("Module IDs:", moduleIds);
@@ -209,10 +283,7 @@ function CourseLearning({ course, onBack }) {
   // SELECT TOPIC
   // =========================================
 
-  const handleTopicClick = (
-    topic,
-    moduleId
-  ) => {
+  const handleTopicClick = (topic, moduleId) => {
     setSelectedTopic(topic);
     setOpenModule(moduleId);
 
@@ -230,10 +301,7 @@ function CourseLearning({ course, onBack }) {
   // SELECT LESSON
   // =========================================
 
-  const handleLessonClick = (
-    lesson,
-    topic
-  ) => {
+  const handleLessonClick = (lesson, topic) => {
     setSelectedLesson(lesson);
     setSelectedTopic(topic);
   };
@@ -302,14 +370,10 @@ function CourseLearning({ course, onBack }) {
         setSelectedTopic(nextTopic);
 
         const nextModule =
-          findModuleByTopic(
-            nextTopic.id
-          );
+          findModuleByTopic(nextTopic.id);
 
         if (nextModule) {
-          setOpenModule(
-            nextModule.id
-          );
+          setOpenModule(nextModule.id);
 
           const nextSection =
             findSectionByModule(
@@ -317,9 +381,7 @@ function CourseLearning({ course, onBack }) {
             );
 
           if (nextSection) {
-            setOpenSection(
-              nextSection.id
-            );
+            setOpenSection(nextSection.id);
           }
         }
       }
@@ -337,9 +399,7 @@ function CourseLearning({ course, onBack }) {
           currentLessonIndex - 1
         ];
 
-      setSelectedLesson(
-        previousLesson
-      );
+      setSelectedLesson(previousLesson);
 
       const previousTopic =
         topics.find(
@@ -349,9 +409,7 @@ function CourseLearning({ course, onBack }) {
         );
 
       if (previousTopic) {
-        setSelectedTopic(
-          previousTopic
-        );
+        setSelectedTopic(previousTopic);
 
         const previousModule =
           findModuleByTopic(
@@ -359,9 +417,7 @@ function CourseLearning({ course, onBack }) {
           );
 
         if (previousModule) {
-          setOpenModule(
-            previousModule.id
-          );
+          setOpenModule(previousModule.id);
 
           const previousSection =
             findSectionByModule(
@@ -369,14 +425,18 @@ function CourseLearning({ course, onBack }) {
             );
 
           if (previousSection) {
-            setOpenSection(
-              previousSection.id
-            );
+            setOpenSection(previousSection.id);
           }
         }
       }
     }
   };
+
+  // =========================================
+  // LESSON CONTENT
+  // =========================================
+
+  
 
   // =========================================
   // LOADING
@@ -450,7 +510,6 @@ function CourseLearning({ course, onBack }) {
 
       </div>
 
-
       {/* =====================================
           LEARNING LAYOUT
       ===================================== */}
@@ -481,8 +540,7 @@ function CourseLearning({ course, onBack }) {
                   className="learning-section-title"
                   onClick={() =>
                     setOpenSection(
-                      openSection ===
-                      section.id
+                      openSection === section.id
                         ? null
                         : section.id
                     )
@@ -494,19 +552,16 @@ function CourseLearning({ course, onBack }) {
                   </span>
 
                   <span>
-                    {openSection ===
-                    section.id
+                    {openSection === section.id
                       ? "⌃"
                       : "⌄"}
                   </span>
 
                 </div>
 
-
                 {/* MODULES */}
 
-                {openSection ===
-                  section.id && (
+                {openSection === section.id && (
 
                   <div className="learning-topics">
 
@@ -530,8 +585,7 @@ function CourseLearning({ course, onBack }) {
                               className="learning-topic"
                               onClick={() =>
                                 setOpenModule(
-                                  openModule ===
-                                  module.id
+                                  openModule === module.id
                                     ? null
                                     : module.id
                                 )
@@ -543,24 +597,20 @@ function CourseLearning({ course, onBack }) {
                               </span>
 
                               <span>
-                                {openModule ===
-                                module.id
+                                {openModule === module.id
                                   ? "⌃"
                                   : "⌄"}
                               </span>
 
                             </div>
 
-
                             {/* TOPICS */}
 
-                            {openModule ===
-                              module.id && (
+                            {openModule === module.id && (
 
                               <div className="module-lessons">
 
-                                {moduleTopics.length ===
-                                0 ? (
+                                {moduleTopics.length === 0 ? (
 
                                   <div className="lesson-item">
                                     No topics available.
@@ -579,9 +629,7 @@ function CourseLearning({ course, onBack }) {
                                       return (
 
                                         <div
-                                          key={
-                                            topic.id
-                                          }
+                                          key={topic.id}
                                         >
 
                                           {/* TOPIC */}
@@ -603,7 +651,6 @@ function CourseLearning({ course, onBack }) {
                                             {topic.title}
                                           </div>
 
-
                                           {/* LESSONS */}
 
                                           {selectedTopic?.id ===
@@ -611,8 +658,7 @@ function CourseLearning({ course, onBack }) {
 
                                             <div className="lesson-list">
 
-                                              {topicLessons.length ===
-                                              0 ? (
+                                              {topicLessons.length === 0 ? (
 
                                                 <div className="lesson-item">
                                                   No lessons available.
@@ -624,9 +670,7 @@ function CourseLearning({ course, onBack }) {
                                                   (lesson) => (
 
                                                     <div
-                                                      key={
-                                                        lesson.id
-                                                      }
+                                                      key={lesson.id}
                                                       className={`lesson-item ${
                                                         selectedLesson?.id ===
                                                         lesson.id
@@ -640,9 +684,7 @@ function CourseLearning({ course, onBack }) {
                                                         )
                                                       }
                                                     >
-                                                      {
-                                                        lesson.title
-                                                      }
+                                                      {lesson.title}
                                                     </div>
 
                                                   )
@@ -683,7 +725,6 @@ function CourseLearning({ course, onBack }) {
 
         </aside>
 
-
         {/* ===================================
             RIGHT CONTENT
         =================================== */}
@@ -706,53 +747,43 @@ function CourseLearning({ course, onBack }) {
                 {selectedTopic?.title}
               </p>
 
+              {/* =================================
+                  LESSON CONTENT
+              ================================= */}
+<div className="lesson-box">
 
-              {/* LESSON CONTENT */}
+  {selectedLesson.content ? (
 
-              <div className="lesson-box">
+    <div className="lesson-content">
+      {formatLessonContent(selectedLesson.content)}
+    </div>
 
-                <h3>
-                  {selectedLesson.title}
-                </h3>
+  ) : (
 
-                {selectedLesson.content ? (
+    <p>
+      Lesson content will be available here.
+    </p>
 
-                  <p>
-                    {selectedLesson.content}
-                  </p>
+  )}
 
-                ) : (
-
-                  <p>
-                    Lesson content will
-                    be available here.
-                  </p>
-
-                )}
-
-              </div>
-
-
-              {/* NAVIGATION */}
+</div>
+              {/* =================================
+                  NAVIGATION
+              ================================= */}
 
               <div className="lesson-navigation">
 
                 <button
-                  onClick={
-                    goToPreviousLesson
-                  }
+                  onClick={goToPreviousLesson}
                   disabled={
-                    currentLessonIndex <=
-                    0
+                    currentLessonIndex <= 0
                   }
                 >
                   ← Previous Lesson
                 </button>
 
                 <button
-                  onClick={
-                    goToNextLesson
-                  }
+                  onClick={goToNextLesson}
                   disabled={
                     currentLessonIndex ===
                     allLessons.length - 1

@@ -8,7 +8,8 @@
   width: 100vw;
   min-width: 100vw;
 
-  min-height: calc(100vh - 80px);
+  height: calc(100vh - 80px);
+  min-height: 0;
 
   margin-top: 0 !important;
   margin-bottom: 0;
@@ -19,6 +20,8 @@
   background: #ffffff;
 
   box-sizing: border-box;
+
+  overflow: hidden;
 }
 
 
@@ -28,6 +31,7 @@
 
 .learning-header {
   width: 100%;
+  height: 82px;
   min-height: 82px;
 
   padding: 0 32px;
@@ -44,7 +48,9 @@
 }
 
 
-/* Back Button */
+/* =========================
+   BACK BUTTON
+========================= */
 
 .back-course-btn {
   border: 1px solid #d0d5dd;
@@ -72,7 +78,9 @@
 }
 
 
-/* Header Title */
+/* =========================
+   HEADER TITLE
+========================= */
 
 .learning-header h1 {
   margin: 0;
@@ -98,11 +106,14 @@
 .learning-layout {
   width: 100%;
 
+  height: calc(100% - 82px);
+  min-height: 0;
+
   display: grid;
 
   grid-template-columns: 300px minmax(0, 1fr);
 
-  min-height: calc(100vh - 162px);
+  overflow: hidden;
 }
 
 
@@ -113,7 +124,8 @@
 .learning-sidebar {
   width: 300px;
 
-  height: calc(100vh - 162px);
+  height: 100%;
+  min-height: 0;
 
   box-sizing: border-box;
 
@@ -124,13 +136,17 @@
   border-right: 1px solid #e5e7eb;
 
   overflow-y: auto;
+  overflow-x: hidden;
 
-  position: sticky;
-  top: 0;
+  position: relative;
+
+  align-self: stretch;
 }
 
 
-/* Sidebar Title */
+/* =========================
+   SIDEBAR TITLE
+========================= */
 
 .learning-sidebar h2 {
   margin: 0;
@@ -152,7 +168,9 @@
 }
 
 
-/* Section Header */
+/* =========================
+   SECTION HEADER
+========================= */
 
 .learning-section-title {
   width: 100%;
@@ -219,7 +237,9 @@
 }
 
 
-/* Active Topic */
+/* =========================
+   ACTIVE TOPIC
+========================= */
 
 .active-topic {
   background: #e8edff;
@@ -240,8 +260,9 @@
   width: 100%;
 
   min-width: 0;
+  min-height: 0;
 
-  min-height: calc(100vh - 162px);
+  height: 100%;
 
   box-sizing: border-box;
 
@@ -252,10 +273,15 @@
   display: flex;
 
   flex-direction: column;
+
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 
-/* Content Label */
+/* =========================
+   CONTENT LABEL
+========================= */
 
 .content-label {
   display: block;
@@ -272,7 +298,9 @@
 }
 
 
-/* Content Heading */
+/* =========================
+   CONTENT HEADING
+========================= */
 
 .learning-content h2 {
   margin: 0 0 20px;
@@ -285,7 +313,9 @@
 }
 
 
-/* Description */
+/* =========================
+   DESCRIPTION
+========================= */
 
 .content-description {
   max-width: 900px;
@@ -319,7 +349,9 @@
 }
 
 
-/* Lesson Heading */
+/* =========================
+   LESSON HEADING
+========================= */
 
 .lesson-box h3 {
   margin: 0 0 22px;
@@ -330,7 +362,46 @@
 }
 
 
-/* Lesson Paragraph */
+/* =========================
+   LESSON CONTENT TEXT
+========================= */
+
+.lesson-content {
+  margin: 0;
+
+  width: 100%;
+
+  white-space: normal;
+
+  word-break: normal;
+
+  overflow-wrap: break-word;
+
+  font-size: 18px;
+
+  line-height: 1.8;
+
+  color: #4b5563;
+}
+
+
+.lesson-content-line {
+  display: block;
+
+  margin-bottom: 18px;
+
+  white-space: normal;
+}
+
+
+.lesson-content-space {
+  height: 10px;
+}
+
+
+/* =========================
+   LESSON PARAGRAPH
+========================= */
 
 .lesson-box p {
   margin: 0;
@@ -343,7 +414,9 @@
 }
 
 
-/* Lesson List */
+/* =========================
+   LESSON LIST
+========================= */
 
 .lesson-box ul {
   margin: 0;
@@ -385,7 +458,9 @@
 }
 
 
-/* Navigation Buttons */
+/* =========================
+   NAVIGATION BUTTONS
+========================= */
 
 .lesson-navigation button {
   min-width: 180px;
@@ -420,7 +495,9 @@
 }
 
 
-/* Button Hover */
+/* =========================
+   BUTTON HOVER
+========================= */
 
 .lesson-navigation button:hover:not(:disabled) {
   background: #4f46e5;
@@ -435,7 +512,9 @@
 }
 
 
-/* Disabled Button */
+/* =========================
+   DISABLED BUTTON
+========================= */
 
 .lesson-navigation button:disabled {
   background: #f3f4f6;
@@ -456,14 +535,23 @@
    SCROLLBAR
 ========================= */
 
-.learning-sidebar::-webkit-scrollbar {
+.learning-sidebar::-webkit-scrollbar,
+.learning-content::-webkit-scrollbar {
   width: 7px;
 }
 
-.learning-sidebar::-webkit-scrollbar-thumb {
+
+.learning-sidebar::-webkit-scrollbar-thumb,
+.learning-content::-webkit-scrollbar-thumb {
   background: #cbd5e1;
 
   border-radius: 10px;
+}
+
+
+.learning-sidebar::-webkit-scrollbar-track,
+.learning-content::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 
@@ -557,6 +645,15 @@
   color: #f9fafb;
 }
 
+
+/* =========================
+   DARK MODE LESSON CONTENT
+========================= */
+
+.app.dark .lesson-content {
+  color: #d1d5db;
+}
+
 .app.dark .lesson-box p {
   color: #d1d5db;
 }
@@ -625,7 +722,18 @@
 
 @media (max-width: 700px) {
 
+  .learning-page {
+    height: auto;
+
+    min-height: calc(100vh - 80px);
+
+    overflow: visible;
+  }
+
   .learning-header {
+    height: auto;
+    min-height: 82px;
+
     padding: 18px;
 
     flex-direction: column;
@@ -635,6 +743,10 @@
 
   .learning-layout {
     display: block;
+
+    height: auto;
+
+    overflow: visible;
   }
 
   .learning-sidebar {
@@ -646,15 +758,25 @@
 
     position: relative;
 
+    top: auto;
+
     border-right: none;
 
     border-bottom: 1px solid #e5e7eb;
+
+    overflow-y: auto;
   }
 
   .learning-content {
-    min-height: calc(100vh - 162px);
+    width: 100%;
+
+    height: auto;
+
+    min-height: 0;
 
     padding: 35px 22px 40px;
+
+    overflow: visible;
   }
 
   .learning-content h2 {

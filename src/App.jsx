@@ -141,7 +141,6 @@ function App() {
         if (!mounted) {
 
           return;
-
         }
 
 
@@ -163,7 +162,6 @@ function App() {
           if (!mounted) {
 
             return;
-
           }
 
 
@@ -300,14 +298,6 @@ function App() {
 
             }
 
-            // =================================
-            // STUDENT LOGIN
-            // =================================
-            // Student ko yahan Home par
-            // force nahi kar rahe.
-            // handleLoginSuccess already
-            // Home set karta hai.
-
           }
 
 
@@ -338,10 +328,7 @@ function App() {
 
   const getParentPage = (page) => {
 
-
-    // =========================================
     // FOOTER PAGES
-    // =========================================
 
     if (
       page === "about" ||
@@ -355,9 +342,7 @@ function App() {
     }
 
 
-    // =========================================
     // MAIN NAVIGATION
-    // =========================================
 
     if (
       page === "explore" ||
@@ -371,9 +356,7 @@ function App() {
     }
 
 
-    // =========================================
     // EXPLORE CHILDREN
-    // =========================================
 
     if (
       page === "courses" ||
@@ -385,9 +368,7 @@ function App() {
     }
 
 
-    // =========================================
     // LEARN CHILDREN
-    // =========================================
 
     if (
       page === "continue-learning" ||
@@ -400,9 +381,7 @@ function App() {
     }
 
 
-    // =========================================
     // BUILD CHILDREN
-    // =========================================
 
     if (
       page === "projects" ||
@@ -415,9 +394,7 @@ function App() {
     }
 
 
-    // =========================================
     // GROW CHILDREN
-    // =========================================
 
     if (
       page === "roadmaps" ||
@@ -429,9 +406,7 @@ function App() {
     }
 
 
-    // =========================================
     // PROFILE
-    // =========================================
 
     if (page === "profile") {
 
@@ -496,9 +471,7 @@ function App() {
       );
 
 
-    // =======================================
     // ADMIN LOGIN
-    // =======================================
 
     if (role === "admin") {
 
@@ -509,9 +482,7 @@ function App() {
     }
 
 
-    // =======================================
     // STUDENT LOGIN
-    // =======================================
 
     setCurrentPage("home");
 
@@ -565,9 +536,7 @@ function App() {
     }
 
 
-    // =========================================
     // AUTH → HOME
-    // =========================================
 
     if (currentPage === "auth") {
 
@@ -580,9 +549,7 @@ function App() {
     }
 
 
-    // =========================================
     // ADMIN
-    // =========================================
 
     if (currentPage === "admin") {
 
@@ -839,9 +806,7 @@ function App() {
       <main className="main-content">
 
 
-        {/* =====================================
-            BACK BUTTON
-        ===================================== */}
+        {/* BACK BUTTON */}
 
         {showBackButton && (
 
@@ -863,45 +828,35 @@ function App() {
         )}
 
 
-        {/* =====================================
-            ABOUT
-        ===================================== */}
+        {/* ABOUT */}
 
         {currentPage === "about" ? (
 
           <About />
 
 
-        /* =====================================
-            CONTACT
-        ===================================== */
+        /* CONTACT */
 
         ) : currentPage === "contact" ? (
 
           <Contact />
 
 
-        /* =====================================
-            PRIVACY
-        ===================================== */
+        /* PRIVACY */
 
         ) : currentPage === "privacy" ? (
 
           <Privacy />
 
 
-        /* =====================================
-            TERMS
-        ===================================== */
+        /* TERMS */
 
         ) : currentPage === "terms" ? (
 
           <Terms />
 
 
-        /* =====================================
-            AUTH
-        ===================================== */
+        /* AUTH */
 
         ) : currentPage === "auth" ? (
 
@@ -910,9 +865,7 @@ function App() {
           />
 
 
-        /* =====================================
-            PROFILE
-        ===================================== */
+        /* PROFILE */
 
         ) : currentPage === "profile" ? (
 
@@ -922,9 +875,7 @@ function App() {
           />
 
 
-        /* =====================================
-            EXPLORE
-        ===================================== */
+        /* EXPLORE */
 
         ) : currentPage === "explore" ? (
 
@@ -933,27 +884,21 @@ function App() {
           />
 
 
-        /* =====================================
-            COURSES
-        ===================================== */
+        /* COURSES */
 
         ) : currentPage === "courses" ? (
 
           <Courses />
 
 
-        /* =====================================
-            COLLEGE SYLLABUS
-        ===================================== */
+        /* COLLEGE SYLLABUS */
 
         ) : currentPage === "college-syllabus" ? (
 
           <CollegeSyllabus />
 
 
-        /* =====================================
-            LEARN
-        ===================================== */
+        /* LEARN */
 
         ) : currentPage === "learn" ? (
 
@@ -979,9 +924,7 @@ function App() {
           <PracticeQuizzes />
 
 
-        /* =====================================
-            BUILD
-        ===================================== */
+        /* BUILD */
 
         ) : currentPage === "build" ? (
 
@@ -1005,9 +948,7 @@ function App() {
           <Challenges />
 
 
-        /* =====================================
-            GROW
-        ===================================== */
+        /* GROW */
 
         ) : currentPage === "grow" ? (
 
@@ -1027,16 +968,14 @@ function App() {
 
 
         /* =====================================
-            HOME
+           HOME
         ===================================== */
 
         ) : (
 
           <>
 
-            {/* =================================
-                SEARCH RESULTS
-            ================================= */}
+            {/* SEARCH RESULTS */}
 
             {searchQuery && (
 
@@ -1113,31 +1052,71 @@ function App() {
 
 
             {/* =================================
-                HOME CONTENT
+                HOME HERO
             ================================= */}
 
             {!searchQuery && (
 
               <>
 
-                <section className="welcome">
+                <section className="home-hero">
 
-                  <h2>
-                    Start Your Learning Journey
-                  </h2>
 
-                  <p className="learning-path">
-                    Explore • Learn • Build • Grow
-                  </p>
+                  {/* LEFT IMAGE */}
 
-                  <p>
-                    Learn programming, practice your skills,
-                    build real projects, and grow your knowledge
-                    with EDUVANTA.
-                  </p>
+                  <div className="hero-image hero-image-left">
+
+                    <img
+                      src="/image/bg1.jpg"
+                      alt=""
+                    />
+
+                  </div>
+
+
+                  {/* RIGHT IMAGE */}
+
+                  <div className="hero-image hero-image-right">
+
+                    <img
+                      src="/image/bg2.jpg"
+                      alt=""
+                    />
+
+                  </div>
+
+
+                  {/* CENTER CONTENT */}
+
+                  <div className="hero-content">
+
+                    <h2>
+                      Start Your Learning Journey
+                    </h2>
+
+                    <p className="learning-path">
+                      Since 2026
+                    </p>
+
+                    <p className="hero-description">
+                      Learn programming, strengthen your skills,
+                      practice with real challenges, build meaningful
+                      projects, and grow your knowledge with ILMI.
+                    </p>
+
+                    <p className="welcome-tagline">
+                      Learn at your own pace. Practice what you learn.
+                      Build real skills for your future.
+                    </p>
+
+                  </div>
 
                 </section>
 
+
+                {/* =================================
+                    HOME CARDS
+                ================================= */}
 
                 <section className="cards">
 
@@ -1316,7 +1295,6 @@ function App() {
         </div>
 
       </footer>
-
 
     </div>
 

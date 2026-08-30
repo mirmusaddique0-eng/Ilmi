@@ -1,7 +1,18 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -15,25 +26,41 @@ input {
   font-family: inherit;
 }
 
+
+/* =========================================================
+   APP
+========================================================= */
+
 .app {
   min-height: 100vh;
+
   display: flex;
   flex-direction: column;
+
   background: #f7f8fc;
   color: #111827;
-  transition: background 0.3s ease, color 0.3s ease;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
 }
 
-/* =========================
+
+/* =========================================================
    HEADER
-========================= */
+========================================================= */
 
 .header {
   height: 80px;
+
   padding: 0 6%;
+
   background: white;
+
   border-bottom: 1px solid #e8eaf0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.03);
 
   display: flex;
   align-items: center;
@@ -42,15 +69,20 @@ input {
 .header-left {
   display: flex;
   align-items: center;
+
   gap: 12px;
+
   order: 1;
 }
 
 .header-right {
   display: flex;
   align-items: center;
+
   gap: 12px;
+
   order: 3;
+
   position: relative;
 }
 
@@ -63,15 +95,21 @@ input {
 .language-btn,
 .icon-btn {
   border: none;
+
   background: transparent;
+
   cursor: pointer;
+
   padding: 10px 14px;
+
   border-radius: 30px;
+
   font-size: 15px;
 }
 
 .signin-btn {
   background: hsl(221, 39%, 11%);
+
   color: white;
 }
 
@@ -80,38 +118,48 @@ input {
 .language-btn:hover,
 .icon-btn:hover {
   background: #eef2ff;
+
   color: #4f46e5;
 }
 
-/* =========================
+
+/* =========================================================
    LOGO
-========================= */
+========================================================= */
 
 .logo-container {
   display: flex;
+
   align-items: center;
   justify-content: center;
+
   flex-shrink: 0;
 }
 
-
- .header-logo {
+.header-logo {
   width: 150px;
+
   height: 100px;
+
   object-fit: contain;
+
   display: block;
 }
 
-/* =========================
+
+/* =========================================================
    NAVIGATION
-========================= */
+========================================================= */
 
 .navigation {
   height: 55px;
+
   background: white;
 
   display: flex;
+
   justify-content: center;
+
   align-items: center;
 
   gap: 45px;
@@ -121,72 +169,296 @@ input {
 
 .navigation a {
   text-decoration: none;
+
   color: #374151;
+
   font-weight: 500;
+
+  transition: color 0.2s ease;
 }
 
 .navigation a:hover {
   color: #4f46e5;
 }
 
-/* =========================
+
+/* =========================================================
    MAIN
-========================= */
+========================================================= */
 
 .main-content {
   width: min(1100px, 90%);
+
   margin: 0 auto;
+
   flex: 1;
 }
+
 
 /* Learning page full width */
 
 .main-content:has(.learning-page) {
   width: 100% !important;
+
   max-width: none !important;
+
   margin: 0 !important;
+
   padding: 0 !important;
+
   min-height: calc(100vh - 135px);
 }
 
-/* =========================
-   NORMAL WELCOME
-========================= */
 
-.welcome {
+/* =========================================================
+   HOME HERO
+========================================================= */
+
+.home-hero {
+  position: relative;
+
+  width: 100vw;
+
+  min-height: 520px;
+
+  margin-left: calc(50% - 50vw);
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #f7f8fc;
+}
+
+
+/* =========================================================
+   HERO IMAGE CONTAINERS
+========================================================= */
+
+.hero-image {
+  position: absolute;
+
+  top: 0;
+
+  bottom: 0;
+
+  width: 50%;
+
+  overflow: hidden;
+
+  z-index: 0;
+}
+
+.hero-image-left {
+  left: 0;
+}
+
+.hero-image-right {
+  right: 0;
+}
+
+
+/* =========================================================
+   HERO IMAGES
+========================================================= */
+
+.hero-image img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  animation:
+    heroImageMotion 12s ease-in-out infinite alternate;
+}
+
+.hero-image-left img {
+  object-position: center;
+}
+
+.hero-image-right img {
+  object-position: center;
+
+  animation-delay: -6s;
+}
+
+
+/* =========================================================
+   IMAGE MOTION
+========================================================= */
+
+@keyframes heroImageMotion {
+
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.08);
+  }
+
+}
+
+
+/* =========================================================
+   IMAGE OVERLAY
+========================================================= */
+
+.hero-image::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    rgba(255, 255, 255, 0.52);
+}
+
+
+/* =========================================================
+   CENTER HERO CONTENT
+========================================================= */
+
+.hero-content {
+  position: relative;
+
+  z-index: 2;
+
+  width: min(720px, 88%);
+
+  padding: 45px 35px;
+
   text-align: center;
-  margin-top: 45px;
-  margin-bottom: 35px;
+
+ background: rgba(255, 255, 255, 0.55);
+
+  backdrop-filter: blur(6px);
+
+  -webkit-backdrop-filter: blur(6px);
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.08);
 }
 
-.welcome h2 {
-  font-size: 30px;
-  margin-bottom: 10px;
+
+/* =========================================================
+   HERO HEADING
+========================================================= */
+
+.hero-content h2 {
+  font-size: 42px;
+
+  font-weight: 700;
+
+  letter-spacing: -0.8px;
+
+  margin-bottom: 12px;
+
+  background: linear-gradient(
+    90deg,
+    #0f4c81,
+    #1677a8,
+    #159a9c
+  );
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+
+  line-height: 1.2;
 }
 
-.welcome p {
-  color: #6b7280;
+
+/* =========================================================
+   LEARNING PATH
+========================================================= */
+
+.hero-content .learning-path {
+  font-size: 18px;
+
+  font-weight: 600;
+
+  color: #1677a8;
+
+  margin-bottom: 18px;
+
+  letter-spacing: 0.6px;
 }
 
-/* =========================
+
+/* =========================================================
+   HERO DESCRIPTION
+========================================================= */
+
+.hero-description {
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  color: #374151;
+
+  max-width: 650px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   HERO TAGLINE
+========================================================= */
+
+.hero-content .welcome-tagline {
+  font-size: 15px;
+
+  line-height: 1.6;
+
+  color: #64748b;
+
+  margin-top: 10px;
+}
+
+
+/* =========================================================
    NORMAL CARDS
-========================= */
+========================================================= */
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
   gap: 25px;
+
+  padding-top: 40px;
+
   padding-bottom: 70px;
 }
 
 .card {
   background: white;
+
   padding: 30px;
 
   border: 1px solid #e5e7eb;
+
   border-radius: 16px;
 
-  transition: 0.2s;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .card:hover {
@@ -198,17 +470,21 @@ input {
 
 .card-icon {
   font-size: 32px;
+
   margin-bottom: 18px;
 }
 
 .card h3 {
   font-size: 22px;
+
   margin-bottom: 10px;
 }
 
 .card p {
   color: #6b7280;
+
   line-height: 1.6;
+
   margin-bottom: 20px;
 }
 
@@ -216,6 +492,7 @@ input {
   border: none;
 
   background: #4f46e5;
+
   color: white;
 
   padding: 10px 15px;
@@ -223,26 +500,42 @@ input {
   border-radius: 8px;
 
   cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
-/* =========================
+.card button:hover {
+  background: #4338ca;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
    FOOTER
-========================= */
+========================================================= */
 
 .footer {
   background: #111827;
+
   color: #d1d5db;
 
   padding: 30px 6%;
 
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
 }
 
 .footer a {
   color: #d1d5db;
+
   text-decoration: none;
+
   margin-left: 20px;
 }
 
@@ -250,15 +543,18 @@ input {
   color: white;
 }
 
-/* =========================
+
+/* =========================================================
    HEADER SEARCH
-========================= */
+========================================================= */
 
 .header-search {
   width: 520px;
+
   height: 52px;
 
   display: flex;
+
   align-items: center;
 
   padding: 4px 5px 4px 20px;
@@ -266,12 +562,14 @@ input {
   background: #ffffff;
 
   border: 1px solid #e5e7eb;
+
   border-radius: 30px;
 
   box-shadow:
     0 4px 18px rgba(0, 0, 0, 0.06);
 
   margin-left: auto;
+
   margin-right: auto;
 }
 
@@ -279,6 +577,7 @@ input {
   flex: 1;
 
   border: none;
+
   outline: none;
 
   background: transparent;
@@ -292,24 +591,30 @@ input {
   color: #9ca3af;
 }
 
-/* =========================
+
+/* =========================================================
    SEARCH BUTTON
-========================= */
+========================================================= */
 
 .header-search-btn {
   width: 44px;
+
   height: 44px;
 
   flex-shrink: 0;
 
   border: none;
+
   border-radius: 50%;
 
   background: #2563eb;
+
   color: white;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   cursor: pointer;
@@ -317,11 +622,13 @@ input {
   box-shadow:
     0 4px 12px rgba(37, 99, 235, 0.25);
 
-  transition: 0.2s ease;
+  transition:
+    0.2s ease;
 }
 
 .header-search-btn:hover {
   background: #1d4ed8;
+
   transform: scale(1.05);
 }
 
@@ -329,25 +636,33 @@ input {
   display: block;
 }
 
-/* =========================
+
+/* =========================================================
    SEARCH RESULTS
-========================= */
+========================================================= */
 
 .search-results-section {
   width: 80%;
+
   max-width: 1100px;
+
   margin: 40px auto;
 }
 
 .search-results-section h2 {
   text-align: center;
+
   margin-bottom: 30px;
+
   font-size: 30px;
 }
 
 .search-results-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
   gap: 24px;
 }
 
@@ -377,23 +692,29 @@ input {
 
 .search-card-icon {
   font-size: 38px;
+
   margin-bottom: 12px;
 }
 
 .search-card-type {
   font-size: 14px;
+
   color: #555;
+
   font-weight: 600;
 }
 
 .search-card h3 {
   font-size: 22px;
+
   margin: 8px 0;
 }
 
 .search-card p {
   color: #667085;
+
   line-height: 1.6;
+
   margin-bottom: 20px;
 }
 
@@ -417,9 +738,10 @@ input {
   background: #4338ca;
 }
 
-/* =========================
+
+/* =========================================================
    NO RESULTS
-========================= */
+========================================================= */
 
 .no-results {
   background: #ffffff;
@@ -442,73 +764,71 @@ input {
 
 .no-results-icon {
   font-size: 45px;
+
   margin-bottom: 15px;
 }
 
 .no-results h3 {
   font-size: 24px;
+
   margin: 10px 0;
 }
 
 .no-results p {
   color: #667085;
+
   font-size: 16px;
 }
 
-/* =========================
-   LEARNING PATH
-========================= */
 
-.learning-path {
-  font-size: 18px;
-
-  font-weight: 600;
-
-  color: #4f46e5;
-
-  margin-bottom: 12px;
-
-  letter-spacing: 0.5px;
-}
-
-/* =========================
+/* =========================================================
    BACK BUTTON
-========================= */
+========================================================= */
 
 .back-button {
   margin: 22px 6% 18px;
 
   display: inline-flex;
+
   align-items: center;
+
   gap: 8px;
 
   padding: 8px 15px 8px 9px;
 
   border: 1px solid #e3e8f0;
+
   border-radius: 50px;
 
   background: #f8fafc;
+
   color: #475569;
 
   font-size: 14px;
+
   font-weight: 600;
 
   cursor: pointer;
 
-  transition: all 0.25s ease;
+  transition:
+    all 0.25s ease;
 }
 
 .back-button-arrow {
   width: 28px;
+
   height: 28px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   border-radius: 50%;
 
   background: #ffffff;
+
   color: #2563eb;
 
   font-size: 17px;
@@ -516,12 +836,15 @@ input {
   box-shadow:
     0 2px 6px rgba(0, 0, 0, 0.06);
 
-  transition: transform 0.25s ease;
+  transition:
+    transform 0.25s ease;
 }
 
 .back-button:hover {
   background: #eff6ff;
+
   border-color: #bfdbfe;
+
   color: #2563eb;
 
   transform: translateX(-2px);
@@ -535,19 +858,22 @@ input {
   transform: translateX(0) scale(0.97);
 }
 
-/* =========================
+
+/* =========================================================
    PROFILE AVATAR
-========================= */
+========================================================= */
 
 .profile-container {
   position: relative;
 
   display: flex;
+
   align-items: center;
 }
 
 .profile-avatar-btn {
   border: none;
+
   background: transparent;
 
   padding: 0;
@@ -555,24 +881,31 @@ input {
   cursor: pointer;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 }
 
 .profile-avatar {
   width: 42px;
+
   height: 42px;
 
   border-radius: 50%;
 
   background: #2563eb;
+
   color: #ffffff;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   font-size: 14px;
+
   font-weight: 700;
 
   cursor: pointer;
@@ -584,14 +917,16 @@ input {
   transform: scale(1.05);
 }
 
-/* =========================
+
+/* =========================================================
    PROFILE DROPDOWN
-========================= */
+========================================================= */
 
 .profile-dropdown {
   position: absolute;
 
   top: 52px;
+
   right: 0;
 
   width: 280px;
@@ -610,13 +945,16 @@ input {
   z-index: 9999;
 }
 
-/* =========================
+
+/* =========================================================
    PROFILE INFORMATION
-========================= */
+========================================================= */
 
 .profile-info {
   display: flex;
+
   align-items: center;
+
   gap: 12px;
 
   padding: 8px;
@@ -624,6 +962,7 @@ input {
 
 .profile-avatar-large {
   width: 48px;
+
   height: 48px;
 
   min-width: 48px;
@@ -631,18 +970,23 @@ input {
   border-radius: 50%;
 
   background: #2563eb;
+
   color: #ffffff;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   font-size: 15px;
+
   font-weight: 700;
 }
 
 .profile-user-details {
   display: flex;
+
   flex-direction: column;
 
   min-width: 0;
@@ -650,6 +994,7 @@ input {
 
 .profile-user-details strong {
   font-size: 15px;
+
   color: #111827;
 }
 
@@ -661,13 +1006,16 @@ input {
   color: #6b7280;
 
   overflow: hidden;
+
   text-overflow: ellipsis;
+
   white-space: nowrap;
 }
 
-/* =========================
+
+/* =========================================================
    PROFILE DIVIDER
-========================= */
+========================================================= */
 
 .profile-divider {
   height: 1px;
@@ -677,9 +1025,10 @@ input {
   margin: 10px 4px;
 }
 
-/* =========================
+
+/* =========================================================
    PROFILE MENU
-========================= */
+========================================================= */
 
 .profile-menu-item {
   width: 100%;
@@ -693,6 +1042,7 @@ input {
   border-radius: 8px;
 
   display: flex;
+
   align-items: center;
 
   gap: 10px;
@@ -710,9 +1060,10 @@ input {
   background: #f3f4f6;
 }
 
-/* =========================
+
+/* =========================================================
    LOGOUT
-========================= */
+========================================================= */
 
 .logout-item {
   color: #dc2626;
@@ -722,27 +1073,34 @@ input {
   background: #fef2f2;
 }
 
-/* =========================
+
+/* =========================================================
    DARK MODE
-========================= */
+========================================================= */
 
 .app.dark {
   background: #111827;
+
   color: #f9fafb;
 }
+
 
 /* Header */
 
 .app.dark .header {
   background: #1f2937;
+
   color: #f9fafb;
+
   border-color: #374151;
 }
+
 
 /* Navigation */
 
 .app.dark .navigation {
   background: #1f2937;
+
   border-color: #374151;
 }
 
@@ -753,6 +1111,7 @@ input {
 .app.dark .navigation a:hover {
   color: #60a5fa;
 }
+
 
 /* Header buttons */
 
@@ -766,13 +1125,16 @@ input {
 .app.dark .language-btn:hover,
 .app.dark .icon-btn:hover {
   background: #374151;
+
   color: #60a5fa;
 }
+
 
 /* Search */
 
 .app.dark .header-search {
   background: #111827;
+
   border-color: #374151;
 }
 
@@ -784,21 +1146,65 @@ input {
   color: #9ca3af;
 }
 
-/* Welcome */
 
-.app.dark .welcome h2 {
-  color: #f9fafb;
+/* =========================================================
+   DARK MODE HERO
+========================================================= */
+
+.app.dark .home-hero {
+  background: #111827;
 }
 
-.app.dark .welcome p {
+.app.dark .hero-image::after {
+  background:
+    rgba(0, 0, 0, 0.48);
+}
+
+.app.dark .hero-content {
+  background:
+    rgba(17, 24, 39, 0.60);
+    
+  box-shadow:
+    0 15px 45px rgba(0, 0, 0, 0.30);
+}
+
+.app.dark .hero-content h2 {
+  background: linear-gradient(
+    90deg,
+    #60a5fa,
+    #818cf8,
+    #a5b4fc
+  );
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+
+  background-clip: text;
+}
+
+.app.dark .hero-content .learning-path {
+  color: #818cf8;
+}
+
+.app.dark .hero-description {
   color: #d1d5db;
 }
 
-/* Cards */
+.app.dark .hero-content .welcome-tagline {
+  color: #cbd5e1;
+}
+
+
+/* =========================================================
+   DARK MODE CARDS
+========================================================= */
 
 .app.dark .card {
   background: #1f2937;
+
   color: #f9fafb;
+
   border-color: #374151;
 }
 
@@ -810,6 +1216,7 @@ input {
   color: #d1d5db;
 }
 
+
 /* Search results */
 
 .app.dark .search-results-section h2 {
@@ -818,7 +1225,9 @@ input {
 
 .app.dark .search-card {
   background: #1f2937;
+
   color: #f9fafb;
+
   border-color: #374151;
 }
 
@@ -834,11 +1243,14 @@ input {
   color: #d1d5db;
 }
 
+
 /* No results */
 
 .app.dark .no-results {
   background: #1f2937;
+
   color: #f9fafb;
+
   border-color: #374151;
 }
 
@@ -850,29 +1262,37 @@ input {
   color: #d1d5db;
 }
 
+
 /* Back button */
 
 .app.dark .back-button {
   background: #1e293b;
+
   border-color: #334155;
+
   color: #e2e8f0;
 }
 
 .app.dark .back-button-arrow {
   background: #273449;
+
   color: #60a5fa;
 }
 
 .app.dark .back-button:hover {
   background: #24344d;
+
   border-color: #3b82f6;
+
   color: #60a5fa;
 }
+
 
 /* Profile */
 
 .app.dark .profile-dropdown {
   background: #1f2937;
+
   border-color: #374151;
 }
 
@@ -904,10 +1324,12 @@ input {
   background: #450a0a;
 }
 
+
 /* Footer */
 
 .app.dark .footer {
   background: #030712;
+
   color: #d1d5db;
 }
 
@@ -919,87 +1341,38 @@ input {
   color: #ffffff;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 800px) {
-
-  .header {
-    padding: 0 20px;
-  }
-
-  .language-btn {
-    display: none;
-  }
-
-  .navigation {
-    gap: 20px;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .search-results-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .footer {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
-  }
-
-  .header-search {
-    width: 400px;
-  }
-
-  .back-button {
-    margin-left: 20px;
-  }
-}
-/* =========================================================
-   MOBILE RESPONSIVE DESIGN
-   ========================================================= */
-
-/* Prevent horizontal scrolling */
-html,
-body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
 
 /* =========================================================
    TABLET
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 900px) {
 
-  /* -------------------------
-     HEADER
-  ------------------------- */
-
   .header {
     height: auto;
+
     min-height: 80px;
+
     padding: 12px 20px;
 
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 10px;
   }
 
   .header-left {
     order: 1;
+
     flex-shrink: 0;
   }
 
   .header-right {
     order: 2;
+
     margin-left: auto;
+
     flex-shrink: 0;
   }
 
@@ -1007,6 +1380,7 @@ body {
     order: 3;
 
     width: 100%;
+
     max-width: 100%;
 
     margin: 5px 0 0;
@@ -1014,20 +1388,14 @@ body {
     flex-basis: 100%;
   }
 
-
-  /* -------------------------
-     LOGO
-  ------------------------- */
-
   .header-logo {
     width: 140px;
+
     height: 75px;
   }
 
 
-  /* -------------------------
-     NAVIGATION
-  ------------------------- */
+  /* Navigation */
 
   .navigation {
     height: auto;
@@ -1040,32 +1408,47 @@ body {
   }
 
 
-  /* -------------------------
-     MAIN
-  ------------------------- */
+  /* Main */
 
   .main-content {
     width: 92%;
+
     max-width: 100%;
   }
 
 
-  /* -------------------------
-     CARDS
-  ------------------------- */
+  /* Hero */
+
+  .home-hero {
+    min-height: 500px;
+  }
+
+  .hero-content {
+    width: 82%;
+
+    padding: 42px 30px;
+  }
+
+  .hero-content h2 {
+    font-size: 36px;
+  }
+
+
+  /* Cards */
 
   .cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+      repeat(2, 1fr);
+
     gap: 20px;
   }
 
 
-  /* -------------------------
-     SEARCH RESULTS
-  ------------------------- */
+  /* Search */
 
   .search-results-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+      repeat(2, 1fr);
   }
 
 }
@@ -1073,18 +1456,17 @@ body {
 
 /* =========================================================
    MOBILE
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 600px) {
 
-  /* -------------------------
-     HEADER
-  ------------------------- */
+  /* Header */
 
   .header {
     padding: 10px 15px 15px;
 
     flex-direction: row;
+
     align-items: center;
   }
 
@@ -1096,36 +1478,27 @@ body {
     gap: 4px;
   }
 
-
-  /* -------------------------
-     LOGO
-  ------------------------- */
-
   .header-logo {
     width: 125px;
+
     height: 65px;
   }
-
-
-  /* -------------------------
-     HEADER BUTTONS
-  ------------------------- */
 
   .signin-btn,
   .courses-btn,
   .language-btn,
   .icon-btn {
     padding: 8px 9px;
+
     font-size: 14px;
   }
 
 
-  /* -------------------------
-     SEARCH
-  ------------------------- */
+  /* Search */
 
   .header-search {
     width: 100%;
+
     height: 48px;
 
     margin: 8px 0 0;
@@ -1135,18 +1508,18 @@ body {
 
   .header-search input {
     min-width: 0;
+
     font-size: 14px;
   }
 
   .header-search-btn {
     width: 40px;
+
     height: 40px;
   }
 
 
-  /* -------------------------
-     NAVIGATION
-  ------------------------- */
+  /* Navigation */
 
   .navigation {
     width: 100%;
@@ -1156,6 +1529,7 @@ body {
     padding: 14px 10px;
 
     display: flex;
+
     justify-content: center;
 
     gap: 18px;
@@ -1168,46 +1542,96 @@ body {
   }
 
 
-  /* -------------------------
-     MAIN CONTENT
-  ------------------------- */
+  /* Main */
 
   .main-content {
     width: 92%;
+
     max-width: 100%;
   }
 
 
-  /* -------------------------
-     WELCOME
-  ------------------------- */
+  /* =====================================================
+     MOBILE HERO
+  ===================================================== */
 
-  .welcome {
-    margin-top: 35px;
-    margin-bottom: 25px;
+  .home-hero {
+    min-height: 600px;
 
-    padding: 0 5px;
+    flex-direction: column;
   }
 
-  .welcome h2 {
-    font-size: 27px;
+
+  .hero-image {
+    width: 100%;
+
+    height: 50%;
+  }
+
+
+  .hero-image-left {
+    top: 0;
+
+    bottom: auto;
+
+    height: 50%;
+  }
+
+
+  .hero-image-right {
+    top: 50%;
+
+    bottom: auto;
+
+    height: 50%;
+  }
+
+
+  .hero-content {
+    width: 88%;
+
+    padding: 32px 20px;
+
+    border-radius: 16px;
+  }
+
+
+  .hero-content h2 {
+    font-size: 30px;
+
     line-height: 1.25;
   }
 
-  .welcome p {
+
+  .hero-content .learning-path {
     font-size: 16px;
-    line-height: 1.6;
+
+    margin-bottom: 15px;
   }
 
 
-  /* -------------------------
+  .hero-description {
+    font-size: 15px;
+
+    line-height: 1.65;
+  }
+
+
+  .hero-content .welcome-tagline {
+    font-size: 14px;
+  }
+
+
+  /* =====================================================
      CARDS
-  ------------------------- */
+  ===================================================== */
 
   .cards {
     grid-template-columns: 1fr;
 
     gap: 18px;
+
+    padding-top: 30px;
 
     padding-bottom: 40px;
   }
@@ -1233,22 +1657,25 @@ body {
   }
 
 
-  /* -------------------------
+  /* =====================================================
      SEARCH RESULTS
-  ------------------------- */
+  ===================================================== */
 
   .search-results-section {
     width: 100%;
+
     margin: 30px auto;
   }
 
   .search-results-section h2 {
     font-size: 24px;
+
     line-height: 1.3;
   }
 
   .search-results-grid {
     grid-template-columns: 1fr;
+
     gap: 18px;
   }
 
@@ -1257,14 +1684,15 @@ body {
   }
 
 
-  /* -------------------------
+  /* =====================================================
      FOOTER
-  ------------------------- */
+  ===================================================== */
 
   .footer {
     padding: 25px 15px;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 15px;
@@ -1297,37 +1725,30 @@ body {
 
 /* =========================================================
    SMALL PHONES
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 400px) {
 
-  /* -------------------------
-     HEADER
-  ------------------------- */
-
   .header {
     padding-left: 10px;
+
     padding-right: 10px;
   }
 
   .header-logo {
     width: 115px;
+
     height: 60px;
   }
-
 
   .signin-btn,
   .courses-btn,
   .language-btn,
   .icon-btn {
     padding: 7px;
+
     font-size: 13px;
   }
-
-
-  /* -------------------------
-     NAVIGATION
-  ------------------------- */
 
   .navigation {
     gap: 14px;
@@ -1338,22 +1759,28 @@ body {
   }
 
 
-  /* -------------------------
-     WELCOME
-  ------------------------- */
+  /* Hero */
 
-  .welcome h2 {
-    font-size: 24px;
+  .home-hero {
+    min-height: 560px;
   }
 
-  .welcome p {
-    font-size: 15px;
+  .hero-content {
+    width: 90%;
+
+    padding: 28px 17px;
+  }
+
+  .hero-content h2 {
+    font-size: 26px;
+  }
+
+  .hero-description {
+    font-size: 14px;
   }
 
 
-  /* -------------------------
-     CARDS
-  ------------------------- */
+  /* Cards */
 
   .card {
     padding: 22px 17px;
