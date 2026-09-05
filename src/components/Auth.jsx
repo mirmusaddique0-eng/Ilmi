@@ -3,376 +3,292 @@ import "./Auth.css";
 import { supabase } from "../lib/supabaseClient";
 
 function Auth({ onLogin }) {
-
   const [isLogin, setIsLogin] = useState(true);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-
-  // =========================================
-  // REGISTER
-  // =========================================
-
-  const handleRegister = async (e) => {
+  // =========================
+  // EMAIL LOGIN / REGISTER
+  // =========================
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
     setMessage("");
     setError("");
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
+    try {
+      // =========================
+      // REGISTER
+      // =========================
+      if (!isLogin) {
+        if (!fullName.trim()) {
+          setError("Please enter your full name.");
+          setLoading(false);
+          return;
+        }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
-      return;
+        const { data, error } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: {
+            data: {
+              full_name: fullName.trim(),
+            },
+          },
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        // Email verification enabled
+        if (data.user && !data.session) {
+          setMessage(
+            "Registration successful! Please check your email and verify your account."
+          );
+        } else {
+          setMessage("Account created successfully!");
+
+          if (data.user && onLogin) {
+            onLogin(data.user);
+          }
+        }
+      }
+
+      // =========================
+      // LOGIN
+      // =========================
+      else {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        if (data.user) {
+          setMessage("Login successful!");
+
+          if (onLogin) {
+            onLogin(data.user);
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Auth Error:", err);
+      setError(err.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // =========================
+  // GOOGLE LOGIN
+  // =========================
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setMessage("");
+    setError("");
 
     try {
-      setLoading(true);
-
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
         options: {
-          data: {
-            full_name: fullName,
-          },
+          redirectTo: window.location.origin,
         },
       });
 
       if (error) {
-        setError(error.message);
-        return;
+        throw error;
       }
-
-      console.log("Registered User:", data);
-
-      setMessage("Account created successfully!");
-
-      setFullName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-
     } catch (err) {
-      console.error(err);
-      setError("Something went wrong. Please try again.");
-
-    } finally {
+      console.error("Google Login Error:", err);
+      setError(err.message || "Google login failed.");
       setLoading(false);
     }
   };
 
-
-  // =========================================
-  // LOGIN
-  // =========================================
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    setMessage("");
-    setError("");
-
-    try {
-      setLoading(true);
-
-      const { data, error } =
-        await supabase.auth.signInWithPassword({
-          email: email,
-          password: password,
-        });
-
-      if (error) {
-        setError(error.message);
-        return;
-      }
-
-      console.log("Logged In User:", data);
-
-setMessage("Login successful!");
-
-setEmail("");
-setPassword("");
-
-if (onLogin) {
-  onLogin();
-}
-
-    } catch (err) {
-      console.error(err);
-      setError("Something went wrong. Please try again.");
-
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-  // =========================================
+  // =========================
   // SWITCH LOGIN / REGISTER
-  // =========================================
-
+  // =========================
   const switchMode = () => {
     setIsLogin(!isLogin);
-
-    setError("");
-    setMessage("");
 
     setFullName("");
     setEmail("");
     setPassword("");
-    setConfirmPassword("");
-  };
 
+    setMessage("");
+    setError("");
+  };
 
   return (
     <div className="auth-page">
+      <div className="auth-container">
 
-      <div className="auth-box">
-
-
-        {/* HEADER */}
-
-        <div className="auth-header">
-
-          <span>EDUVANTA</span>
-
-          <h1>
-            {isLogin
-              ? "Welcome Back"
-              : "Create Your Account"}
-          </h1>
-
-          <p>
-            {isLogin
-              ? "Login to continue your learning journey."
-              : "Create an account and start learning with EDUVANTA."}
-          </p>
-
-        </div>
-
-
-        {/* TABS */}
-
-        <div className="auth-tabs">
-
-          <button
-            type="button"
-            className={isLogin ? "active" : ""}
-            onClick={() => {
-              setIsLogin(true);
-              setError("");
-              setMessage("");
-            }}
-          >
-            Login
-          </button>
-
-
-          <button
-            type="button"
-            className={!isLogin ? "active" : ""}
-            onClick={() => {
-              setIsLogin(false);
-              setError("");
-              setMessage("");
-            }}
-          >
-            Register
-          </button>
-
-        </div>
-
-
-        {/* FORM */}
-
-        <form
-          onSubmit={
-            isLogin
-              ? handleLogin
-              : handleRegister
-          }
-        >
-
-
-          {/* FULL NAME */}
-
-          {!isLogin && (
-
-            <div className="auth-field">
-
-              <label>
-                Full Name
-              </label>
-
-              <input
-                type="text"
-                placeholder="Enter your full name"
-                value={fullName}
-                onChange={(e) =>
-                  setFullName(e.target.value)
-                }
-                required
-              />
-
-            </div>
-
-          )}
-
-
-          {/* EMAIL */}
-
-          <div className="auth-field">
-
-            <label>
-              Email
-            </label>
-
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-              required
-            />
-
+        {/* LEFT SIDE */}
+        <div className="auth-left">
+          <div className="auth-brand">
+            <h1>ILMI</h1>
+            <p>Learn. Practice. Build. Grow.</p>
           </div>
 
+          <div className="auth-info">
+            <h2>
+              {isLogin
+                ? "Welcome Back!"
+                : "Start Your Learning Journey"}
+            </h2>
 
-          {/* PASSWORD */}
-
-          <div className="auth-field">
-
-            <label>
-              Password
-            </label>
-
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
-              required
-            />
-
+            <p>
+              {isLogin
+                ? "Login to continue your learning journey with ILMI."
+                : "Create your ILMI account and start learning today."}
+            </p>
           </div>
+        </div>
 
+        {/* RIGHT SIDE */}
+        <div className="auth-right">
 
-          {/* CONFIRM PASSWORD */}
+          <div className="auth-form-box">
 
-          {!isLogin && (
+            <h2>
+              {isLogin ? "Sign In" : "Create Account"}
+            </h2>
 
-            <div className="auth-field">
+            <p className="auth-subtitle">
+              {isLogin
+                ? "Sign in to continue to ILMI"
+                : "Create your account to get started"}
+            </p>
 
-              <label>
-                Confirm Password
-              </label>
+            {/* GOOGLE LOGIN */}
+            <button
+              type="button"
+              className="google-btn"
+              onClick={handleGoogleLogin}
+              disabled={loading}
+            >
+              <span className="google-icon">G</span>
 
-              <input
-                type="password"
-                placeholder="Confirm your password"
-                value={confirmPassword}
-                onChange={(e) =>
-                  setConfirmPassword(e.target.value)
-                }
-                required
-              />
+              {loading
+                ? "Please wait..."
+                : "Continue with Google"}
+            </button>
 
+            {/* DIVIDER */}
+            <div className="auth-divider">
+              <span>OR</span>
             </div>
 
-          )}
+            {/* ERROR */}
+            {error && (
+              <div className="auth-error">
+                {error}
+              </div>
+            )}
 
+            {/* MESSAGE */}
+            {message && (
+              <div className="auth-message">
+                {message}
+              </div>
+            )}
 
-          {/* MESSAGE */}
+            {/* FORM */}
+            <form onSubmit={handleSubmit}>
 
-          {message && (
+              {/* FULL NAME - REGISTER ONLY */}
+              {!isLogin && (
+                <div className="form-group">
+                  <label>Full Name</label>
 
-            <p
-              style={{
-                color: "green",
-                marginBottom: "15px"
-              }}
-            >
-              {message}
-            </p>
+                  <input
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={fullName}
+                    onChange={(e) =>
+                      setFullName(e.target.value)
+                    }
+                    required
+                  />
+                </div>
+              )}
 
-          )}
+              {/* EMAIL */}
+              <div className="form-group">
+                <label>Email Address</label>
 
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) =>
+                    setEmail(e.target.value)
+                  }
+                  required
+                />
+              </div>
 
-          {/* ERROR */}
+              {/* PASSWORD */}
+              <div className="form-group">
+                <label>Password</label>
 
-          {error && (
+                <input
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
+                  required
+                  minLength={6}
+                />
+              </div>
 
-            <p
-              style={{
-                color: "red",
-                marginBottom: "15px"
-              }}
-            >
-              {error}
-            </p>
+              {/* SUBMIT */}
+              <button
+                type="submit"
+                className="auth-submit-btn"
+                disabled={loading}
+              >
+                {loading
+                  ? "Please wait..."
+                  : isLogin
+                  ? "Sign In"
+                  : "Create Account"}
+              </button>
+            </form>
 
-          )}
+            {/* SWITCH MODE */}
+            <div className="auth-switch">
+              {isLogin
+                ? "Don't have an account?"
+                : "Already have an account?"}
 
+              <button
+                type="button"
+                onClick={switchMode}
+              >
+                {isLogin
+                  ? " Create Account"
+                  : " Sign In"}
+              </button>
+            </div>
 
-          {/* SUBMIT */}
-
-          <button
-            className="auth-submit"
-            type="submit"
-            disabled={loading}
-          >
-
-            {loading
-              ? isLogin
-                ? "Logging In..."
-                : "Creating Account..."
-              : isLogin
-                ? "Login"
-                : "Create Account"}
-
-          </button>
-
-        </form>
-
-
-        {/* SWITCH */}
-
-        <p className="auth-switch">
-
-          {isLogin
-            ? "Don't have an account?"
-            : "Already have an account?"}
-
-          <button
-            type="button"
-            onClick={switchMode}
-          >
-            {isLogin
-              ? "Create Account"
-              : "Login"}
-          </button>
-
-        </p>
-
-
+          </div>
+        </div>
       </div>
-
     </div>
   );
 }

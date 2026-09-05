@@ -166,7 +166,7 @@ function Courses() {
 
           <p>
             Learn programming and technology
-            step by step with EDUVANTA.
+            step by step with ILMI
           </p>
         </div>
 
@@ -195,7 +195,7 @@ function Courses() {
 
           <p>
             Learn programming and technology
-            step by step with EDUVANTA.
+            step by step with ILMI
           </p>
         </div>
 
@@ -222,7 +222,7 @@ function Courses() {
 
           <p>
             Learn programming and technology
-            step by step with EDUVANTA.
+            step by step with ILMI
           </p>
         </div>
 
@@ -364,22 +364,28 @@ function Courses() {
                         {section.title}
                       </h3>
 
-                      <div className="module-list">
+              <div className="module-list">
 
-                        {section.modules?.map(
-                          (module) => (
+  {section.modules
+    ?.slice(0, 3)
+    .map((module) => (
 
-                            <span
-                              className="module-item"
-                              key={module.id}
-                            >
-                              {module.title}
-                            </span>
+      <span
+        className="module-item"
+        key={module.id}
+      >
+        {module.title}
+      </span>
 
-                          )
-                        )}
+    ))}
 
-                      </div>
+  {section.modules?.length > 3 && (
+    <span className="more-modules">
+      + {section.modules.length - 3} more modules
+    </span>
+  )}
+
+</div>
 
                     </div>
 

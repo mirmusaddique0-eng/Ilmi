@@ -34,32 +34,24 @@
 
 .syllabus-label {
   display: inline-block;
-
   font-size: 12px;
   font-weight: 700;
-
   letter-spacing: 1.5px;
-
   color: #2563eb;
-
   margin-bottom: 10px;
 }
 
 .syllabus-header h1 {
   margin: 0 0 10px;
-
   font-size: 34px;
   line-height: 1.2;
-
   color: #111827;
 }
 
 .syllabus-header p {
   margin: 0;
-
   font-size: 15px;
   line-height: 1.7;
-
   color: #667085;
 }
 
@@ -72,23 +64,17 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-
   margin-bottom: 30px;
-
   font-size: 14px;
 }
 
 .syllabus-breadcrumb button {
   border: none;
   background: transparent;
-
   padding: 4px 0;
-
   color: #2563eb;
-
   font-size: 14px;
   font-weight: 600;
-
   cursor: pointer;
 }
 
@@ -119,32 +105,24 @@
 
 .section-label {
   display: block;
-
   margin-bottom: 7px;
-
   color: #2563eb;
-
   font-size: 11px;
   font-weight: 700;
-
   letter-spacing: 1.2px;
   text-transform: uppercase;
 }
 
 .section-heading h2 {
   margin: 0 0 7px;
-
   font-size: 26px;
   line-height: 1.3;
-
   color: #111827;
 }
 
 .section-heading p {
   margin: 0;
-
   color: #667085;
-
   font-size: 14px;
   line-height: 1.6;
 }
@@ -155,10 +133,7 @@
 
 .syllabus-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -169,7 +144,6 @@
   align-items: center;
 
   width: 100%;
-
   min-height: 145px;
 
   padding: 24px;
@@ -180,7 +154,6 @@
   border-radius: 16px;
 
   text-align: left;
-
   cursor: pointer;
 
   transition:
@@ -213,7 +186,6 @@
   border-radius: 14px;
 
   background: #eff6ff;
-
   color: #2563eb;
 
   font-size: 20px;
@@ -239,17 +211,13 @@
 
 .card-content h3 {
   margin: 0 0 6px;
-
   color: #111827;
-
   font-size: 19px;
 }
 
 .card-content p {
   margin: 0;
-
   color: #667085;
-
   font-size: 13px;
   line-height: 1.5;
 }
@@ -260,7 +228,6 @@
   margin-left: 15px;
 
   color: #2563eb;
-
   font-size: 22px;
 }
 
@@ -271,7 +238,6 @@
 .list-container {
   display: flex;
   flex-direction: column;
-
   gap: 12px;
 }
 
@@ -280,7 +246,6 @@
   align-items: center;
 
   width: 100%;
-
   padding: 20px 22px;
 
   background: #ffffff;
@@ -289,7 +254,6 @@
   border-radius: 14px;
 
   text-align: left;
-
   cursor: pointer;
 
   transition:
@@ -345,17 +309,13 @@
 
 .list-content h3 {
   margin: 0 0 5px;
-
   color: #111827;
-
   font-size: 17px;
 }
 
 .list-content p {
   margin: 0;
-
   color: #667085;
-
   font-size: 13px;
   line-height: 1.5;
 }
@@ -366,7 +326,6 @@
   margin-left: 15px;
 
   color: #2563eb;
-
   font-size: 21px;
 }
 
@@ -377,7 +336,6 @@
 .unit-list {
   display: flex;
   flex-direction: column;
-
   gap: 12px;
 }
 
@@ -386,7 +344,6 @@
   align-items: center;
 
   width: 100%;
-
   padding: 20px 22px;
 
   background: #ffffff;
@@ -395,7 +352,6 @@
   border-radius: 14px;
 
   text-align: left;
-
   cursor: pointer;
 
   transition:
@@ -428,7 +384,6 @@
   border-radius: 12px;
 
   background: #eff6ff;
-
   color: #2563eb;
 
   font-size: 18px;
@@ -441,17 +396,13 @@
 
 .unit-content h3 {
   margin: 0 0 5px;
-
   color: #111827;
-
   font-size: 17px;
 }
 
 .unit-content p {
   margin: 0;
-
   color: #667085;
-
   font-size: 13px;
   line-height: 1.5;
 }
@@ -463,7 +414,6 @@
 .topic-list {
   display: flex;
   flex-direction: column;
-
   gap: 10px;
 }
 
@@ -472,7 +422,6 @@
   align-items: center;
 
   width: 100%;
-
   padding: 18px 20px;
 
   background: #ffffff;
@@ -481,7 +430,6 @@
   border-radius: 13px;
 
   text-align: left;
-
   cursor: pointer;
 
   transition:
@@ -514,7 +462,6 @@
   border-radius: 10px;
 
   background: #f5f7fa;
-
   color: #475467;
 
   font-size: 14px;
@@ -527,17 +474,13 @@
 
 .topic-content h3 {
   margin: 0 0 5px;
-
   color: #111827;
-
   font-size: 16px;
 }
 
 .topic-content p {
   margin: 0;
-
   color: #667085;
-
   font-size: 13px;
   line-height: 1.5;
 }
@@ -548,7 +491,6 @@
 
 .topic-detail {
   padding: 28px;
-
   margin-bottom: 22px;
 
   background: #f8faff;
@@ -559,15 +501,12 @@
 
 .topic-detail h2 {
   margin: 0 0 8px;
-
   color: #111827;
-
   font-size: 28px;
 }
 
 .topic-detail p {
   margin: 0;
-
   max-width: 800px;
 
   color: #667085;
@@ -584,68 +523,175 @@
   display: flex;
   flex-direction: column;
 
-  gap: 16px;
+  gap: 24px;
+
+  width: 100%;
 }
 
 .content-card {
-  display: flex;
+  display: block;
 
-  padding: 24px;
+  width: 100%;
 
-  background: #ffffff;
+  padding: 0;
+  margin: 0;
 
-  border: 1px solid #e4e7ec;
-  border-radius: 15px;
+  background: transparent;
 
-  box-shadow:
-    0 3px 10px rgba(16, 24, 40, 0.03);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+
+  box-sizing: border-box;
 }
 
 .content-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-
-  width: 36px;
-  height: 36px;
-
-  margin-right: 18px;
-
-  border-radius: 9px;
-
-  background: #eff6ff;
-
-  color: #2563eb;
-
-  font-size: 13px;
-  font-weight: 700;
+  display: none;
 }
 
 .content-body {
-  flex: 1;
+  width: 100%;
   min-width: 0;
+
+  margin: 0;
+  padding: 0;
 }
 
 .content-body h3 {
-  margin: 4px 0 14px;
+  margin: 0 0 14px;
 
   color: #111827;
 
-  font-size: 19px;
+  font-size: 20px;
+  line-height: 1.4;
 }
 
+/* =========================================
+   CONTENT TEXT
+========================================= */
+
 .content-text {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
   color: #475467;
 
   font-size: 15px;
-
   line-height: 1.8;
 
   white-space: pre-wrap;
 
   word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.content-text.align-left {
+  text-align: left;
+}
+
+.content-text.align-center {
+  text-align: center;
+}
+
+.content-text.align-right {
+  text-align: right;
+}
+
+/* =========================================
+   CONTENT BLOCKS
+========================================= */
+
+.content-block {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+}
+
+.content-block + .content-block {
+  margin-top: 22px;
+}
+
+.content-block.align-left {
+  text-align: left;
+}
+
+.content-block.align-center {
+  text-align: center;
+}
+
+.content-block.align-right {
+  text-align: right;
+}
+
+/* =========================================
+   CONTENT PARAGRAPH
+========================================= */
+
+.content-paragraph {
+  margin: 0;
+
+  color: #475467;
+
+  font-size: 15px;
+  line-height: 1.8;
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.content-paragraph.align-left {
+  text-align: left;
+}
+
+.content-paragraph.align-center {
+  text-align: center;
+}
+
+.content-paragraph.align-right {
+  text-align: right;
+}
+
+/* =========================================
+   CONTENT HEADING
+========================================= */
+
+.content-block h4 {
+  margin: 0 0 10px;
+
+  color: #111827;
+
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.content-block.align-center h4 {
+  text-align: center;
+}
+
+.content-block.align-right h4 {
+  text-align: right;
+}
+
+/* =========================================
+   CONTENT CRUD WRAPPER
+========================================= */
+
+.college-syllabus .content-container .crud-item-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.college-syllabus .content-container .content-card {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* =========================================
@@ -665,7 +711,6 @@
 
 .empty-state > div {
   margin-bottom: 10px;
-
   font-size: 34px;
 }
 
@@ -720,6 +765,7 @@
 .loading-spinner,
 .small-spinner {
   border: 3px solid #e5e7eb;
+
   border-top-color: #2563eb;
 
   border-radius: 50%;
@@ -780,7 +826,6 @@
   max-width: 500px;
 
   margin: 80px auto;
-
   padding: 40px 30px;
 
   background: #ffffff;
@@ -796,7 +841,6 @@
 
 .error-icon {
   font-size: 40px;
-
   margin-bottom: 12px;
 }
 
@@ -836,9 +880,945 @@
   background: #1d4ed8;
 }
 
-/* =========================================
-   RESPONSIVE
-========================================= */
+/* =========================================================
+   ADMIN COLLEGE SYLLABUS CRUD
+========================================================= */
+
+.college-syllabus .admin-syllabus-header {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 30px;
+
+  padding: 28px 30px;
+  margin-bottom: 20px;
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
+
+  box-sizing: border-box;
+}
+
+.college-syllabus .admin-syllabus-header span {
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  color: #2563eb;
+}
+
+.college-syllabus .admin-syllabus-header h1 {
+  margin: 7px 0;
+
+  font-size: 28px;
+
+  color: #111827;
+}
+
+.college-syllabus .admin-syllabus-header p {
+  margin: 0;
+
+  color: #64748b;
+}
+
+.college-syllabus .admin-syllabus-back {
+  border: none;
+
+  background: #f1f5f9;
+
+  padding: 11px 18px;
+
+  border-radius: 9px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  color: #334155;
+}
+
+.college-syllabus .admin-syllabus-back:hover {
+  background: #e2e8f0;
+}
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+.college-syllabus .section-heading {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: flex-end;
+
+  gap: 20px;
+
+  margin-bottom: 22px;
+}
+
+.college-syllabus .crud-add-btn {
+  flex-shrink: 0;
+
+  border: none;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  padding: 11px 18px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition: background 0.2s ease;
+}
+
+.college-syllabus .crud-add-btn:hover {
+  background: #1d4ed8;
+}
+
+/* =========================================================
+   ITEM WRAPPERS
+========================================================= */
+
+.college-syllabus .syllabus-card-wrapper,
+.college-syllabus .crud-item-wrapper {
+  position: relative;
+
+  width: 100%;
+}
+
+.college-syllabus .crud-item-wrapper {
+  margin-bottom: 14px;
+}
+
+/* =========================================================
+   CRUD ACTIONS
+========================================================= */
+
+.college-syllabus .crud-actions {
+  display: flex;
+
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 9px 10px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e4e7ec;
+
+  border-top: none;
+
+  border-radius: 0 0 12px 12px;
+}
+
+.college-syllabus .crud-actions button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 32px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  padding: 7px 12px;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  opacity: 1;
+  visibility: visible;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.college-syllabus .crud-actions button:hover {
+  transform: translateY(-1px);
+}
+
+/* EDIT */
+
+.college-syllabus .crud-actions .crud-edit {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.college-syllabus .crud-actions .crud-edit:hover {
+  background: #bae6fd;
+}
+
+/* HIDE */
+
+.college-syllabus .crud-actions .crud-hide {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.college-syllabus .crud-actions .crud-hide:hover {
+  background: #fde68a;
+}
+
+/* SHOW */
+
+.college-syllabus .crud-actions .crud-show {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.college-syllabus .crud-actions .crud-show:hover {
+  background: #bbf7d0;
+}
+
+/* DELETE */
+
+.college-syllabus .crud-actions .crud-delete {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.college-syllabus .crud-actions .crud-delete:hover {
+  background: #fecaca;
+}
+
+/* =========================================================
+   CARD + CRUD CONNECTION
+========================================================= */
+
+.college-syllabus .syllabus-card-wrapper .syllabus-card,
+.college-syllabus .crud-item-wrapper .list-card,
+.college-syllabus .crud-item-wrapper .unit-card,
+.college-syllabus .crud-item-wrapper .topic-card {
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.college-syllabus .crud-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.6);
+
+  box-sizing: border-box;
+}
+
+.college-syllabus .crud-modal {
+  width: min(620px, 100%);
+
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: #ffffff;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.25);
+
+  box-sizing: border-box;
+}
+
+.college-syllabus .crud-modal-header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  padding: 22px 24px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.college-syllabus .crud-modal-header span {
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  color: #2563eb;
+}
+
+.college-syllabus .crud-modal-header h2 {
+  margin: 6px 0 0;
+
+  font-size: 22px;
+
+  color: #111827;
+}
+
+.college-syllabus .crud-modal-header > button {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #f1f5f9;
+
+  cursor: pointer;
+
+  font-size: 16px;
+
+  color: #334155;
+}
+
+.college-syllabus .crud-modal-header > button:hover {
+  background: #e2e8f0;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.college-syllabus .crud-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 17px;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+}
+
+.college-syllabus .crud-form label {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  color: #334155;
+}
+
+.college-syllabus .crud-form input,
+.college-syllabus .crud-form textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 9px;
+
+  padding: 11px 13px;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #111827;
+}
+
+.college-syllabus .crud-form input:focus,
+.college-syllabus .crud-form textarea:focus {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.college-syllabus .crud-form textarea {
+  min-height: 90px;
+
+  resize: vertical;
+}
+
+.college-syllabus .crud-form .crud-content-textarea {
+  min-height: 220px !important;
+}
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.college-syllabus .crud-form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding-top: 8px;
+}
+
+.college-syllabus .crud-cancel-btn,
+.college-syllabus .crud-save-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 9px;
+
+  padding: 11px 20px;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.college-syllabus .crud-cancel-btn {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.college-syllabus .crud-cancel-btn:hover {
+  background: #e2e8f0;
+}
+
+.college-syllabus .crud-save-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.college-syllabus .crud-save-btn:hover {
+  background: #1d4ed8;
+}
+
+.college-syllabus .crud-save-btn:disabled,
+.college-syllabus .crud-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+.app.dark .college-syllabus {
+  color: #e5e7eb;
+}
+
+/* HEADER */
+
+.app.dark .syllabus-header {
+  background: linear-gradient(
+    135deg,
+    #172033,
+    #111827
+  );
+
+  border-color: #374151;
+}
+
+.app.dark .syllabus-label {
+  color: #60a5fa;
+}
+
+.app.dark .syllabus-header h1 {
+  color: #f9fafb;
+}
+
+.app.dark .syllabus-header p {
+  color: #cbd5e1;
+}
+
+/* BREADCRUMB */
+
+.app.dark .syllabus-breadcrumb > span {
+  color: #64748b;
+}
+
+.app.dark .syllabus-breadcrumb .current-breadcrumb {
+  color: #e5e7eb;
+}
+
+.app.dark .syllabus-breadcrumb button {
+  color: #60a5fa;
+}
+
+/* SECTION */
+
+.app.dark .section-label {
+  color: #60a5fa;
+}
+
+.app.dark .section-heading h2 {
+  color: #f9fafb;
+}
+
+.app.dark .section-heading p {
+  color: #cbd5e1;
+}
+
+/* YEAR CARDS */
+
+.app.dark .syllabus-card {
+  background: #1f2937;
+
+  border-color: #374151;
+
+  color: #f9fafb;
+}
+
+.app.dark .syllabus-card:hover {
+  background: #243244;
+
+  border-color: #4b6da8;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.app.dark .card-number {
+  background: #263b5c;
+  color: #60a5fa;
+}
+
+.app.dark .card-content > span {
+  color: #94a3b8;
+}
+
+.app.dark .card-content h3 {
+  color: #f9fafb;
+}
+
+.app.dark .card-content p {
+  color: #cbd5e1;
+}
+
+.app.dark .card-arrow {
+  color: #60a5fa;
+}
+
+/* LIST CARDS */
+
+.app.dark .list-card {
+  background: #1f2937;
+
+  border-color: #374151;
+
+  color: #f9fafb;
+}
+
+.app.dark .list-card:hover {
+  background: #243244;
+
+  border-color: #4b6da8;
+
+  box-shadow:
+    0 7px 20px rgba(0, 0, 0, 0.35);
+}
+
+.app.dark .list-icon {
+  background: #263b5c;
+}
+
+.app.dark .item-label {
+  color: #94a3b8;
+}
+
+.app.dark .list-content h3 {
+  color: #f9fafb;
+}
+
+.app.dark .list-content p {
+  color: #cbd5e1;
+}
+
+.app.dark .list-arrow {
+  color: #60a5fa;
+}
+
+/* UNIT CARDS */
+
+.app.dark .unit-card {
+  background: #1f2937;
+
+  border-color: #374151;
+
+  color: #f9fafb;
+}
+
+.app.dark .unit-card:hover {
+  background: #243244;
+
+  border-color: #4b6da8;
+
+  box-shadow:
+    0 7px 20px rgba(0, 0, 0, 0.35);
+}
+
+.app.dark .unit-number {
+  background: #263b5c;
+  color: #60a5fa;
+}
+
+.app.dark .unit-content h3 {
+  color: #f9fafb;
+}
+
+.app.dark .unit-content p {
+  color: #cbd5e1;
+}
+
+/* TOPIC CARDS */
+
+.app.dark .topic-card {
+  background: #1f2937;
+
+  border-color: #374151;
+
+  color: #f9fafb;
+}
+
+.app.dark .topic-card:hover {
+  background: #243244;
+
+  border-color: #4b6da8;
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.app.dark .topic-number {
+  background: #374151;
+  color: #dbeafe;
+}
+
+.app.dark .topic-content h3 {
+  color: #f9fafb;
+}
+
+.app.dark .topic-content p {
+  color: #cbd5e1;
+}
+
+/* TOPIC DETAIL */
+
+.app.dark .topic-detail {
+  background: #172033;
+
+  border-color: #334155;
+}
+
+.app.dark .topic-detail h2 {
+  color: #f9fafb;
+}
+
+.app.dark .topic-detail p {
+  color: #cbd5e1;
+}
+
+/* CONTENT */
+
+.app.dark .content-body h3 {
+  color: #f9fafb;
+}
+
+.app.dark .content-text {
+  color: #d1d5db;
+}
+
+.app.dark .content-paragraph {
+  color: #d1d5db;
+}
+
+.app.dark .content-block h4 {
+  color: #f3f4f6;
+}
+
+/* EMPTY */
+
+.app.dark .empty-state {
+  background: #1f2937;
+
+  border-color: #475569;
+}
+
+.app.dark .empty-state h3 {
+  color: #f9fafb;
+}
+
+.app.dark .empty-state p {
+  color: #cbd5e1;
+}
+
+/* LOADING */
+
+.app.dark .syllabus-loading h3 {
+  color: #f9fafb;
+}
+
+.app.dark .syllabus-loading p {
+  color: #cbd5e1;
+}
+
+.app.dark .loading-spinner,
+.app.dark .small-spinner {
+  border-color: #374151;
+  border-top-color: #60a5fa;
+}
+
+/* CONTENT LOADING */
+
+.app.dark .content-loading {
+  background: #1f2937;
+
+  border-color: #374151;
+}
+
+.app.dark .content-loading p {
+  color: #cbd5e1;
+}
+
+/* ERROR */
+
+.app.dark .syllabus-error {
+  background: #1f2937;
+
+  border-color: #374151;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.app.dark .syllabus-error h2 {
+  color: #f9fafb;
+}
+
+.app.dark .syllabus-error p {
+  color: #cbd5e1;
+}
+
+/* =========================================================
+   DARK MODE - ADMIN
+========================================================= */
+
+.app.dark .college-syllabus .admin-syllabus-header {
+  background: #1f2937;
+
+  border-color: #374151;
+}
+
+.app.dark .college-syllabus .admin-syllabus-header span {
+  color: #60a5fa;
+}
+
+.app.dark .college-syllabus .admin-syllabus-header h1 {
+  color: #f9fafb;
+}
+
+.app.dark .college-syllabus .admin-syllabus-header p {
+  color: #cbd5e1;
+}
+
+.app.dark .college-syllabus .admin-syllabus-back {
+  background: #374151;
+  color: #e5e7eb;
+}
+
+.app.dark .college-syllabus .admin-syllabus-back:hover {
+  background: #475569;
+}
+
+/* CRUD ACTIONS */
+
+.app.dark .college-syllabus .crud-actions {
+  background: #111827;
+
+  border-color: #374151;
+}
+
+/* EDIT */
+
+.app.dark .college-syllabus .crud-actions .crud-edit {
+  background: #164e63;
+  color: #bae6fd;
+}
+
+.app.dark .college-syllabus .crud-actions .crud-edit:hover {
+  background: #155e75;
+}
+
+/* HIDE */
+
+.app.dark .college-syllabus .crud-actions .crud-hide {
+  background: #713f12;
+  color: #fde68a;
+}
+
+.app.dark .college-syllabus .crud-actions .crud-hide:hover {
+  background: #854d0e;
+}
+
+/* SHOW */
+
+.app.dark .college-syllabus .crud-actions .crud-show {
+  background: #14532d;
+  color: #bbf7d0;
+}
+
+.app.dark .college-syllabus .crud-actions .crud-show:hover {
+  background: #166534;
+}
+
+/* DELETE */
+
+.app.dark .college-syllabus .crud-actions .crud-delete {
+  background: #7f1d1d;
+  color: #fecaca;
+}
+
+.app.dark .college-syllabus .crud-actions .crud-delete:hover {
+  background: #991b1b;
+}
+
+/* =========================================================
+   DARK MODE - MODAL
+========================================================= */
+
+.app.dark .college-syllabus .crud-modal {
+  background: #1f2937;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.55);
+}
+
+.app.dark .college-syllabus .crud-modal-header {
+  border-bottom-color: #374151;
+}
+
+.app.dark .college-syllabus .crud-modal-header span {
+  color: #60a5fa;
+}
+
+.app.dark .college-syllabus .crud-modal-header h2 {
+  color: #f9fafb;
+}
+
+.app.dark .college-syllabus .crud-modal-header > button {
+  background: #374151;
+  color: #e5e7eb;
+}
+
+.app.dark .college-syllabus .crud-modal-header > button:hover {
+  background: #475569;
+}
+
+/* FORM */
+
+.app.dark .college-syllabus .crud-form label {
+  color: #e5e7eb;
+}
+
+.app.dark .college-syllabus .crud-form input,
+.app.dark .college-syllabus .crud-form textarea {
+  background: #111827;
+
+  border-color: #475569;
+
+  color: #f9fafb;
+}
+
+.app.dark .college-syllabus .crud-form input::placeholder,
+.app.dark .college-syllabus .crud-form textarea::placeholder {
+  color: #64748b;
+}
+
+.app.dark .college-syllabus .crud-form input:focus,
+.app.dark .college-syllabus .crud-form textarea:focus {
+  border-color: #60a5fa;
+
+  box-shadow:
+    0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+/* FORM BUTTONS */
+
+.app.dark .college-syllabus .crud-cancel-btn {
+  background: #374151;
+  color: #e5e7eb;
+}
+
+.app.dark .college-syllabus .crud-cancel-btn:hover {
+  background: #475569;
+}
+
+/* SAVE BUTTON */
+
+.app.dark .college-syllabus .crud-save-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.app.dark .college-syllabus .crud-save-btn:hover {
+  background: #1d4ed8;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 800px) {
 
@@ -860,6 +1840,35 @@
 
   .section-heading h2 {
     font-size: 23px;
+  }
+}
+
+@media (max-width: 700px) {
+
+  .college-syllabus .admin-syllabus-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .college-syllabus .section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .college-syllabus .crud-add-btn {
+    width: 100%;
+  }
+
+  .college-syllabus .crud-actions {
+    width: 100%;
+  }
+
+  .college-syllabus .crud-actions button {
+    flex: 1;
+  }
+
+  .college-syllabus .crud-modal {
+    max-height: 95vh;
   }
 }
 
@@ -890,7 +1899,6 @@
   .card-number {
     width: 48px;
     height: 48px;
-
     margin-right: 13px;
   }
 
@@ -907,21 +1915,18 @@
   .list-icon {
     width: 43px;
     height: 43px;
-
     margin-right: 12px;
   }
 
   .unit-number {
     width: 44px;
     height: 44px;
-
     margin-right: 12px;
   }
 
   .topic-number {
     width: 38px;
     height: 38px;
-
     margin-right: 12px;
   }
 
@@ -946,507 +1951,23 @@
   }
 
   .content-card {
-    padding: 18px;
-  }
-
-  .content-number {
-    width: 32px;
-    height: 32px;
-
-    margin-right: 12px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .content-body h3 {
     font-size: 17px;
   }
 
-  .content-text {
+  .content-text,
+  .content-paragraph {
     font-size: 14px;
   }
 
-}
-/* =========================================================
-   ADMIN COLLEGE SYLLABUS CRUD
-   FIXED / SCOPED STYLES
-========================================================= */
-
-.college-syllabus .admin-syllabus-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 30px;
-
-  padding: 28px 30px;
-  margin-bottom: 20px;
-
-  border-radius: 16px;
-
-  background: var(--card-bg, #ffffff);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-
-  box-sizing: border-box;
-}
-
-.college-syllabus .admin-syllabus-header span {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #2563eb;
-}
-
-.college-syllabus .admin-syllabus-header h1 {
-  margin: 7px 0;
-  font-size: 28px;
-  color: #111827;
-}
-
-.college-syllabus .admin-syllabus-header p {
-  margin: 0;
-  color: #64748b;
-}
-
-.college-syllabus .admin-syllabus-back {
-  border: none;
-  background: #f1f5f9;
-
-  padding: 11px 18px;
-
-  border-radius: 9px;
-
-  cursor: pointer;
-  font-weight: 600;
-
-  color: #334155;
-}
-
-.college-syllabus .admin-syllabus-back:hover {
-  background: #e2e8f0;
-}
-
-
-/* =========================================================
-   SECTION HEADING
-========================================================= */
-
-.college-syllabus .section-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-
-  gap: 20px;
-  margin-bottom: 22px;
-}
-
-.college-syllabus .crud-add-btn {
-  flex-shrink: 0;
-
-  border: none;
-  background: #2563eb;
-  color: #ffffff;
-
-  padding: 11px 18px;
-
-  border-radius: 9px;
-
-  font-size: 14px;
-  font-weight: 700;
-
-  cursor: pointer;
-  white-space: nowrap;
-
-  transition: background 0.2s ease;
-}
-
-.college-syllabus .crud-add-btn:hover {
-  background: #1d4ed8;
-}
-
-
-/* =========================================================
-   ITEM WRAPPERS
-========================================================= */
-
-.college-syllabus .syllabus-card-wrapper,
-.college-syllabus .crud-item-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.college-syllabus .crud-item-wrapper {
-  margin-bottom: 14px;
-}
-
-
-/* =========================================================
-   CRUD ACTIONS
-========================================================= */
-
-.college-syllabus .crud-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-
-  gap: 7px;
-
-  width: 100%;
-  box-sizing: border-box;
-
-  padding: 9px 10px;
-
-  background: #f8fafc;
-
-  border: 1px solid #e4e7ec;
-  border-top: none;
-
-  border-radius: 0 0 12px 12px;
-}
-
-
-/* Make sure CRUD buttons are visible */
-.college-syllabus .crud-actions button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  min-height: 32px;
-
-  border: none;
-  border-radius: 7px;
-
-  padding: 7px 12px;
-
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  white-space: nowrap;
-
-  opacity: 1;
-  visibility: visible;
-
-  transition:
-    background 0.2s ease,
-    transform 0.15s ease;
-}
-
-.college-syllabus .crud-actions button:hover {
-  transform: translateY(-1px);
-}
-
-
-/* EDIT */
-
-.college-syllabus .crud-actions .crud-edit {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-.college-syllabus .crud-actions .crud-edit:hover {
-  background: #bae6fd;
-}
-
-
-/* HIDE */
-
-.college-syllabus .crud-actions .crud-hide {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.college-syllabus .crud-actions .crud-hide:hover {
-  background: #fde68a;
-}
-
-
-/* SHOW */
-
-.college-syllabus .crud-actions .crud-show {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.college-syllabus .crud-actions .crud-show:hover {
-  background: #bbf7d0;
-}
-
-
-/* DELETE */
-
-.college-syllabus .crud-actions .crud-delete {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.college-syllabus .crud-actions .crud-delete:hover {
-  background: #fecaca;
-}
-
-
-/* =========================================================
-   CARD + CRUD CONNECTION
-========================================================= */
-
-.college-syllabus .syllabus-card-wrapper .syllabus-card,
-.college-syllabus .crud-item-wrapper .list-card,
-.college-syllabus .crud-item-wrapper .unit-card,
-.college-syllabus .crud-item-wrapper .topic-card {
-  margin-bottom: 0;
-}
-
-
-/* =========================================================
-   CONTENT CRUD
-========================================================= */
-
-.college-syllabus .content-container .crud-item-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.college-syllabus .content-container .content-card {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.college-syllabus .crud-modal-overlay {
-  position: fixed;
-  inset: 0;
-
-  z-index: 99999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 20px;
-
-  background: rgba(15, 23, 42, 0.6);
-
-  box-sizing: border-box;
-}
-
-.college-syllabus .crud-modal {
-  width: min(620px, 100%);
-  max-height: 90vh;
-
-  overflow-y: auto;
-
-  background: #ffffff;
-
-  border-radius: 18px;
-
-  box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.25);
-
-  box-sizing: border-box;
-}
-
-.college-syllabus .crud-modal-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-
-  padding: 22px 24px;
-
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.college-syllabus .crud-modal-header span {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #2563eb;
-}
-
-.college-syllabus .crud-modal-header h2 {
-  margin: 6px 0 0;
-
-  font-size: 22px;
-  color: #111827;
-}
-
-.college-syllabus .crud-modal-header > button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 34px;
-  height: 34px;
-
-  border: none;
-  border-radius: 8px;
-
-  background: #f1f5f9;
-
-  cursor: pointer;
-  font-size: 16px;
-
-  color: #334155;
-}
-
-.college-syllabus .crud-modal-header > button:hover {
-  background: #e2e8f0;
-}
-
-
-/* =========================================================
-   FORM
-========================================================= */
-
-.college-syllabus .crud-form {
-  display: flex;
-  flex-direction: column;
-
-  gap: 17px;
-
-  padding: 24px;
-
-  box-sizing: border-box;
-}
-
-.college-syllabus .crud-form label {
-  display: flex;
-  flex-direction: column;
-
-  gap: 7px;
-
-  font-size: 13px;
-  font-weight: 700;
-
-  color: #334155;
-}
-
-.college-syllabus .crud-form input,
-.college-syllabus .crud-form textarea {
-  width: 100%;
-  box-sizing: border-box;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 9px;
-
-  padding: 11px 13px;
-
-  font-family: inherit;
-  font-size: 14px;
-
-  outline: none;
-
-  background: #ffffff;
-  color: #111827;
-}
-
-.college-syllabus .crud-form input:focus,
-.college-syllabus .crud-form textarea:focus {
-  border-color: #2563eb;
-
-  box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.college-syllabus .crud-form textarea {
-  min-height: 90px;
-  resize: vertical;
-}
-
-.college-syllabus .crud-form .crud-content-textarea {
-  min-height: 220px !important;
-}
-
-
-/* =========================================================
-   FORM ACTIONS
-========================================================= */
-
-.college-syllabus .crud-form-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  gap: 10px;
-
-  padding-top: 8px;
-}
-
-.college-syllabus .crud-cancel-btn,
-.college-syllabus .crud-save-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  border: none;
-  border-radius: 9px;
-
-  padding: 11px 20px;
-
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-
-  cursor: pointer;
-}
-
-.college-syllabus .crud-cancel-btn {
-  background: #f1f5f9;
-  color: #334155;
-}
-
-.college-syllabus .crud-cancel-btn:hover {
-  background: #e2e8f0;
-}
-
-.college-syllabus .crud-save-btn {
-  background: #2563eb;
-  color: #ffffff;
-}
-
-.college-syllabus .crud-save-btn:hover {
-  background: #1d4ed8;
-}
-
-.college-syllabus .crud-save-btn:disabled,
-.college-syllabus .crud-cancel-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 700px) {
-
-  .college-syllabus .admin-syllabus-header {
-    flex-direction: column;
-    align-items: flex-start;
+  .content-block + .content-block {
+    margin-top: 18px;
   }
-
-  .college-syllabus .section-heading {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .college-syllabus .crud-add-btn {
-    width: 100%;
-  }
-
-  .college-syllabus .crud-actions {
-    width: 100%;
-  }
-
-  .college-syllabus .crud-actions button {
-    flex: 1;
-  }
-
-  .college-syllabus .crud-modal {
-    max-height: 95vh;
-  }
-
 }

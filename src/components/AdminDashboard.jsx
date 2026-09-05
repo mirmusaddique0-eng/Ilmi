@@ -5,9 +5,8 @@ import { supabase } from "../lib/supabaseClient";
 import CollegeSyllabus from "./CollegeSyllabus";
 import AdminPracticeQuiz from "./AdminPracticeQuiz";
 import AdminBuild from "./AdminBuild";
-
 import AdminGrow from "./AdminGrow";
-
+import RichTextEditor from "./RichTextEditor";
 
 function AdminDashboard({ user, onLogout }) {
   // =========================================================
@@ -173,6 +172,7 @@ function AdminDashboard({ user, onLogout }) {
       "Untitled Course"
     );
   };
+
   const [studentCount, setStudentCount] = useState(0);
   const [quizAttemptCount, setQuizAttemptCount] = useState(0);
 
@@ -865,45 +865,42 @@ function AdminDashboard({ user, onLogout }) {
   }, [activeSection, selectedModule]);
 
   useEffect(() => {
-  const fetchStudentCount = async () => {
-    const { count, error } = await supabase
-      .from("profiles")
-      .select("*", { count: "exact", head: true })
-      .eq("role", "student");
+    const fetchStudentCount = async () => {
+      const { count, error } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true })
+        .eq("role", "student");
 
-    if (error) {
-      console.error("Student Count Error:", error);
-      return;
-    }
+      if (error) {
+        console.error("Student Count Error:", error);
+        return;
+      }
 
-    setStudentCount(count || 0);
-  };
+      setStudentCount(count || 0);
+    };
 
-  fetchStudentCount();
-}, []);
+    fetchStudentCount();
+  }, []);
 
+  useEffect(() => {
+    const fetchQuizAttemptCount = async () => {
+      const { count, error } = await supabase
+        .from("quiz_attempts")
+        .select("*", {
+          count: "exact",
+          head: true,
+        });
 
+      if (error) {
+        console.error("Quiz Attempt Count Error:", error);
+        return;
+      }
 
+      setQuizAttemptCount(count || 0);
+    };
 
-useEffect(() => {
-  const fetchQuizAttemptCount = async () => {
-    const { count, error } = await supabase
-      .from("quiz_attempts")
-      .select("*", {
-        count: "exact",
-        head: true,
-      });
-
-    if (error) {
-      console.error("Quiz Attempt Count Error:", error);
-      return;
-    }
-
-    setQuizAttemptCount(count || 0);
-  };
-
-  fetchQuizAttemptCount();
-}, []);
+    fetchQuizAttemptCount();
+  }, []);
 
   const filteredTopics = courseTopics.filter((topic) => {
     const searchText = topicSearch.toLowerCase().trim();
@@ -1191,6 +1188,10 @@ useEffect(() => {
     }));
   };
 
+  // =========================================================
+  // SAVE LESSON
+  // =========================================================
+
   const handleSaveLesson = async (event) => {
     event.preventDefault();
 
@@ -1200,9 +1201,18 @@ useEffect(() => {
     }
 
     const title = lessonForm.title.trim();
-    const type = lessonForm.type.trim() || "text";
-    const content = lessonForm.content.trim();
-    const displayOrder = Number(lessonForm.display_order);
+
+    const type =
+      lessonForm.type.trim() || "text";
+
+    // IMPORTANT:
+    // DO NOT trim content.
+    // This preserves spaces, bullets, tabs,
+    // blank lines and flow alignment.
+    const content = lessonForm.content;
+
+    const displayOrder =
+      Number(lessonForm.display_order);
 
     if (!title) {
       alert("Please enter a lesson title.");
@@ -1232,7 +1242,9 @@ useEffect(() => {
           .eq("id", editingLesson.id);
 
         if (error) {
-          alert(`Unable to update lesson.\n\n${error.message}`);
+          alert(
+            `Unable to update lesson.\n\n${error.message}`
+          );
           return;
         }
 
@@ -1248,7 +1260,9 @@ useEffect(() => {
           ]);
 
         if (error) {
-          alert(`Unable to add lesson.\n\n${error.message}`);
+          alert(
+            `Unable to add lesson.\n\n${error.message}`
+          );
           return;
         }
 
@@ -1256,14 +1270,18 @@ useEffect(() => {
       }
 
       closeLessonModal();
-      await loadTopicLessons(selectedTopic.id);
+
+      await loadTopicLessons(
+        selectedTopic.id
+      );
     } finally {
       setSavingLesson(false);
     }
   };
 
   const handleToggleLesson = async (lesson) => {
-    const newStatus = lesson.is_published === false;
+    const newStatus =
+      lesson.is_published === false;
 
     const confirmed = window.confirm(
       `Are you sure you want to ${
@@ -1275,15 +1293,21 @@ useEffect(() => {
 
     const { error } = await supabase
       .from("course_lessons")
-      .update({ is_published: newStatus })
+      .update({
+        is_published: newStatus,
+      })
       .eq("id", lesson.id);
 
     if (error) {
-      alert(`Unable to change lesson status.\n\n${error.message}`);
+      alert(
+        `Unable to change lesson status.\n\n${error.message}`
+      );
       return;
     }
 
-    await loadTopicLessons(selectedTopic.id);
+    await loadTopicLessons(
+      selectedTopic.id
+    );
   };
 
   // =========================================================
@@ -1304,7 +1328,10 @@ useEffect(() => {
 
         <div className="admin-stats">
           <div className="admin-stat-card">
-            <div className="admin-stat-icon">📚</div>
+            <div className="admin-stat-icon">
+              📚
+            </div>
+
             <div>
               <span>Courses</span>
               <strong>{courses.length}</strong>
@@ -1312,7 +1339,10 @@ useEffect(() => {
           </div>
 
           <div className="admin-stat-card">
-            <div className="admin-stat-icon">📖</div>
+            <div className="admin-stat-icon">
+              📖
+            </div>
+
             <div>
               <span>Lessons</span>
               <strong>56</strong>
@@ -1320,25 +1350,33 @@ useEffect(() => {
           </div>
 
           <div className="admin-stat-card">
-  <div className="admin-stat-icon">👥</div>
-  <div>
-    <span>Students</span>
-    <strong>{studentCount}</strong>
-  </div>
-</div>
-         <div className="admin-stat-card">
-  <div className="admin-stat-icon">📝</div>
-  <div>
-    <span>Quiz Attempts</span>
-    <strong>{quizAttemptCount}</strong>
-  </div>
-</div>
+            <div className="admin-stat-icon">
+              👥
+            </div>
+
+            <div>
+              <span>Students</span>
+              <strong>{studentCount}</strong>
+            </div>
+          </div>
+
+          <div className="admin-stat-card">
+            <div className="admin-stat-icon">
+              📝
+            </div>
+
+            <div>
+              <span>Quiz Attempts</span>
+              <strong>{quizAttemptCount}</strong>
+            </div>
+          </div>
         </div>
 
         <section className="admin-section">
           <div className="admin-section-header">
             <div>
               <h2>Content Management</h2>
+
               <p>
                 Manage different sections of EDUVANTA.
               </p>
@@ -1347,12 +1385,17 @@ useEffect(() => {
 
           <div className="admin-management-grid">
             <div className="admin-management-card">
-              <div className="management-icon">📚</div>
+              <div className="management-icon">
+                📚
+              </div>
+
               <h3>Courses</h3>
+
               <p>
                 Add, edit and manage complete course
                 content.
               </p>
+
               <button
                 onClick={() =>
                   handleSectionChange("courses")
@@ -1363,12 +1406,17 @@ useEffect(() => {
             </div>
 
             <div className="admin-management-card">
-              <div className="management-icon">🎓</div>
+              <div className="management-icon">
+                🎓
+              </div>
+
               <h3>College Syllabus</h3>
+
               <p>
                 Manage years, semesters, subjects,
                 units and topics.
               </p>
+
               <button
                 onClick={() =>
                   handleSectionChange("syllabus")
@@ -1379,12 +1427,17 @@ useEffect(() => {
             </div>
 
             <div className="admin-management-card">
-              <div className="management-icon">📝</div>
+              <div className="management-icon">
+                📝
+              </div>
+
               <h3>Practice & Quizzes</h3>
+
               <p>
                 Manage questions, quizzes and practice
                 content.
               </p>
+
               <button
                 onClick={() =>
                   handleSectionChange("practice")
@@ -1395,12 +1448,17 @@ useEffect(() => {
             </div>
 
             <div className="admin-management-card">
-              <div className="management-icon">🛠️</div>
+              <div className="management-icon">
+                🛠️
+              </div>
+
               <h3>Build</h3>
+
               <p>
                 Manage projects, practice projects and
                 coding challenges.
               </p>
+
               <button
                 onClick={() =>
                   handleSectionChange("build")
@@ -1411,11 +1469,16 @@ useEffect(() => {
             </div>
 
             <div className="admin-management-card">
-              <div className="management-icon">🌱</div>
+              <div className="management-icon">
+                🌱
+              </div>
+
               <h3>Grow</h3>
+
               <p>
                 Manage roadmaps and resources
               </p>
+
               <button
                 onClick={() =>
                   handleSectionChange("grow")
@@ -1426,12 +1489,17 @@ useEffect(() => {
             </div>
 
             <div className="admin-management-card">
-              <div className="management-icon">👥</div>
+              <div className="management-icon">
+                👥
+              </div>
+
               <h3>Students</h3>
+
               <p>
                 View registered students and their
                 learning activity.
               </p>
+
               <button
                 onClick={() =>
                   handleSectionChange("students")
@@ -1456,6 +1524,7 @@ useEffect(() => {
         <div className="admin-section-header">
           <div>
             <h2>Courses Management</h2>
+
             <p>
               Manage complete EDUVANTA course
               structure.
@@ -1481,7 +1550,9 @@ useEffect(() => {
               placeholder="Search courses..."
               value={courseSearch}
               onChange={(event) =>
-                setCourseSearch(event.target.value)
+                setCourseSearch(
+                  event.target.value
+                )
               }
             />
           </div>
@@ -1528,99 +1599,125 @@ useEffect(() => {
         {coursesLoading && (
           <div className="admin-empty-state">
             <div>⏳</div>
+
             <h3>Loading courses...</h3>
-            <p>Fetching courses from Supabase.</p>
+
+            <p>
+              Fetching courses from Supabase.
+            </p>
           </div>
         )}
 
-        {!coursesLoading && coursesError && (
-          <div className="admin-error-state">
-            <h3>Unable to load courses</h3>
-            <p>{coursesError}</p>
-            <button onClick={loadCourses}>
-              Try Again
-            </button>
-          </div>
-        )}
+        {!coursesLoading &&
+          coursesError && (
+            <div className="admin-error-state">
+              <h3>
+                Unable to load courses
+              </h3>
+
+              <p>{coursesError}</p>
+
+              <button onClick={loadCourses}>
+                Try Again
+              </button>
+            </div>
+          )}
 
         {!coursesLoading &&
           !coursesError &&
           filteredCourses.length > 0 && (
             <div className="admin-course-list">
-              {filteredCourses.map((course) => (
-                <div
-                  className={
-                    course.is_active === false
-                      ? "admin-course-card course-hidden"
-                      : "admin-course-card"
-                  }
-                  key={course.id}
-                >
-                  <div className="admin-course-card-top">
-                    <div className="admin-course-icon">
-                      📚
+              {filteredCourses.map(
+                (course) => (
+                  <div
+                    className={
+                      course.is_active === false
+                        ? "admin-course-card course-hidden"
+                        : "admin-course-card"
+                    }
+                    key={course.id}
+                  >
+                    <div className="admin-course-card-top">
+                      <div className="admin-course-icon">
+                        📚
+                      </div>
+
+                      <span
+                        className={
+                          getCourseStatus(
+                            course
+                          ) === "Active"
+                            ? "course-status active"
+                            : "course-status inactive"
+                        }
+                      >
+                        {getCourseStatus(
+                          course
+                        )}
+                      </span>
                     </div>
 
-                    <span
-                      className={
-                        getCourseStatus(course) ===
-                        "Active"
-                          ? "course-status active"
-                          : "course-status inactive"
-                      }
-                    >
-                      {getCourseStatus(course)}
-                    </span>
+                    <h3>
+                      {getCourseName(course)}
+                    </h3>
+
+                    <p>
+                      {getCourseDescription(
+                        course
+                      )}
+                    </p>
+
+                    <div className="admin-course-meta">
+                      <span>
+                        Course ID: {course.id}
+                      </span>
+                    </div>
+
+                    <div className="admin-course-actions">
+                      <button
+                        className="admin-course-manage-btn"
+                        onClick={() =>
+                          handleManageCourse(
+                            course
+                          )
+                        }
+                      >
+                        Manage Course →
+                      </button>
+
+                      <button
+                        className="admin-course-edit-btn"
+                        onClick={() =>
+                          openEditCourse(
+                            course
+                          )
+                        }
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        className={
+                          course.is_active ===
+                          false
+                            ? "admin-course-show-btn"
+                            : "admin-course-hide-btn"
+                        }
+                        onClick={() =>
+                          handleToggleCourse(
+                            course
+                          )
+                        }
+                      >
+                        {course.is_active ===
+                        false
+                          ? "Show"
+                          : "Hide"}
+                      </button>
+                    </div>
                   </div>
-
-                  <h3>{getCourseName(course)}</h3>
-
-                  <p>
-                    {getCourseDescription(course)}
-                  </p>
-
-                  <div className="admin-course-meta">
-                    <span>
-                      Course ID: {course.id}
-                    </span>
-                  </div>
-
-                  <div className="admin-course-actions">
-                    <button
-                      className="admin-course-manage-btn"
-                      onClick={() =>
-                        handleManageCourse(course)
-                      }
-                    >
-                      Manage Course →
-                    </button>
-
-                    <button
-                      className="admin-course-edit-btn"
-                      onClick={() =>
-                        openEditCourse(course)
-                      }
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className={
-                        course.is_active === false
-                          ? "admin-course-show-btn"
-                          : "admin-course-hide-btn"
-                      }
-                      onClick={() =>
-                        handleToggleCourse(course)
-                      }
-                    >
-                      {course.is_active === false
-                        ? "Show"
-                        : "Hide"}
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           )}
 
@@ -1629,7 +1726,9 @@ useEffect(() => {
           courses.length === 0 && (
             <div className="admin-empty-state">
               <div>📚</div>
+
               <h3>No courses found</h3>
+
               <p>
                 There are currently no courses in
                 Supabase.
@@ -1649,6 +1748,7 @@ useEffect(() => {
       return (
         <div className="admin-error-state">
           <h3>No course selected</h3>
+
           <button
             onClick={() =>
               handleSectionChange("courses")
@@ -1665,8 +1765,11 @@ useEffect(() => {
         <div className="admin-section-header">
           <div>
             <h2>
-              📚 {getCourseName(selectedCourse)}
+              📚 {getCourseName(
+                selectedCourse
+              )}
             </h2>
+
             <p>
               Manage sections of this course.
             </p>
@@ -1676,7 +1779,10 @@ useEffect(() => {
             className="admin-back-btn"
             onClick={() => {
               setSelectedCourse(null);
-              handleSectionChange("courses");
+
+              handleSectionChange(
+                "courses"
+              );
             }}
           >
             ← Courses
@@ -1686,7 +1792,9 @@ useEffect(() => {
         <div className="admin-course-summary">
           <span>
             Sections:
-            <strong>{courseSections.length}</strong>
+            <strong>
+              {courseSections.length}
+            </strong>
           </span>
 
           <span>
@@ -1705,12 +1813,15 @@ useEffect(() => {
         <div className="admin-course-toolbar">
           <div className="admin-course-search">
             <span>🔎</span>
+
             <input
               type="text"
               placeholder="Search sections..."
               value={sectionSearch}
               onChange={(event) =>
-                setSectionSearch(event.target.value)
+                setSectionSearch(
+                  event.target.value
+                )
               }
             />
           </div>
@@ -1726,96 +1837,120 @@ useEffect(() => {
         {sectionsLoading && (
           <div className="admin-empty-state">
             <div>⏳</div>
-            <h3>Loading sections...</h3>
+
+            <h3>
+              Loading sections...
+            </h3>
           </div>
         )}
 
-        {!sectionsLoading && sectionsError && (
-          <div className="admin-error-state">
-            <h3>Unable to load sections</h3>
-            <p>{sectionsError}</p>
-          </div>
-        )}
+        {!sectionsLoading &&
+          sectionsError && (
+            <div className="admin-error-state">
+              <h3>
+                Unable to load sections
+              </h3>
+
+              <p>{sectionsError}</p>
+            </div>
+          )}
 
         {!sectionsLoading &&
           !sectionsError &&
           filteredSections.length > 0 && (
             <div className="admin-course-list">
-              {filteredSections.map((section) => (
-                <div
-                  className={
-                    section.is_active === false
-                      ? "admin-course-card course-hidden"
-                      : "admin-course-card"
-                  }
-                  key={section.id}
-                >
-                  <div className="admin-course-card-top">
-                    <div className="admin-course-icon">
-                      📂
+              {filteredSections.map(
+                (section) => (
+                  <div
+                    className={
+                      section.is_active ===
+                      false
+                        ? "admin-course-card course-hidden"
+                        : "admin-course-card"
+                    }
+                    key={section.id}
+                  >
+                    <div className="admin-course-card-top">
+                      <div className="admin-course-icon">
+                        📂
+                      </div>
+
+                      <span
+                        className={
+                          section.is_active !==
+                          false
+                            ? "course-status active"
+                            : "course-status inactive"
+                        }
+                      >
+                        {section.is_active !==
+                        false
+                          ? "Active"
+                          : "Inactive"}
+                      </span>
                     </div>
 
-                    <span
-                      className={
-                        section.is_active !== false
-                          ? "course-status active"
-                          : "course-status inactive"
-                      }
-                    >
-                      {section.is_active !== false
-                        ? "Active"
-                        : "Inactive"}
-                    </span>
+                    <h3>
+                      {section.title}
+                    </h3>
+
+                    <p>
+                      Section{" "}
+                      {section.display_order}
+                    </p>
+
+                    <div className="admin-course-meta">
+                      <span>
+                        Section ID:{" "}
+                        {section.id}
+                      </span>
+                    </div>
+
+                    <div className="admin-course-actions">
+                      <button
+                        className="admin-course-manage-btn"
+                        onClick={() =>
+                          handleManageModules(
+                            section
+                          )
+                        }
+                      >
+                        Manage Modules →
+                      </button>
+
+                      <button
+                        className="admin-course-edit-btn"
+                        onClick={() =>
+                          openEditSection(
+                            section
+                          )
+                        }
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        className={
+                          section.is_active ===
+                          false
+                            ? "admin-course-show-btn"
+                            : "admin-course-hide-btn"
+                        }
+                        onClick={() =>
+                          handleToggleSection(
+                            section
+                          )
+                        }
+                      >
+                        {section.is_active ===
+                        false
+                          ? "Show"
+                          : "Hide"}
+                      </button>
+                    </div>
                   </div>
-
-                  <h3>{section.title}</h3>
-
-                  <p>
-                    Section {section.display_order}
-                  </p>
-
-                  <div className="admin-course-meta">
-                    <span>
-                      Section ID: {section.id}
-                    </span>
-                  </div>
-
-                  <div className="admin-course-actions">
-                    <button
-                      className="admin-course-manage-btn"
-                      onClick={() =>
-                        handleManageModules(section)
-                      }
-                    >
-                      Manage Modules →
-                    </button>
-
-                    <button
-                      className="admin-course-edit-btn"
-                      onClick={() =>
-                        openEditSection(section)
-                      }
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className={
-                        section.is_active === false
-                          ? "admin-course-show-btn"
-                          : "admin-course-hide-btn"
-                      }
-                      onClick={() =>
-                        handleToggleSection(section)
-                      }
-                    >
-                      {section.is_active === false
-                        ? "Show"
-                        : "Hide"}
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           )}
       </section>
@@ -1831,6 +1966,7 @@ useEffect(() => {
       return (
         <div className="admin-error-state">
           <h3>No section selected</h3>
+
           <button
             onClick={() =>
               handleSectionChange(
@@ -1848,14 +1984,20 @@ useEffect(() => {
       <section className="admin-section">
         <div className="admin-section-header">
           <div>
-            <h2>📂 {selectedSection.title}</h2>
-            <p>Manage modules of this section.</p>
+            <h2>
+              📂 {selectedSection.title}
+            </h2>
+
+            <p>
+              Manage modules of this section.
+            </p>
           </div>
 
           <button
             className="admin-back-btn"
             onClick={() => {
               setSelectedSection(null);
+
               handleSectionChange(
                 "course-management"
               );
@@ -1868,7 +2010,9 @@ useEffect(() => {
         <div className="admin-course-summary">
           <span>
             Modules:
-            <strong>{courseModules.length}</strong>
+            <strong>
+              {courseModules.length}
+            </strong>
           </span>
 
           <span>
@@ -1887,12 +2031,15 @@ useEffect(() => {
         <div className="admin-course-toolbar">
           <div className="admin-course-search">
             <span>🔎</span>
+
             <input
               type="text"
               placeholder="Search modules..."
               value={moduleSearch}
               onChange={(event) =>
-                setModuleSearch(event.target.value)
+                setModuleSearch(
+                  event.target.value
+                )
               }
             />
           </div>
@@ -1908,101 +2055,124 @@ useEffect(() => {
         {modulesLoading && (
           <div className="admin-empty-state">
             <div>⏳</div>
-            <h3>Loading modules...</h3>
+
+            <h3>
+              Loading modules...
+            </h3>
           </div>
         )}
 
-        {!modulesLoading && modulesError && (
-          <div className="admin-error-state">
-            <h3>Unable to load modules</h3>
-            <p>{modulesError}</p>
-          </div>
-        )}
+        {!modulesLoading &&
+          modulesError && (
+            <div className="admin-error-state">
+              <h3>
+                Unable to load modules
+              </h3>
+
+              <p>{modulesError}</p>
+            </div>
+          )}
 
         {!modulesLoading &&
           !modulesError &&
           filteredModules.length > 0 && (
             <div className="admin-course-list">
-              {filteredModules.map((module) => (
-                <div
-                  className={
-                    module.is_active === false
-                      ? "admin-course-card course-hidden"
-                      : "admin-course-card"
-                  }
-                  key={module.id}
-                >
-                  <div className="admin-course-card-top">
-                    <div className="admin-course-icon">
-                      📦
+              {filteredModules.map(
+                (module) => (
+                  <div
+                    className={
+                      module.is_active ===
+                      false
+                        ? "admin-course-card course-hidden"
+                        : "admin-course-card"
+                    }
+                    key={module.id}
+                  >
+                    <div className="admin-course-card-top">
+                      <div className="admin-course-icon">
+                        📦
+                      </div>
+
+                      <span
+                        className={
+                          module.is_active !==
+                          false
+                            ? "course-status active"
+                            : "course-status inactive"
+                        }
+                      >
+                        {module.is_active !==
+                        false
+                          ? "Active"
+                          : "Inactive"}
+                      </span>
                     </div>
 
-                    <span
-                      className={
-                        module.is_active !== false
-                          ? "course-status active"
-                          : "course-status inactive"
-                      }
-                    >
-                      {module.is_active !== false
-                        ? "Active"
-                        : "Inactive"}
-                    </span>
+                    <h3>
+                      {module.title}
+                    </h3>
+
+                    <p>
+                      {module.description ||
+                        "No description available."}
+                    </p>
+
+                    <div className="admin-course-meta">
+                      <span>
+                        Module ID: {module.id}
+                      </span>
+
+                      <span>
+                        Order:{" "}
+                        {module.display_order}
+                      </span>
+                    </div>
+
+                    <div className="admin-course-actions">
+                      <button
+                        className="admin-course-manage-btn"
+                        onClick={() =>
+                          handleManageTopics(
+                            module
+                          )
+                        }
+                      >
+                        Manage Topics →
+                      </button>
+
+                      <button
+                        className="admin-course-edit-btn"
+                        onClick={() =>
+                          openEditModule(
+                            module
+                          )
+                        }
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        className={
+                          module.is_active ===
+                          false
+                            ? "admin-course-show-btn"
+                            : "admin-course-hide-btn"
+                        }
+                        onClick={() =>
+                          handleToggleModule(
+                            module
+                          )
+                        }
+                      >
+                        {module.is_active ===
+                        false
+                          ? "Show"
+                          : "Hide"}
+                      </button>
+                    </div>
                   </div>
-
-                  <h3>{module.title}</h3>
-
-                  <p>
-                    {module.description ||
-                      "No description available."}
-                  </p>
-
-                  <div className="admin-course-meta">
-                    <span>
-                      Module ID: {module.id}
-                    </span>
-
-                    <span>
-                      Order: {module.display_order}
-                    </span>
-                  </div>
-
-                  <div className="admin-course-actions">
-                    <button
-                      className="admin-course-manage-btn"
-                      onClick={() =>
-                        handleManageTopics(module)
-                      }
-                    >
-                      Manage Topics →
-                    </button>
-
-                    <button
-                      className="admin-course-edit-btn"
-                      onClick={() =>
-                        openEditModule(module)
-                      }
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className={
-                        module.is_active === false
-                          ? "admin-course-show-btn"
-                          : "admin-course-hide-btn"
-                      }
-                      onClick={() =>
-                        handleToggleModule(module)
-                      }
-                    >
-                      {module.is_active === false
-                        ? "Show"
-                        : "Hide"}
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           )}
       </section>
@@ -2018,6 +2188,7 @@ useEffect(() => {
       return (
         <div className="admin-error-state">
           <h3>No module selected</h3>
+
           <button
             onClick={() =>
               handleSectionChange(
@@ -2035,14 +2206,20 @@ useEffect(() => {
       <section className="admin-section">
         <div className="admin-section-header">
           <div>
-            <h2>📦 {selectedModule.title}</h2>
-            <p>Manage topics of this module.</p>
+            <h2>
+              📦 {selectedModule.title}
+            </h2>
+
+            <p>
+              Manage topics of this module.
+            </p>
           </div>
 
           <button
             className="admin-back-btn"
             onClick={() => {
               setSelectedModule(null);
+
               handleSectionChange(
                 "module-management"
               );
@@ -2055,7 +2232,9 @@ useEffect(() => {
         <div className="admin-course-summary">
           <span>
             Topics:
-            <strong>{courseTopics.length}</strong>
+            <strong>
+              {courseTopics.length}
+            </strong>
           </span>
 
           <span>
@@ -2080,7 +2259,9 @@ useEffect(() => {
               placeholder="Search topics..."
               value={topicSearch}
               onChange={(event) =>
-                setTopicSearch(event.target.value)
+                setTopicSearch(
+                  event.target.value
+                )
               }
             />
           </div>
@@ -2096,100 +2277,124 @@ useEffect(() => {
         {topicsLoading && (
           <div className="admin-empty-state">
             <div>⏳</div>
-            <h3>Loading topics...</h3>
+
+            <h3>
+              Loading topics...
+            </h3>
           </div>
         )}
 
-        {!topicsLoading && topicsError && (
-          <div className="admin-error-state">
-            <h3>Unable to load topics</h3>
-            <p>{topicsError}</p>
-          </div>
-        )}
+        {!topicsLoading &&
+          topicsError && (
+            <div className="admin-error-state">
+              <h3>
+                Unable to load topics
+              </h3>
+
+              <p>{topicsError}</p>
+            </div>
+          )}
 
         {!topicsLoading &&
           !topicsError &&
           filteredTopics.length > 0 && (
             <div className="admin-course-list">
-              {filteredTopics.map((topic) => (
-                <div
-                  className={
-                    topic.is_active === false
-                      ? "admin-course-card course-hidden"
-                      : "admin-course-card"
-                  }
-                  key={topic.id}
-                >
-                  <div className="admin-course-card-top">
-                    <div className="admin-course-icon">
-                      📑
+              {filteredTopics.map(
+                (topic) => (
+                  <div
+                    className={
+                      topic.is_active ===
+                      false
+                        ? "admin-course-card course-hidden"
+                        : "admin-course-card"
+                    }
+                    key={topic.id}
+                  >
+                    <div className="admin-course-card-top">
+                      <div className="admin-course-icon">
+                        📑
+                      </div>
+
+                      <span
+                        className={
+                          topic.is_active !==
+                          false
+                            ? "course-status active"
+                            : "course-status inactive"
+                        }
+                      >
+                        {topic.is_active !==
+                        false
+                          ? "Active"
+                          : "Inactive"}
+                      </span>
                     </div>
 
-                    <span
-                      className={
-                        topic.is_active !== false
-                          ? "course-status active"
-                          : "course-status inactive"
-                      }
-                    >
-                      {topic.is_active !== false
-                        ? "Active"
-                        : "Inactive"}
-                    </span>
+                    <h3>
+                      {topic.title}
+                    </h3>
+
+                    <p>
+                      Topic{" "}
+                      {topic.display_order}
+                    </p>
+
+                    <div className="admin-course-meta">
+                      <span>
+                        Topic ID: {topic.id}
+                      </span>
+
+                      <span>
+                        Order:{" "}
+                        {topic.display_order}
+                      </span>
+                    </div>
+
+                    <div className="admin-course-actions">
+                      <button
+                        className="admin-course-manage-btn"
+                        onClick={() =>
+                          handleManageLessons(
+                            topic
+                          )
+                        }
+                      >
+                        Manage Lessons →
+                      </button>
+
+                      <button
+                        className="admin-course-edit-btn"
+                        onClick={() =>
+                          openEditTopic(
+                            topic
+                          )
+                        }
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        className={
+                          topic.is_active ===
+                          false
+                            ? "admin-course-show-btn"
+                            : "admin-course-hide-btn"
+                        }
+                        onClick={() =>
+                          handleToggleTopic(
+                            topic
+                          )
+                        }
+                      >
+                        {topic.is_active ===
+                        false
+                          ? "Show"
+                          : "Hide"}
+                      </button>
+                    </div>
                   </div>
-
-                  <h3>{topic.title}</h3>
-
-                  <p>
-                    Topic {topic.display_order}
-                  </p>
-
-                  <div className="admin-course-meta">
-                    <span>
-                      Topic ID: {topic.id}
-                    </span>
-
-                    <span>
-                      Order: {topic.display_order}
-                    </span>
-                  </div>
-
-                  <div className="admin-course-actions">
-                    <button
-                      className="admin-course-manage-btn"
-                      onClick={() =>
-                        handleManageLessons(topic)
-                      }
-                    >
-                      Manage Lessons →
-                    </button>
-
-                    <button
-                      className="admin-course-edit-btn"
-                      onClick={() =>
-                        openEditTopic(topic)
-                      }
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className={
-                        topic.is_active === false
-                          ? "admin-course-show-btn"
-                          : "admin-course-hide-btn"
-                      }
-                      onClick={() =>
-                        handleToggleTopic(topic)
-                      }
-                    >
-                      {topic.is_active === false
-                        ? "Show"
-                        : "Hide"}
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           )}
       </section>
@@ -2223,7 +2428,9 @@ useEffect(() => {
       <section className="admin-section">
         <div className="admin-section-header">
           <div>
-            <h2>📑 {selectedTopic.title}</h2>
+            <h2>
+              📑 {selectedTopic.title}
+            </h2>
 
             <p>
               Manage lessons and lesson content.
@@ -2247,7 +2454,9 @@ useEffect(() => {
         <div className="admin-course-summary">
           <span>
             Lessons:
-            <strong>{courseLessons.length}</strong>
+            <strong>
+              {courseLessons.length}
+            </strong>
           </span>
 
           <span>
@@ -2256,7 +2465,8 @@ useEffect(() => {
               {
                 courseLessons.filter(
                   (lesson) =>
-                    lesson.is_published !== false
+                    lesson.is_published !==
+                    false
                 ).length
               }
             </strong>
@@ -2268,7 +2478,8 @@ useEffect(() => {
               {
                 courseLessons.filter(
                   (lesson) =>
-                    lesson.is_published === false
+                    lesson.is_published ===
+                    false
                 ).length
               }
             </strong>
@@ -2284,7 +2495,9 @@ useEffect(() => {
               placeholder="Search lessons..."
               value={lessonSearch}
               onChange={(event) =>
-                setLessonSearch(event.target.value)
+                setLessonSearch(
+                  event.target.value
+                )
               }
             />
           </div>
@@ -2300,7 +2513,10 @@ useEffect(() => {
         {lessonsLoading && (
           <div className="admin-empty-state">
             <div>⏳</div>
-            <h3>Loading lessons...</h3>
+
+            <h3>
+              Loading lessons...
+            </h3>
 
             <p>
               Fetching lessons from Supabase.
@@ -2308,96 +2524,116 @@ useEffect(() => {
           </div>
         )}
 
-        {!lessonsLoading && lessonsError && (
-          <div className="admin-error-state">
-            <h3>Unable to load lessons</h3>
+        {!lessonsLoading &&
+          lessonsError && (
+            <div className="admin-error-state">
+              <h3>
+                Unable to load lessons
+              </h3>
 
-            <p>{lessonsError}</p>
+              <p>{lessonsError}</p>
 
-            <button
-              onClick={() =>
-                loadTopicLessons(selectedTopic.id)
-              }
-            >
-              Try Again
-            </button>
-          </div>
-        )}
+              <button
+                onClick={() =>
+                  loadTopicLessons(
+                    selectedTopic.id
+                  )
+                }
+              >
+                Try Again
+              </button>
+            </div>
+          )}
 
         {!lessonsLoading &&
           !lessonsError &&
           filteredLessons.length > 0 && (
             <div className="admin-course-list">
-              {filteredLessons.map((lesson) => (
-                <div
-                  className={
-                    lesson.is_published === false
-                      ? "admin-course-card course-hidden"
-                      : "admin-course-card"
-                  }
-                  key={lesson.id}
-                >
-                  <div className="admin-course-card-top">
-                    <div className="admin-course-icon">
-                      📖
+              {filteredLessons.map(
+                (lesson) => (
+                  <div
+                    className={
+                      lesson.is_published ===
+                      false
+                        ? "admin-course-card course-hidden"
+                        : "admin-course-card"
+                    }
+                    key={lesson.id}
+                  >
+                    <div className="admin-course-card-top">
+                      <div className="admin-course-icon">
+                        📖
+                      </div>
+
+                      <span
+                        className={
+                          lesson.is_published !==
+                          false
+                            ? "course-status active"
+                            : "course-status inactive"
+                        }
+                      >
+                        {lesson.is_published !==
+                        false
+                          ? "Published"
+                          : "Draft"}
+                      </span>
                     </div>
 
-                    <span
-                      className={
-                        lesson.is_published !== false
-                          ? "course-status active"
-                          : "course-status inactive"
-                      }
-                    >
-                      {lesson.is_published !== false
-                        ? "Published"
-                        : "Draft"}
-                    </span>
+                    <h3>
+                      {lesson.title}
+                    </h3>
+
+                    <p>
+                      Type:{" "}
+                      {lesson.type || "text"}
+                    </p>
+
+                    <div className="admin-course-meta">
+                      <span>
+                        Lesson ID: {lesson.id}
+                      </span>
+
+                      <span>
+                        Order:{" "}
+                        {lesson.display_order}
+                      </span>
+                    </div>
+
+                    <div className="admin-course-actions">
+                      <button
+                        className="admin-course-edit-btn"
+                        onClick={() =>
+                          openEditLesson(
+                            lesson
+                          )
+                        }
+                      >
+                        Edit Lesson
+                      </button>
+
+                      <button
+                        className={
+                          lesson.is_published ===
+                          false
+                            ? "admin-course-show-btn"
+                            : "admin-course-hide-btn"
+                        }
+                        onClick={() =>
+                          handleToggleLesson(
+                            lesson
+                          )
+                        }
+                      >
+                        {lesson.is_published ===
+                        false
+                          ? "Publish"
+                          : "Unpublish"}
+                      </button>
+                    </div>
                   </div>
-
-                  <h3>{lesson.title}</h3>
-
-                  <p>
-                    Type: {lesson.type || "text"}
-                  </p>
-
-                  <div className="admin-course-meta">
-                    <span>
-                      Lesson ID: {lesson.id}
-                    </span>
-
-                    <span>
-                      Order: {lesson.display_order}
-                    </span>
-                  </div>
-
-                  <div className="admin-course-actions">
-                    <button
-                      className="admin-course-edit-btn"
-                      onClick={() =>
-                        openEditLesson(lesson)
-                      }
-                    >
-                      Edit Lesson
-                    </button>
-
-                    <button
-                      className={
-                        lesson.is_published === false
-                          ? "admin-course-show-btn"
-                          : "admin-course-hide-btn"
-                      }
-                      onClick={() =>
-                        handleToggleLesson(lesson)
-                      }
-                    >
-                      {lesson.is_published === false
-                        ? "Publish"
-                        : "Unpublish"}
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           )}
 
@@ -2407,10 +2643,13 @@ useEffect(() => {
             <div className="admin-empty-state">
               <div>📖</div>
 
-              <h3>No lessons found</h3>
+              <h3>
+                No lessons found
+              </h3>
 
               <p>
-                Add the first lesson to this topic.
+                Add the first lesson to this
+                topic.
               </p>
             </div>
           )}
@@ -2425,13 +2664,17 @@ useEffect(() => {
   const renderCourseModal = () => {
     if (!showCourseModal) return null;
 
-    const isEditing = Boolean(editingCourse);
+    const isEditing =
+      Boolean(editingCourse);
 
     return (
       <div
         className="admin-modal-overlay"
         onMouseDown={(event) => {
-          if (event.target === event.currentTarget) {
+          if (
+            event.target ===
+            event.currentTarget
+          ) {
             closeCourseModal();
           }
         }}
@@ -2466,27 +2709,37 @@ useEffect(() => {
             onSubmit={handleSaveCourse}
           >
             <div className="admin-form-group">
-              <label>Course Name</label>
+              <label>
+                Course Name
+              </label>
 
               <input
                 type="text"
                 name="name"
                 placeholder="e.g. Web Development"
                 value={courseForm.name}
-                onChange={handleCourseFormChange}
+                onChange={
+                  handleCourseFormChange
+                }
                 disabled={savingCourse}
               />
             </div>
 
             <div className="admin-form-group">
-              <label>Description</label>
+              <label>
+                Description
+              </label>
 
               <textarea
                 name="description"
                 rows="4"
                 placeholder="Enter course description..."
-                value={courseForm.description}
-                onChange={handleCourseFormChange}
+                value={
+                  courseForm.description
+                }
+                onChange={
+                  handleCourseFormChange
+                }
                 disabled={savingCourse}
               />
             </div>
@@ -2495,12 +2748,18 @@ useEffect(() => {
               <input
                 type="checkbox"
                 name="is_active"
-                checked={courseForm.is_active}
-                onChange={handleCourseFormChange}
+                checked={
+                  courseForm.is_active
+                }
+                onChange={
+                  handleCourseFormChange
+                }
                 disabled={savingCourse}
               />
 
-              <span>Course is active</span>
+              <span>
+                Course is active
+              </span>
             </label>
 
             <div className="admin-modal-actions">
@@ -2538,13 +2797,17 @@ useEffect(() => {
   const renderSectionModal = () => {
     if (!showSectionModal) return null;
 
-    const isEditing = Boolean(editingSection);
+    const isEditing =
+      Boolean(editingSection);
 
     return (
       <div
         className="admin-modal-overlay"
         onMouseDown={(event) => {
-          if (event.target === event.currentTarget) {
+          if (
+            event.target ===
+            event.currentTarget
+          ) {
             closeSectionModal();
           }
         }}
@@ -2577,27 +2840,37 @@ useEffect(() => {
             onSubmit={handleSaveSection}
           >
             <div className="admin-form-group">
-              <label>Section Title</label>
+              <label>
+                Section Title
+              </label>
 
               <input
                 type="text"
                 name="title"
                 placeholder="e.g. Frontend"
                 value={sectionForm.title}
-                onChange={handleSectionFormChange}
+                onChange={
+                  handleSectionFormChange
+                }
                 disabled={savingSection}
               />
             </div>
 
             <div className="admin-form-group">
-              <label>Display Order</label>
+              <label>
+                Display Order
+              </label>
 
               <input
                 type="number"
                 name="display_order"
                 min="1"
-                value={sectionForm.display_order}
-                onChange={handleSectionFormChange}
+                value={
+                  sectionForm.display_order
+                }
+                onChange={
+                  handleSectionFormChange
+                }
                 disabled={savingSection}
               />
             </div>
@@ -2606,12 +2879,18 @@ useEffect(() => {
               <input
                 type="checkbox"
                 name="is_active"
-                checked={sectionForm.is_active}
-                onChange={handleSectionFormChange}
+                checked={
+                  sectionForm.is_active
+                }
+                onChange={
+                  handleSectionFormChange
+                }
                 disabled={savingSection}
               />
 
-              <span>Section is active</span>
+              <span>
+                Section is active
+              </span>
             </label>
 
             <div className="admin-modal-actions">
@@ -2649,13 +2928,17 @@ useEffect(() => {
   const renderModuleModal = () => {
     if (!showModuleModal) return null;
 
-    const isEditing = Boolean(editingModule);
+    const isEditing =
+      Boolean(editingModule);
 
     return (
       <div
         className="admin-modal-overlay"
         onMouseDown={(event) => {
-          if (event.target === event.currentTarget) {
+          if (
+            event.target ===
+            event.currentTarget
+          ) {
             closeModuleModal();
           }
         }}
@@ -2688,40 +2971,56 @@ useEffect(() => {
             onSubmit={handleSaveModule}
           >
             <div className="admin-form-group">
-              <label>Module Title</label>
+              <label>
+                Module Title
+              </label>
 
               <input
                 type="text"
                 name="title"
                 placeholder="e.g. HTML"
                 value={moduleForm.title}
-                onChange={handleModuleFormChange}
+                onChange={
+                  handleModuleFormChange
+                }
                 disabled={savingModule}
               />
             </div>
 
             <div className="admin-form-group">
-              <label>Description</label>
+              <label>
+                Description
+              </label>
 
               <textarea
                 name="description"
                 rows="4"
                 placeholder="Enter module description..."
-                value={moduleForm.description}
-                onChange={handleModuleFormChange}
+                value={
+                  moduleForm.description
+                }
+                onChange={
+                  handleModuleFormChange
+                }
                 disabled={savingModule}
               />
             </div>
 
             <div className="admin-form-group">
-              <label>Display Order</label>
+              <label>
+                Display Order
+              </label>
 
               <input
                 type="number"
                 name="display_order"
                 min="1"
-                value={moduleForm.display_order}
-                onChange={handleModuleFormChange}
+                value={
+                  moduleForm.display_order
+                }
+                onChange={
+                  handleModuleFormChange
+                }
                 disabled={savingModule}
               />
             </div>
@@ -2730,12 +3029,18 @@ useEffect(() => {
               <input
                 type="checkbox"
                 name="is_active"
-                checked={moduleForm.is_active}
-                onChange={handleModuleFormChange}
+                checked={
+                  moduleForm.is_active
+                }
+                onChange={
+                  handleModuleFormChange
+                }
                 disabled={savingModule}
               />
 
-              <span>Module is active</span>
+              <span>
+                Module is active
+              </span>
             </label>
 
             <div className="admin-modal-actions">
@@ -2773,13 +3078,17 @@ useEffect(() => {
   const renderTopicModal = () => {
     if (!showTopicModal) return null;
 
-    const isEditing = Boolean(editingTopic);
+    const isEditing =
+      Boolean(editingTopic);
 
     return (
       <div
         className="admin-modal-overlay"
         onMouseDown={(event) => {
-          if (event.target === event.currentTarget) {
+          if (
+            event.target ===
+            event.currentTarget
+          ) {
             closeTopicModal();
           }
         }}
@@ -2812,27 +3121,37 @@ useEffect(() => {
             onSubmit={handleSaveTopic}
           >
             <div className="admin-form-group">
-              <label>Topic Title</label>
+              <label>
+                Topic Title
+              </label>
 
               <input
                 type="text"
                 name="title"
                 placeholder="e.g. HTML Basics"
                 value={topicForm.title}
-                onChange={handleTopicFormChange}
+                onChange={
+                  handleTopicFormChange
+                }
                 disabled={savingTopic}
               />
             </div>
 
             <div className="admin-form-group">
-              <label>Display Order</label>
+              <label>
+                Display Order
+              </label>
 
               <input
                 type="number"
                 name="display_order"
                 min="1"
-                value={topicForm.display_order}
-                onChange={handleTopicFormChange}
+                value={
+                  topicForm.display_order
+                }
+                onChange={
+                  handleTopicFormChange
+                }
                 disabled={savingTopic}
               />
             </div>
@@ -2841,12 +3160,18 @@ useEffect(() => {
               <input
                 type="checkbox"
                 name="is_active"
-                checked={topicForm.is_active}
-                onChange={handleTopicFormChange}
+                checked={
+                  topicForm.is_active
+                }
+                onChange={
+                  handleTopicFormChange
+                }
                 disabled={savingTopic}
               />
 
-              <span>Topic is active</span>
+              <span>
+                Topic is active
+              </span>
             </label>
 
             <div className="admin-modal-actions">
@@ -2884,20 +3209,26 @@ useEffect(() => {
   const renderLessonModal = () => {
     if (!showLessonModal) return null;
 
-    const isEditing = Boolean(editingLesson);
+    const isEditing =
+      Boolean(editingLesson);
 
     return (
       <div
         className="admin-modal-overlay"
         onMouseDown={(event) => {
-          if (event.target === event.currentTarget) {
+          if (
+            event.target ===
+            event.currentTarget
+          ) {
             closeLessonModal();
           }
         }}
       >
         <div
           className="admin-course-modal"
-          style={{ maxWidth: "760px" }}
+          style={{
+            maxWidth: "760px",
+          }}
         >
           <div className="admin-modal-header">
             <div>
@@ -2908,7 +3239,8 @@ useEffect(() => {
               </h2>
 
               <p>
-                Add lesson title, type and content.
+                Add lesson title, type and
+                content.
               </p>
             </div>
 
@@ -2926,57 +3258,107 @@ useEffect(() => {
             onSubmit={handleSaveLesson}
           >
             <div className="admin-form-group">
-              <label>Lesson Title</label>
+              <label>
+                Lesson Title
+              </label>
 
               <input
                 type="text"
                 name="title"
                 placeholder="e.g. Introduction to HTML"
                 value={lessonForm.title}
-                onChange={handleLessonFormChange}
+                onChange={
+                  handleLessonFormChange
+                }
                 disabled={savingLesson}
               />
             </div>
 
             <div className="admin-form-group">
-              <label>Lesson Type</label>
+              <label>
+                Lesson Type
+              </label>
 
               <select
                 name="type"
                 value={lessonForm.type}
-                onChange={handleLessonFormChange}
+                onChange={
+                  handleLessonFormChange
+                }
                 disabled={savingLesson}
               >
-                <option value="text">Text</option>
-                <option value="video">Video</option>
-                <option value="code">Code</option>
-                <option value="example">Example</option>
-                <option value="note">Note</option>
+                <option value="text">
+                  Text
+                </option>
+
+                <option value="video">
+                  Video
+                </option>
+
+                <option value="code">
+                  Code
+                </option>
+
+                <option value="example">
+                  Example
+                </option>
+
+                <option value="note">
+                  Note
+                </option>
               </select>
             </div>
 
             <div className="admin-form-group">
-              <label>Lesson Content</label>
+              <label>
+                Lesson Content
+              </label>
 
-              <textarea
-                name="content"
-                rows="10"
-                placeholder="Write lesson content here..."
+              <RichTextEditor
                 value={lessonForm.content}
-                onChange={handleLessonFormChange}
+                onChange={(html) =>
+                  setLessonForm((previous) => ({
+                    ...previous,
+                    content: html,
+                  }))
+                }
                 disabled={savingLesson}
+                placeholder="Write lesson content here..."
               />
+
+              <div
+                style={{
+                  marginTop: "8px",
+                  fontSize: "12px",
+                  lineHeight: "1.5",
+                  opacity: 0.75,
+                }}
+              >
+                <strong>Rich text editor:</strong>{" "}
+                Bold, italic, underline, headings, bullets, numbered lists,
+                links, code blocks and text alignment are supported.
+                <br />
+                <strong>Paste:</strong>{" "}
+                Copy from Word, Google Docs, websites or ChatGPT and the editor
+                will keep supported formatting automatically.
+              </div>
             </div>
 
             <div className="admin-form-group">
-              <label>Display Order</label>
+              <label>
+                Display Order
+              </label>
 
               <input
                 type="number"
                 name="display_order"
                 min="1"
-                value={lessonForm.display_order}
-                onChange={handleLessonFormChange}
+                value={
+                  lessonForm.display_order
+                }
+                onChange={
+                  handleLessonFormChange
+                }
                 disabled={savingLesson}
               />
             </div>
@@ -2985,12 +3367,18 @@ useEffect(() => {
               <input
                 type="checkbox"
                 name="is_published"
-                checked={lessonForm.is_published}
-                onChange={handleLessonFormChange}
+                checked={
+                  lessonForm.is_published
+                }
+                onChange={
+                  handleLessonFormChange
+                }
                 disabled={savingLesson}
               />
 
-              <span>Lesson is published</span>
+              <span>
+                Lesson is published
+              </span>
             </label>
 
             <div className="admin-modal-actions">
@@ -3038,13 +3426,17 @@ useEffect(() => {
               {icon} {title}
             </h2>
 
-            <p>{description}</p>
+            <p>
+              {description}
+            </p>
           </div>
 
           <button
             className="admin-back-btn"
             onClick={() =>
-              handleSectionChange("dashboard")
+              handleSectionChange(
+                "dashboard"
+              )
             }
           >
             ← Dashboard
@@ -3054,7 +3446,9 @@ useEffect(() => {
         <div className="admin-empty-state">
           <div>🚧</div>
 
-          <h3>{title} Management</h3>
+          <h3>
+            {title} Management
+          </h3>
 
           <p>
             This section will be connected to
@@ -3086,38 +3480,45 @@ useEffect(() => {
       case "lesson-management":
         return renderCourseLessons();
 
-case "syllabus":
-  return (
-    <CollegeSyllabus
-      adminMode={true}
-       onBack={() => setActiveSection("dashboard")}
-    />
-  );
+      case "syllabus":
+        return (
+          <CollegeSyllabus
+            adminMode={true}
+            onBack={() =>
+              setActiveSection("dashboard")
+            }
+          />
+        );
 
       case "practice":
         return (
           <AdminPracticeQuiz
-          adminMode={true}
-          onBack={()=> setActiveSection("dashboard")}
-        
+            adminMode={true}
+            onBack={() =>
+              setActiveSection("dashboard")
+            }
           />
         );
 
       case "build":
-  return (
-    <AdminBuild
-      adminMode={true}
-      onBack={() => setActiveSection("dashboard")}
-    />
-  );
+        return (
+          <AdminBuild
+            adminMode={true}
+            onBack={() =>
+              setActiveSection("dashboard")
+            }
+          />
+        );
 
-     case "grow":
-  return (
-    <AdminGrow
-      adminMode={true}
-      onBack={() => setActiveSection("dashboard")}
-    />
-  );
+      case "grow":
+        return (
+          <AdminGrow
+            adminMode={true}
+            onBack={() =>
+              setActiveSection("dashboard")
+            }
+          />
+        );
 
       case "students":
         return renderPlaceholder(
@@ -3197,29 +3598,41 @@ case "syllabus":
                 : "admin-nav-item"
             }
             onClick={() =>
-              handleSectionChange("dashboard")
+              handleSectionChange(
+                "dashboard"
+              )
             }
           >
             📊
-            <span>Dashboard</span>
+            <span>
+              Dashboard
+            </span>
           </button>
 
           <button
             className={
               activeSection === "courses" ||
-              activeSection === "course-management" ||
-              activeSection === "module-management" ||
-              activeSection === "topic-management" ||
-              activeSection === "lesson-management"
+              activeSection ===
+                "course-management" ||
+              activeSection ===
+                "module-management" ||
+              activeSection ===
+                "topic-management" ||
+              activeSection ===
+                "lesson-management"
                 ? "admin-nav-item active"
                 : "admin-nav-item"
             }
             onClick={() =>
-              handleSectionChange("courses")
+              handleSectionChange(
+                "courses"
+              )
             }
           >
             📚
-            <span>Courses</span>
+            <span>
+              Courses
+            </span>
           </button>
 
           <button
@@ -3229,11 +3642,15 @@ case "syllabus":
                 : "admin-nav-item"
             }
             onClick={() =>
-              handleSectionChange("syllabus")
+              handleSectionChange(
+                "syllabus"
+              )
             }
           >
             🎓
-            <span>College Syllabus</span>
+            <span>
+              College Syllabus
+            </span>
           </button>
 
           <button
@@ -3243,11 +3660,15 @@ case "syllabus":
                 : "admin-nav-item"
             }
             onClick={() =>
-              handleSectionChange("practice")
+              handleSectionChange(
+                "practice"
+              )
             }
           >
             📝
-            <span>Practice & Quizzes</span>
+            <span>
+              Practice & Quizzes
+            </span>
           </button>
 
           <button
@@ -3257,11 +3678,15 @@ case "syllabus":
                 : "admin-nav-item"
             }
             onClick={() =>
-              handleSectionChange("build")
+              handleSectionChange(
+                "build"
+              )
             }
           >
             🛠️
-            <span>Build</span>
+            <span>
+              Build
+            </span>
           </button>
 
           <button
@@ -3271,11 +3696,15 @@ case "syllabus":
                 : "admin-nav-item"
             }
             onClick={() =>
-              handleSectionChange("grow")
+              handleSectionChange(
+                "grow"
+              )
             }
           >
             🌱
-            <span>Grow</span>
+            <span>
+              Grow
+            </span>
           </button>
 
           <button
@@ -3285,18 +3714,24 @@ case "syllabus":
                 : "admin-nav-item"
             }
             onClick={() =>
-              handleSectionChange("students")
+              handleSectionChange(
+                "students"
+              )
             }
           >
             👥
-            <span>Students</span>
+            <span>
+              Students
+            </span>
           </button>
         </nav>
 
         <div className="admin-sidebar-bottom">
           <button className="admin-nav-item">
             ⚙️
-            <span>Settings</span>
+            <span>
+              Settings
+            </span>
           </button>
 
           <button
@@ -3304,7 +3739,9 @@ case "syllabus":
             onClick={onLogout}
           >
             🚪
-            <span>Logout</span>
+            <span>
+              Logout
+            </span>
           </button>
         </div>
       </aside>
@@ -3314,10 +3751,11 @@ case "syllabus":
       ===================================================== */}
 
       <main className="admin-main">
-
         <header className="admin-topbar">
           <div>
-            <h1>{getPageTitle()}</h1>
+            <h1>
+              {getPageTitle()}
+            </h1>
 
             <p>
               Welcome back to EDUVANTA Admin Panel.
@@ -3335,7 +3773,9 @@ case "syllabus":
                   "EDUVANTA Admin"}
               </strong>
 
-              <span>Administrator</span>
+              <span>
+                Administrator
+              </span>
             </div>
           </div>
         </header>

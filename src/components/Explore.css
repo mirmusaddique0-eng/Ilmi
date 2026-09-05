@@ -8,6 +8,10 @@
   padding: 50px 0 80px;
 }
 
+/* =========================
+   HEADER
+========================= */
+
 .explore-header {
   text-align: center;
   margin-bottom: 40px;
@@ -17,12 +21,18 @@
   font-size: 36px;
   margin-bottom: 10px;
   color: #111827;
+  font-weight: 700;
 }
 
 .explore-header p {
   color: #6b7280;
   font-size: 16px;
+  margin: 0;
 }
+
+/* =========================
+   GRID
+========================= */
 
 .explore-grid {
   display: grid;
@@ -30,21 +40,39 @@
   gap: 25px;
 }
 
+/* =========================
+   CARD
+========================= */
+
 .explore-card {
-  background: white;
+  background: #ffffff;
+
   border: 1px solid #e5e7eb;
   border-radius: 18px;
+
   padding: 30px;
 
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
 
-  transition: 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
 }
 
 .explore-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.10);
+
+  border-color: #c7d2fe;
 }
+
+/* =========================
+   ICON
+========================= */
 
 .explore-icon {
   width: 55px;
@@ -55,71 +83,200 @@
   justify-content: center;
 
   background: #eef2ff;
+
   border-radius: 14px;
 
   font-size: 30px;
+
   margin-bottom: 18px;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
 }
+
+/* =========================
+   CARD TITLE
+========================= */
 
 .explore-card h2 {
   font-size: 22px;
-  margin-bottom: 12px;
+
+  margin: 0 0 12px;
+
   color: #111827;
+
+  font-weight: 700;
 }
+
+/* =========================
+   CARD DESCRIPTION
+========================= */
 
 .explore-card p {
   color: #6b7280;
+
   line-height: 1.6;
-  margin-bottom: 22px;
+
+  margin: 0 0 22px;
 }
+
+/* =========================
+   BUTTON
+========================= */
 
 .explore-card button {
   border: none;
+
   background: #4f46e5;
-  color: white;
+  color: #ffffff;
 
   padding: 11px 18px;
+
   border-radius: 9px;
 
   cursor: pointer;
+
   font-size: 15px;
+  font-weight: 600;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .explore-card button:hover {
   background: #4338ca;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 18px rgba(79, 70, 229, 0.25);
 }
 
-/* Dark Mode */
+/* =========================
+   DARK MODE
+========================= */
+
+.app.dark .explore-page {
+  color: #f9fafb;
+}
+
+/* Header */
 
 .app.dark .explore-header h1 {
   color: #f9fafb;
 }
 
 .app.dark .explore-header p {
-  color: #d1d5db;
+  color: #cbd5e1;
 }
+
+/* Card */
 
 .app.dark .explore-card {
   background: #1f2937;
+
   border-color: #374151;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.30);
 }
+
+.app.dark .explore-card:hover {
+  border-color: #6366f1;
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.40);
+}
+
+/* Icon */
+
+.app.dark .explore-icon {
+  background: #312e81;
+}
+
+/* Title */
 
 .app.dark .explore-card h2 {
   color: #f9fafb;
 }
 
+/* Description */
+
 .app.dark .explore-card p {
-  color: #d1d5db;
+  color: #cbd5e1;
 }
 
-.app.dark .explore-icon {
-  background: #374151;
+/* Button */
+
+.app.dark .explore-card button {
+  background: #4f46e5;
+  color: #ffffff;
 }
 
-/* Responsive */
+.app.dark .explore-card button:hover {
+  background: #6366f1;
+
+  box-shadow:
+    0 8px 20px rgba(99, 102, 241, 0.30);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media (max-width: 900px) {
+
   .explore-grid {
     grid-template-columns: 1fr;
   }
+
+}
+
+@media (max-width: 600px) {
+
+  .explore-page {
+    width: 90%;
+    padding: 35px 0 60px;
+  }
+
+  .explore-header {
+    margin-bottom: 30px;
+  }
+
+  .explore-header h1 {
+    font-size: 28px;
+  }
+
+  .explore-header p {
+    font-size: 15px;
+  }
+
+  .explore-card {
+    padding: 24px;
+  }
+
+}
+
+@media (max-width: 400px) {
+
+  .explore-page {
+    width: 92%;
+  }
+
+  .explore-card {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .explore-card h2 {
+    font-size: 20px;
+  }
+
+  .explore-card p {
+    font-size: 14px;
+  }
+
 }

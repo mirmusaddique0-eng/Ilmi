@@ -1,1362 +1,842 @@
-import { useEffect, useRef, useState } from "react";
-import "./ContinueLearning.css";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import "./CourseLearning.css";
 
-function ContinueLearning() {
-  const [courses, setCourses] = useState([]);
+// =========================================================
+// CHECK IF CONTENT IS HTML
+// =========================================================
 
-  const [selectedLesson, setSelectedLesson] = useState(null);
-  const [currentLessons, setCurrentLessons] = useState([]);
-  const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+const isHtmlContent = (content) => {
+  if (!content) return false;
 
-  const [currentCourseId, setCurrentCourseId] = useState(null);
+  const text = String(content).trim();
 
-  const [progressData, setProgressData] = useState({});
-  const [courseStats, setCourseStats] = useState({});
+  return /<\/?[a-z][\s\S]*>/i.test(text);
+};
 
-  const [loading, setLoading] = useState(true);
-  const [lessonLoading, setLessonLoading] = useState(false);
+// =========================================================
+// NORMALIZE TEXT
+// =========================================================
+
+const normalizeText = (content) => {
+  if (content === null || content === undefined) {
+    return "";
+  }
+
+  let text = String(content);
+
+  text = text
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n");
+
+  return text;
+};
+
+// =========================================================
+// FORMAT PLAIN TEXT LESSON
+// =========================================================
+//
+// Existing lessons ke liye.
+// Database ka original structure preserve rahega.
+// Sirf actual Flow / Diagram center hoga.
+// =========================================================
+
+const formatPlainTextLesson = (content) => {
+  const text = normalizeText(content);
+
+  if (!text) {
+    return null;
+  }
+
+  const lines = text.split("\n");
+
+  const result = [];
+
+  // ---------------------------------------------------------
+  // CHECK ARROW
+  // ---------------------------------------------------------
+
+  const isArrow = (line) => {
+    return /^[\s]*[\*]?[↓↑→←↕↔]+[\*]?[\s]*$/.test(
+      line
+    );
+  };
+
+  // ---------------------------------------------------------
+  // CHECK FLOW BLOCK
+  // ---------------------------------------------------------
+
+  const isFlowBlock = (blockLines) => {
+    if (!blockLines.length) {
+      return false;
+    }
+
+    const cleanedLines = blockLines.map((line) =>
+      line.trim()
+    );
+
+    const hasSimpleFlowHeading =
+      cleanedLines.some(
+        (line) =>
+          line.toLowerCase() === "simple flow"
+      );
+
+    const hasArrow = cleanedLines.some((line) =>
+      isArrow(line)
+    );
+
+    return (
+      hasSimpleFlowHeading ||
+      hasArrow
+    );
+  };
+
+  // ---------------------------------------------------------
+  // SPLIT CONTENT INTO BLOCKS
+  // ---------------------------------------------------------
+
+  const blocks = [];
+
+  let currentBlock = [];
+
+  lines.forEach((line) => {
+    if (line === "") {
+      if (currentBlock.length > 0) {
+        blocks.push(currentBlock);
+        currentBlock = [];
+      }
+
+      blocks.push([""]);
+    } else {
+      currentBlock.push(line);
+    }
+  });
+
+  if (currentBlock.length > 0) {
+    blocks.push(currentBlock);
+  }
+
+  // ---------------------------------------------------------
+  // RENDER BLOCKS
+  // ---------------------------------------------------------
+
+  blocks.forEach((block, blockIndex) => {
+    // -------------------------------------------------------
+    // EMPTY LINE
+    // -------------------------------------------------------
+
+    if (
+      block.length === 1 &&
+      block[0] === ""
+    ) {
+      result.push(
+        <div
+          key={`space-${blockIndex}`}
+          className="lesson-content-space"
+        />
+      );
+
+      return;
+    }
+
+    // -------------------------------------------------------
+    // FLOW / DIAGRAM
+    // -------------------------------------------------------
+
+    if (isFlowBlock(block)) {
+      const hasSimpleFlowHeading =
+        block.some(
+          (line) =>
+            line.trim().toLowerCase() ===
+            "simple flow"
+        );
+
+      const hasArrow = block.some((line) =>
+        isArrow(line)
+      );
+
+      if (
+        hasSimpleFlowHeading ||
+        hasArrow
+      ) {
+        result.push(
+          <div
+            key={`flow-${blockIndex}`}
+            className="lesson-flow"
+          >
+            {block.map((line, index) => {
+              const trimmedLine =
+                line.trim();
+
+              // Simple Flow heading
+              if (
+                trimmedLine.toLowerCase() ===
+                "simple flow"
+              ) {
+                return (
+                  <div
+                    key={index}
+                    className="lesson-flow-heading"
+                  >
+                    {line}
+                  </div>
+                );
+              }
+
+              // Arrow
+              if (isArrow(line)) {
+                return (
+                  <div
+                    key={index}
+                    className="lesson-flow-arrow"
+                  >
+                    {line}
+                  </div>
+                );
+              }
+
+              // Flow item
+              return (
+                <div
+                  key={index}
+                  className="lesson-flow-item"
+                >
+                  {line}
+                </div>
+              );
+            })}
+          </div>
+        );
+
+        return;
+      }
+    }
+
+    // -------------------------------------------------------
+    // NORMAL TEXT
+    // -------------------------------------------------------
+
+    result.push(
+      <div
+        key={`content-${blockIndex}`}
+        className="lesson-content-line"
+      >
+        {block.map((line, index) => (
+          <span
+            key={index}
+            className="lesson-raw-line"
+          >
+            {line}
+
+            {index <
+              block.length - 1 && (
+              <br />
+            )}
+          </span>
+        ))}
+      </div>
+    );
+  });
+
+  return result;
+};
+
+// =========================================================
+// WORD / HTML CONTENT
+// =========================================================
+//
+// Mammoth Word document ko HTML mein convert karega.
+//
+// Example:
+// <h1>What is HTML?</h1>
+// <p>HTML is...</p>
+// <ul><li>...</li></ul>
+//
+// Images intentionally remove ki ja rahi hain.
+// =========================================================
+
+const formatHtmlLesson = (content) => {
+  if (!content) {
+    return null;
+  }
+
+  let html = String(content);
+
+  // ---------------------------------------------------------
+  // REMOVE SCRIPT / STYLE
+  // ---------------------------------------------------------
+
+  html = html.replace(
+    /<script[\s\S]*?<\/script>/gi,
+    ""
+  );
+
+  html = html.replace(
+    /<style[\s\S]*?<\/style>/gi,
+    ""
+  );
+
+  // ---------------------------------------------------------
+  // REMOVE IMAGES
+  // ---------------------------------------------------------
+
+  html = html.replace(
+    /<img\b[^>]*>/gi,
+    ""
+  );
+
+  // ---------------------------------------------------------
+  // REMOVE IFRAME / EMBED / OBJECT
+  // ---------------------------------------------------------
+
+  html = html.replace(
+    /<iframe[\s\S]*?<\/iframe>/gi,
+    ""
+  );
+
+  html = html.replace(
+    /<object[\s\S]*?<\/object>/gi,
+    ""
+  );
+
+  html = html.replace(
+    /<embed\b[^>]*>/gi,
+    ""
+  );
+
+  // ---------------------------------------------------------
+  // REMOVE EVENT ATTRIBUTES
+  // ---------------------------------------------------------
+
+  html = html.replace(
+    /\s+on[a-z]+\s*=\s*(['"])[\s\S]*?\1/gi,
+    ""
+  );
+
+  // ---------------------------------------------------------
+  // REMOVE JAVASCRIPT LINKS
+  // ---------------------------------------------------------
+
+  html = html.replace(
+    /\s+(href|src)\s*=\s*(['"])\s*javascript:[\s\S]*?\2/gi,
+    ""
+  );
+
+  // ---------------------------------------------------------
+  // REMOVE META / LINK / FORM
+  // ---------------------------------------------------------
+
+  html = html.replace(
+    /<meta\b[^>]*>/gi,
+    ""
+  );
+
+  html = html.replace(
+    /<link\b[^>]*>/gi,
+    ""
+  );
+
+  html = html.replace(
+    /<form[\s\S]*?<\/form>/gi,
+    ""
+  );
+
+  // ---------------------------------------------------------
+  // RETURN SAFE HTML
+  // ---------------------------------------------------------
+
+  return (
+    <div
+      className="lesson-rich-content"
+      dangerouslySetInnerHTML={{
+        __html: html,
+      }}
+    />
+  );
+};
+
+// =========================================================
+// COURSE LEARNING
+// =========================================================
+
+function CourseLearning({ course, onBack }) {
+  const [topics, setTopics] =
+    useState([]);
+
+  const [lessons, setLessons] =
+    useState([]);
+
+  const [selectedTopic, setSelectedTopic] =
+    useState(null);
+
+  const [selectedLesson, setSelectedLesson] =
+    useState(null);
+
+  const [openSection, setOpenSection] =
+    useState(
+      course.sections?.[0]?.id || null
+    );
+
+  const [openModule, setOpenModule] =
+    useState(
+      course.sections?.[0]?.modules?.[0]?.id ||
+        null
+    );
+
+  const [loading, setLoading] =
+    useState(true);
 
   // =========================================================
-  // LESSON TIMER
-  // =========================================================
-
-  const lessonTimeRef = useRef(0);
-
-  // Prevent duplicate saves
-  const savingTimeRef = useRef(false);
-
-  // =========================================================
-  // LOAD COURSES
+  // FETCH TOPICS + LESSONS
   // =========================================================
 
   useEffect(() => {
-    loadCourses();
-  }, []);
+    const fetchCourseContent =
+      async () => {
+        setLoading(true);
 
-  async function loadCourses() {
-    try {
-      setLoading(true);
+        try {
+          // -------------------------------------------------
+          // GET ALL MODULE IDS
+          // -------------------------------------------------
 
-      const { data, error } = await supabase
-        .from("courses")
-        .select("*")
-        .eq("is_active", true)
-        .order("display_order", {
-          ascending: true,
-        });
+          const moduleIds =
+            course.sections?.flatMap(
+              (section) =>
+                section.modules?.map(
+                  (module) => module.id
+                ) || []
+            ) || [];
 
-      if (error) {
-        console.error("Courses error:", error);
-        return;
-      }
-
-      const courseList = data || [];
-
-      setCourses(courseList);
-
-      await loadCourseStats(courseList);
-      await loadProgress(courseList);
-    } catch (error) {
-      console.error("Load courses error:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // =========================================================
-  // BACKGROUND LESSON TIMER
-  // NO TIMER UI
-  // NO TIMER CONSOLE LOGS
-  // =========================================================
-
-  useEffect(() => {
-    if (!selectedLesson || !currentCourseId) {
-      return;
-    }
-
-    // -------------------------------------------------------
-    // FIND SAVED TIME FOR CURRENT LESSON
-    // -------------------------------------------------------
-
-    const savedRow =
-      progressData[currentCourseId]?.progressRows?.find(
-        (item) =>
-          Number(item.lesson_id) ===
-          Number(selectedLesson.id)
-      );
-
-    // IMPORTANT:
-    // DATABASE COLUMN = learning_time_seconds
-
-    const savedSeconds =
-      Number(savedRow?.learning_time_seconds) || 0;
-
-    lessonTimeRef.current = savedSeconds;
-
-    // -------------------------------------------------------
-    // START BACKGROUND TIMER
-    // -------------------------------------------------------
-
-    const timer = setInterval(() => {
-      lessonTimeRef.current += 1;
-    }, 1000);
-
-    // -------------------------------------------------------
-    // AUTO SAVE EVERY 5 SECONDS
-    // -------------------------------------------------------
-
-    const autoSaveTimer = setInterval(() => {
-      saveLessonTime(
-        selectedLesson.id,
-        currentCourseId,
-        lessonTimeRef.current
-      );
-    }, 5000);
-
-    // -------------------------------------------------------
-    // CLEANUP
-    // -------------------------------------------------------
-
-    return () => {
-      clearInterval(timer);
-      clearInterval(autoSaveTimer);
-
-      // Save latest time when leaving lesson
-      saveLessonTime(
-        selectedLesson.id,
-        currentCourseId,
-        lessonTimeRef.current
-      );
-    };
-
-    // IMPORTANT:
-    // progressData intentionally NOT included.
-  }, [selectedLesson, currentCourseId]);
-
-  // =========================================================
-  // SAVE LESSON TIME
-  // =========================================================
-
-  async function saveLessonTime(
-    lessonId,
-    courseId,
-    seconds
-  ) {
-    if (
-      !lessonId ||
-      !courseId ||
-      seconds <= 0
-    ) {
-      return;
-    }
-
-    if (savingTimeRef.current) {
-      return;
-    }
-
-    try {
-      savingTimeRef.current = true;
-
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        return;
-      }
-
-      // -----------------------------------------------------
-      // GET EXISTING ROW
-      // -----------------------------------------------------
-
-      const {
-        data: existingRows,
-        error: fetchError,
-      } = await supabase
-        .from("course_progress")
-        .select(
-          `
-          id,
-          lesson_id,
-          course_id,
-          progress_percent,
-          is_completed,
-          learning_time_seconds
-          `
-        )
-        .eq("user_id", user.id)
-        .eq("course_id", courseId)
-        .eq("lesson_id", lessonId)
-        .limit(1);
-
-      if (fetchError) {
-        console.error(
-          "Timer existing row error:",
-          fetchError
-        );
-        return;
-      }
-
-      const existingRow =
-        existingRows?.[0];
-
-      // -----------------------------------------------------
-      // NEVER REDUCE SAVED TIME
-      // -----------------------------------------------------
-
-      const oldSeconds =
-        Number(
-          existingRow?.learning_time_seconds
-        ) || 0;
-
-      const newSeconds = Math.max(
-        oldSeconds,
-        Number(seconds) || 0
-      );
-
-      // -----------------------------------------------------
-      // SAVE PAYLOAD
-      // -----------------------------------------------------
-
-      const payload = {
-        user_id: user.id,
-        course_id: courseId,
-        lesson_id: lessonId,
-
-        progress_percent:
-          existingRow?.progress_percent || 0,
-
-        is_completed:
-          existingRow?.is_completed || false,
-
-        // EXACT DATABASE COLUMN
-        learning_time_seconds:
-          newSeconds,
-
-        updated_at:
-          new Date().toISOString(),
-      };
-
-      let saveError;
-
-      // -----------------------------------------------------
-      // UPDATE EXISTING ROW
-      // -----------------------------------------------------
-
-      if (existingRow?.id) {
-        const result = await supabase
-          .from("course_progress")
-          .update(payload)
-          .eq("id", existingRow.id);
-
-        saveError = result.error;
-      }
-
-      // -----------------------------------------------------
-      // INSERT NEW ROW
-      // -----------------------------------------------------
-
-      else {
-        const result = await supabase
-          .from("course_progress")
-          .insert(payload);
-
-        saveError = result.error;
-      }
-
-      if (saveError) {
-        console.error(
-          "Timer save error:",
-          saveError
-        );
-        return;
-      }
-
-      // -----------------------------------------------------
-      // UPDATE LOCAL STATE
-      // -----------------------------------------------------
-
-      setProgressData((prev) => {
-        const courseInfo =
-          prev[courseId] || {};
-
-        const rows =
-          courseInfo.progressRows || [];
-
-        const existingIndex =
-          rows.findIndex(
-            (row) =>
-              Number(row.lesson_id) ===
-              Number(lessonId)
+          console.log(
+            "Module IDs:",
+            moduleIds
           );
 
-        let updatedRows;
-
-        if (existingIndex !== -1) {
-          updatedRows = [...rows];
-
-          updatedRows[existingIndex] = {
-            ...updatedRows[existingIndex],
-
-            learning_time_seconds:
-              newSeconds,
-
-            updated_at:
-              new Date().toISOString(),
-          };
-        } else {
-          updatedRows = [
-            ...rows,
-
-            {
-              lesson_id: lessonId,
-              course_id: courseId,
-
-              learning_time_seconds:
-                newSeconds,
-
-              progress_percent: 0,
-              is_completed: false,
-
-              updated_at:
-                new Date().toISOString(),
-            },
-          ];
-        }
-
-        return {
-          ...prev,
-
-          [courseId]: {
-            ...courseInfo,
-            progressRows: updatedRows,
-          },
-        };
-      });
-    } catch (error) {
-      console.error(
-        "Save lesson time error:",
-        error
-      );
-    } finally {
-      savingTimeRef.current = false;
-    }
-  }
-
-  // =========================================================
-  // LOAD REAL COURSE STATISTICS
-  // COURSE → SECTION → MODULE → TOPIC → LESSON
-  // =========================================================
-
-  async function loadCourseStats(courseList) {
-    if (!courseList.length) {
-      return;
-    }
-
-    try {
-      const courseIds =
-        courseList.map(
-          (course) => course.id
-        );
-
-      // =====================================================
-      // SECTIONS
-      // =====================================================
-
-      const {
-        data: sections,
-        error: sectionError,
-      } = await supabase
-        .from("course_sections")
-        .select(
-          "id, course_id, display_order"
-        )
-        .in(
-          "course_id",
-          courseIds
-        )
-        .eq(
-          "is_active",
-          true
-        );
-
-      if (sectionError) {
-        console.error(
-          "Course stats sections error:",
-          sectionError
-        );
-        return;
-      }
-
-      if (!sections?.length) {
-        return;
-      }
-
-      const sectionIds =
-        sections.map(
-          (section) => section.id
-        );
-
-      // =====================================================
-      // MODULES
-      // =====================================================
-
-      const {
-        data: modules,
-        error: moduleError,
-      } = await supabase
-        .from("course_modules")
-        .select(
-          "id, section_id, display_order"
-        )
-        .in(
-          "section_id",
-          sectionIds
-        )
-        .eq(
-          "is_active",
-          true
-        );
-
-      if (moduleError) {
-        console.error(
-          "Course stats modules error:",
-          moduleError
-        );
-        return;
-      }
-
-      if (!modules?.length) {
-        return;
-      }
-
-      const moduleIds =
-        modules.map(
-          (module) => module.id
-        );
-
-      // =====================================================
-      // TOPICS
-      // =====================================================
-
-      const {
-        data: topics,
-        error: topicError,
-      } = await supabase
-        .from("course_topics")
-        .select(
-          "id, module_id, display_order"
-        )
-        .in(
-          "module_id",
-          moduleIds
-        )
-        .eq(
-          "is_active",
-          true
-        );
-
-      if (topicError) {
-        console.error(
-          "Course stats topics error:",
-          topicError
-        );
-        return;
-      }
-
-      if (!topics?.length) {
-        return;
-      }
-
-      const topicIds =
-        topics.map(
-          (topic) => topic.id
-        );
-
-      // =====================================================
-      // LESSONS
-      // =====================================================
-
-      const {
-        data: lessons,
-        error: lessonError,
-      } = await supabase
-        .from("course_lessons")
-        .select(
-          "id, topic_id, display_order"
-        )
-        .in(
-          "topic_id",
-          topicIds
-        )
-        .eq(
-          "is_published",
-          true
-        );
-
-      if (lessonError) {
-        console.error(
-          "Course stats lessons error:",
-          lessonError
-        );
-        return;
-      }
-
-      // =====================================================
-      // MAPS
-      // =====================================================
-
-      const topicMap = {};
-      const moduleMap = {};
-      const sectionMap = {};
-
-      topics.forEach((topic) => {
-        topicMap[topic.id] = topic;
-      });
-
-      modules.forEach((module) => {
-        moduleMap[module.id] = module;
-      });
-
-      sections.forEach((section) => {
-        sectionMap[section.id] = section;
-      });
-
-      // =====================================================
-      // CREATE STATS
-      // =====================================================
-
-      const stats = {};
-
-      courseList.forEach((course) => {
-        stats[course.id] = {
-          totalLessons: 0,
-          lessonIds: new Set(),
-        };
-      });
-
-      // =====================================================
-      // COUNT LESSONS
-      // =====================================================
-
-      (lessons || []).forEach((lesson) => {
-        const topic =
-          topicMap[lesson.topic_id];
-
-        const module =
-          moduleMap[topic?.module_id];
-
-        const section =
-          sectionMap[module?.section_id];
-
-        const courseId =
-          section?.course_id;
-
-        if (
-          courseId &&
-          stats[courseId]
-        ) {
-          stats[courseId].totalLessons += 1;
-
-          stats[courseId].lessonIds.add(
-            lesson.id
-          );
-        }
-      });
-
-      setCourseStats(stats);
-    } catch (error) {
-      console.error(
-        "Load course stats error:",
-        error
-      );
-    }
-  }
-
-  // =========================================================
-  // LOAD USER PROGRESS
-  // =========================================================
-
-  async function loadProgress(courseList) {
-    if (!courseList.length) {
-      return;
-    }
-
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        console.error(
-          "User not logged in"
-        );
-        return;
-      }
-
-      const courseIds =
-        courseList.map(
-          (course) => course.id
-        );
-
-      const {
-        data,
-        error,
-      } = await supabase
-        .from("course_progress")
-        .select(
-          `
-          id,
-          course_id,
-          lesson_id,
-          progress_percent,
-          is_completed,
-          learning_time_seconds,
-          updated_at
-          `
-        )
-        .eq(
-          "user_id",
-          user.id
-        )
-        .in(
-          "course_id",
-          courseIds
-        )
-        .order(
-          "updated_at",
-          {
-            ascending: false,
+          if (
+            moduleIds.length === 0
+          ) {
+            setTopics([]);
+            setLessons([]);
+            setSelectedTopic(null);
+            setSelectedLesson(null);
+            setLoading(false);
+            return;
           }
-        );
 
-      if (error) {
-        console.error(
-          "Progress error:",
-          error
-        );
-        return;
-      }
+          // -------------------------------------------------
+          // FETCH TOPICS
+          // -------------------------------------------------
 
-      const progressMap = {};
-
-      courseList.forEach((course) => {
-        const courseProgress =
-          (data || []).filter(
-            (item) =>
-              item.course_id ===
-              course.id
-          );
-
-        const completedLessonIds =
-          new Set(
-            courseProgress
-              .filter(
-                (item) =>
-                  item.is_completed ===
-                  true
-              )
-              .map(
-                (item) =>
-                  item.lesson_id
-              )
-          );
-
-        progressMap[course.id] = {
-          completedLessons:
-            completedLessonIds.size,
-
-          lastLessonId:
-            courseProgress.length > 0
-              ? courseProgress[0]
-                  .lesson_id
-              : null,
-
-          progressRows:
-            courseProgress,
-        };
-      });
-
-      setProgressData(progressMap);
-    } catch (error) {
-      console.error(
-        "Load progress error:",
-        error
-      );
-    }
-  }
-
-  // =========================================================
-  // LOAD COMPLETE COURSE
-  // =========================================================
-
-  async function handleContinue(courseId) {
-    try {
-      setLessonLoading(true);
-
-      setCurrentCourseId(courseId);
-
-      // =====================================================
-      // SECTIONS
-      // =====================================================
-
-      const {
-        data: sections,
-        error: sectionError,
-      } = await supabase
-        .from("course_sections")
-        .select(
-          "id, title, display_order, course_id"
-        )
-        .eq(
-          "course_id",
-          courseId
-        )
-        .eq(
-          "is_active",
-          true
-        )
-        .order(
-          "display_order",
-          {
-            ascending: true,
-          }
-        );
-
-      if (sectionError) {
-        console.error(
-          "Sections error:",
-          sectionError
-        );
-        return;
-      }
-
-      if (!sections?.length) {
-        alert("No sections found.");
-        return;
-      }
-
-      const sectionIds =
-        sections.map(
-          (section) =>
-            section.id
-        );
-
-      // =====================================================
-      // MODULES
-      // =====================================================
-
-      const {
-        data: modules,
-        error: moduleError,
-      } = await supabase
-        .from("course_modules")
-        .select(
-          "id, title, display_order, section_id"
-        )
-        .in(
-          "section_id",
-          sectionIds
-        )
-        .eq(
-          "is_active",
-          true
-        )
-        .order(
-          "display_order",
-          {
-            ascending: true,
-          }
-        );
-
-      if (moduleError) {
-        console.error(
-          "Modules error:",
-          moduleError
-        );
-        return;
-      }
-
-      if (!modules?.length) {
-        alert("No modules found.");
-        return;
-      }
-
-      const moduleIds =
-        modules.map(
-          (module) =>
-            module.id
-        );
-
-      // =====================================================
-      // TOPICS
-      // =====================================================
-
-      const {
-        data: topics,
-        error: topicError,
-      } = await supabase
-        .from("course_topics")
-        .select(
-          "id, title, display_order, module_id"
-        )
-        .in(
-          "module_id",
-          moduleIds
-        )
-        .eq(
-          "is_active",
-          true
-        )
-        .order(
-          "display_order",
-          {
-            ascending: true,
-          }
-        );
-
-      if (topicError) {
-        console.error(
-          "Topics error:",
-          topicError
-        );
-        return;
-      }
-
-      if (!topics?.length) {
-        alert("No topics found.");
-        return;
-      }
-
-      const topicIds =
-        topics.map(
-          (topic) =>
-            topic.id
-        );
-
-      // =====================================================
-      // LESSONS
-      // =====================================================
-
-      const {
-        data: lessons,
-        error: lessonError,
-      } = await supabase
-        .from("course_lessons")
-        .select("*")
-        .in(
-          "topic_id",
-          topicIds
-        )
-        .eq(
-          "is_published",
-          true
-        )
-        .order(
-          "display_order",
-          {
-            ascending: true,
-          }
-        );
-
-      if (lessonError) {
-        console.error(
-          "Lessons error:",
-          lessonError
-        );
-        return;
-      }
-
-      if (!lessons?.length) {
-        alert("No lessons found.");
-        return;
-      }
-
-      // =====================================================
-      // MAPS
-      // =====================================================
-
-      const moduleMap = {};
-      const topicMap = {};
-      const sectionMap = {};
-
-      modules.forEach((module) => {
-        moduleMap[module.id] = module;
-      });
-
-      topics.forEach((topic) => {
-        topicMap[topic.id] = topic;
-      });
-
-      sections.forEach((section) => {
-        sectionMap[section.id] = section;
-      });
-
-      // =====================================================
-      // SORT LESSONS
-      // =====================================================
-
-      const sortedLessons =
-        [...lessons].sort(
-          (a, b) => {
-            const topicA =
-              topicMap[a.topic_id];
-
-            const topicB =
-              topicMap[b.topic_id];
-
-            const moduleA =
-              moduleMap[
-                topicA?.module_id
-              ];
-
-            const moduleB =
-              moduleMap[
-                topicB?.module_id
-              ];
-
-            const sectionA =
-              sectionMap[
-                moduleA?.section_id
-              ];
-
-            const sectionB =
-              sectionMap[
-                moduleB?.section_id
-              ];
-
-            const sectionCompare =
-              (
-                sectionA?.display_order ??
-                0
-              ) -
-              (
-                sectionB?.display_order ??
-                0
-              );
-
-            if (sectionCompare !== 0) {
-              return sectionCompare;
-            }
-
-            const moduleCompare =
-              (
-                moduleA?.display_order ??
-                0
-              ) -
-              (
-                moduleB?.display_order ??
-                0
-              );
-
-            if (moduleCompare !== 0) {
-              return moduleCompare;
-            }
-
-            const topicCompare =
-              (
-                topicA?.display_order ??
-                0
-              ) -
-              (
-                topicB?.display_order ??
-                0
-              );
-
-            if (topicCompare !== 0) {
-              return topicCompare;
-            }
-
-            return (
-              (
-                a.display_order ??
-                0
-              ) -
-              (
-                b.display_order ??
-                0
-              )
-            );
-          }
-        );
-
-      setCurrentLessons(
-        sortedLessons
-      );
-
-      // =====================================================
-      // COMPLETED LESSONS
-      // =====================================================
-
-      const savedProgress =
-        progressData[courseId];
-
-      const completedLessonIds =
-        new Set(
-          (
-            savedProgress?.progressRows ||
-            []
-          )
-            .filter(
-              (item) =>
-                item.is_completed ===
-                true
+          const {
+            data: topicData,
+            error: topicError,
+          } = await supabase
+            .from("course_topics")
+            .select("*")
+            .in(
+              "module_id",
+              moduleIds
             )
-            .map(
-              (item) =>
-                item.lesson_id
-            )
-        );
-
-      // =====================================================
-      // NEXT INCOMPLETE LESSON
-      // =====================================================
-
-      let startIndex =
-        sortedLessons.findIndex(
-          (lesson) =>
-            !completedLessonIds.has(
-              lesson.id
-            )
-        );
-
-      if (startIndex === -1) {
-        startIndex =
-          sortedLessons.length - 1;
-      }
-
-      setCurrentLessonIndex(
-        startIndex
-      );
-
-      setSelectedLesson(
-        sortedLessons[startIndex]
-      );
-    } catch (error) {
-      console.error(
-        "Continue learning error:",
-        error
-      );
-
-      alert(
-        "Something went wrong while loading the course."
-      );
-    } finally {
-      setLessonLoading(false);
-    }
-  }
-
-  // =========================================================
-  // SAVE COMPLETE LESSON
-  // =========================================================
-
-  async function saveProgress(
-    lesson,
-    courseId
-  ) {
-    if (
-      !lesson ||
-      !courseId
-    ) {
-      return;
-    }
-
-    try {
-      // Save latest timer first
-      await saveLessonTime(
-        lesson.id,
-        courseId,
-        lessonTimeRef.current
-      );
-
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        return;
-      }
-
-      const totalLessons =
-        currentLessons.length;
-
-      if (totalLessons === 0) {
-        return;
-      }
-
-      // =====================================================
-      // EXISTING PROGRESS
-      // =====================================================
-
-      const {
-        data: existingProgress,
-        error,
-      } = await supabase
-        .from("course_progress")
-        .select(
-          `
-          id,
-          lesson_id,
-          is_completed,
-          progress_percent,
-          learning_time_seconds,
-          updated_at
-          `
-        )
-        .eq(
-          "user_id",
-          user.id
-        )
-        .eq(
-          "course_id",
-          courseId
-        );
-
-      if (error) {
-        console.error(
-          "Existing progress error:",
-          error
-        );
-        return;
-      }
-
-      // =====================================================
-      // COMPLETED IDS
-      // =====================================================
-
-      const completedIds =
-        new Set(
-          (existingProgress || [])
-            .filter(
-              (item) =>
-                item.is_completed ===
-                true
-            )
-            .map(
-              (item) =>
-                item.lesson_id
-            )
-        );
-
-      completedIds.add(
-        lesson.id
-      );
-
-      const completedCount =
-        completedIds.size;
-
-      // =====================================================
-      // PERCENTAGE
-      // =====================================================
-
-      const percent =
-        Math.min(
-          100,
-          Math.round(
-            (completedCount /
-              totalLessons) *
-              100
-          )
-        );
-
-      // =====================================================
-      // CURRENT LESSON TIME
-      // =====================================================
-
-      const currentSeconds =
-        Math.max(
-          Number(
-            lessonTimeRef.current
-          ) || 0,
-
-          Number(
-            existingProgress?.find(
-              (item) =>
-                Number(
-                  item.lesson_id
-                ) ===
-                Number(
-                  lesson.id
-                )
-            )
-              ?.learning_time_seconds
-          ) || 0
-        );
-
-      // =====================================================
-      // CURRENT LESSON ROW
-      // =====================================================
-
-      const existingRow =
-        (
-          existingProgress ||
-          []
-        ).find(
-          (item) =>
-            Number(
-              item.lesson_id
-            ) ===
-            Number(
-              lesson.id
-            )
-        );
-
-      // =====================================================
-      // SAVE PAYLOAD
-      // =====================================================
-
-      const payload = {
-        user_id: user.id,
-        course_id: courseId,
-        lesson_id: lesson.id,
-
-        progress_percent:
-          percent,
-
-        is_completed: true,
-
-        // EXACT DATABASE COLUMN
-        learning_time_seconds:
-          currentSeconds,
-
-        updated_at:
-          new Date().toISOString(),
-      };
-
-      let progressError;
-
-      // =====================================================
-      // UPDATE
-      // =====================================================
-
-      if (existingRow?.id) {
-        const result =
-          await supabase
-            .from("course_progress")
-            .update(payload)
             .eq(
-              "id",
-              existingRow.id
+              "is_active",
+              true
+            )
+            .order(
+              "display_order",
+              {
+                ascending: true,
+              }
             );
 
-        progressError =
-          result.error;
-      }
+          if (topicError) {
+            console.error(
+              "Course topics fetch error:",
+              topicError
+            );
 
-      // =====================================================
-      // INSERT
-      // =====================================================
+            setTopics([]);
+            setLessons([]);
+            setLoading(false);
+            return;
+          }
 
-      else {
-        const result =
-          await supabase
-            .from("course_progress")
-            .insert(payload);
+          console.log(
+            "Course Topics from Supabase:",
+            topicData
+          );
 
-        progressError =
-          result.error;
-      }
+          setTopics(
+            topicData || []
+          );
 
-      if (progressError) {
-        console.error(
-          "Save progress error:",
-          progressError
-        );
-        return;
-      }
+          // -------------------------------------------------
+          // GET TOPIC IDS
+          // -------------------------------------------------
 
-      // Refresh progress
-      await loadProgress(
-        courses
+          const topicIds =
+            (topicData || []).map(
+              (topic) => topic.id
+            );
+
+          if (
+            topicIds.length === 0
+          ) {
+            setLessons([]);
+            setSelectedTopic(null);
+            setSelectedLesson(null);
+            setLoading(false);
+            return;
+          }
+
+          // -------------------------------------------------
+          // FETCH LESSONS
+          // -------------------------------------------------
+
+          const {
+            data: lessonData,
+            error: lessonError,
+          } = await supabase
+            .from("course_lessons")
+            .select("*")
+            .in(
+              "topic_id",
+              topicIds
+            )
+            .eq(
+              "is_published",
+              true
+            )
+            .order(
+              "display_order",
+              {
+                ascending: true,
+              }
+            );
+
+          if (lessonError) {
+            console.error(
+              "Course lessons fetch error:",
+              lessonError
+            );
+
+            setLessons([]);
+            setLoading(false);
+            return;
+          }
+
+          console.log(
+            "Course Lessons from Supabase:",
+            lessonData
+          );
+
+          setLessons(
+            lessonData || []
+          );
+
+          // -------------------------------------------------
+          // SELECT FIRST TOPIC
+          // -------------------------------------------------
+
+          const firstTopic =
+            topicData?.[0] || null;
+
+          setSelectedTopic(
+            firstTopic
+          );
+
+          // -------------------------------------------------
+          // SELECT FIRST LESSON
+          // -------------------------------------------------
+
+          if (firstTopic) {
+            const firstLesson =
+              (lessonData || []).find(
+                (lesson) =>
+                  lesson.topic_id ===
+                  firstTopic.id
+              ) || null;
+
+            setSelectedLesson(
+              firstLesson
+            );
+          } else {
+            setSelectedLesson(
+              null
+            );
+          }
+        } catch (error) {
+          console.error(
+            "Course content error:",
+            error
+          );
+
+          setTopics([]);
+          setLessons([]);
+          setSelectedTopic(null);
+          setSelectedLesson(null);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+    if (course) {
+      fetchCourseContent();
+    }
+  }, [course]);
+
+  // =========================================================
+  // GET MODULE TOPICS
+  // =========================================================
+
+  const getModuleTopics = (
+    moduleId
+  ) => {
+    return topics.filter(
+      (topic) =>
+        topic.module_id ===
+        moduleId
+    );
+  };
+
+  // =========================================================
+  // GET TOPIC LESSONS
+  // =========================================================
+
+  const getTopicLessons = (
+    topicId
+  ) => {
+    return lessons.filter(
+      (lesson) =>
+        lesson.topic_id ===
+        topicId
+    );
+  };
+
+  // =========================================================
+  // ALL LESSONS
+  // =========================================================
+
+  const allLessons = lessons;
+
+  const currentLessonIndex =
+    selectedLesson
+      ? allLessons.findIndex(
+          (lesson) =>
+            lesson.id ===
+            selectedLesson.id
+        )
+      : -1;
+
+  // =========================================================
+  // SELECT TOPIC
+  // =========================================================
+
+  const handleTopicClick = (
+    topic,
+    moduleId
+  ) => {
+    setSelectedTopic(topic);
+
+    setOpenModule(moduleId);
+
+    const topicLessons =
+      getTopicLessons(
+        topic.id
       );
 
-      return {
-        percent,
-        completedCount,
-        totalLessons,
-
-        isCompleted:
-          completedCount >=
-          totalLessons,
-      };
-    } catch (error) {
-      console.error(
-        "Save progress error:",
-        error
+    if (
+      topicLessons.length > 0
+    ) {
+      setSelectedLesson(
+        topicLessons[0]
+      );
+    } else {
+      setSelectedLesson(
+        null
       );
     }
-  }
+  };
+
+  // =========================================================
+  // SELECT LESSON
+  // =========================================================
+
+  const handleLessonClick = (
+    lesson,
+    topic
+  ) => {
+    setSelectedLesson(
+      lesson
+    );
+
+    setSelectedTopic(
+      topic
+    );
+  };
+
+  // =========================================================
+  // FIND MODULE BY TOPIC
+  // =========================================================
+
+  const findModuleByTopic = (
+    topicId
+  ) => {
+    const topic =
+      topics.find(
+        (item) =>
+          item.id === topicId
+      );
+
+    if (!topic) {
+      return null;
+    }
+
+    return (
+      course.sections
+        ?.flatMap(
+          (section) =>
+            section.modules || []
+        )
+        .find(
+          (module) =>
+            module.id ===
+            topic.module_id
+        ) || null
+    );
+  };
+
+  // =========================================================
+  // FIND SECTION BY MODULE
+  // =========================================================
+
+  const findSectionByModule = (
+    moduleId
+  ) => {
+    return (
+      course.sections?.find(
+        (section) =>
+          section.modules?.some(
+            (module) =>
+              module.id ===
+              moduleId
+          )
+      ) || null
+    );
+  };
 
   // =========================================================
   // NEXT LESSON
   // =========================================================
 
-  async function handleNextLesson() {
-    const currentLesson =
-      currentLessons[
-        currentLessonIndex
-      ];
-
-    if (!currentLesson) {
-      return;
-    }
-
-    // SAVE CURRENT LESSON + TIME
-    await saveProgress(
-      currentLesson,
-      currentCourseId
-    );
-
-    const nextIndex =
-      currentLessonIndex + 1;
-
+  const goToNextLesson = () => {
     if (
-      nextIndex >=
-      currentLessons.length
+      currentLessonIndex >= 0 &&
+      currentLessonIndex <
+        allLessons.length - 1
     ) {
-      alert(
-        "🎉 Congratulations! You completed the entire course!"
+      const nextLesson =
+        allLessons[
+          currentLessonIndex + 1
+        ];
+
+      setSelectedLesson(
+        nextLesson
       );
 
-      return;
+      const nextTopic =
+        topics.find(
+          (topic) =>
+            topic.id ===
+            nextLesson.topic_id
+        );
+
+      if (nextTopic) {
+        setSelectedTopic(
+          nextTopic
+        );
+
+        const nextModule =
+          findModuleByTopic(
+            nextTopic.id
+          );
+
+        if (nextModule) {
+          setOpenModule(
+            nextModule.id
+          );
+
+          const nextSection =
+            findSectionByModule(
+              nextModule.id
+            );
+
+          if (nextSection) {
+            setOpenSection(
+              nextSection.id
+            );
+          }
+        }
+      }
     }
-
-    setCurrentLessonIndex(
-      nextIndex
-    );
-
-    setSelectedLesson(
-      currentLessons[nextIndex]
-    );
-  }
+  };
 
   // =========================================================
-  // BACK TO COURSES
+  // PREVIOUS LESSON
   // =========================================================
 
-  async function handleBackToCourses() {
-    // Save current lesson time before leaving
-    if (
-      selectedLesson &&
-      currentCourseId
-    ) {
-      await saveLessonTime(
-        selectedLesson.id,
-        currentCourseId,
-        lessonTimeRef.current
-      );
-    }
+  const goToPreviousLesson =
+    () => {
+      if (
+        currentLessonIndex > 0
+      ) {
+        const previousLesson =
+          allLessons[
+            currentLessonIndex - 1
+          ];
 
-    setSelectedLesson(null);
-    setCurrentLessons([]);
-    setCurrentLessonIndex(0);
-    setCurrentCourseId(null);
+        setSelectedLesson(
+          previousLesson
+        );
 
-    await loadProgress(
-      courses
-    );
-  }
+        const previousTopic =
+          topics.find(
+            (topic) =>
+              topic.id ===
+              previousLesson.topic_id
+          );
+
+        if (previousTopic) {
+          setSelectedTopic(
+            previousTopic
+          );
+
+          const previousModule =
+            findModuleByTopic(
+              previousTopic.id
+            );
+
+          if (previousModule) {
+            setOpenModule(
+              previousModule.id
+            );
+
+            const previousSection =
+              findSectionByModule(
+                previousModule.id
+              );
+
+            if (previousSection) {
+              setOpenSection(
+                previousSection.id
+              );
+            }
+          }
+        }
+      }
+    };
 
   // =========================================================
   // LOADING
@@ -1364,341 +844,365 @@ function ContinueLearning() {
 
   if (loading) {
     return (
-      <div className="continue-learning-page">
+      <section className="learning-page">
+        <div className="learning-header">
+          <div>
+            <h1>
+              {course.title}
+            </h1>
 
-        <div className="continue-learning-header">
-
-          <span>
-            LEARN
-          </span>
-
-          <h1>
-            Continue Learning
-          </h1>
-
-          <p>
-            Loading your courses...
-          </p>
-
-        </div>
-
-      </div>
-    );
-  }
-
-  // =========================================================
-  // LESSON LOADING
-  // =========================================================
-
-  if (lessonLoading) {
-    return (
-      <div className="continue-learning-page">
-
-        <div className="continue-learning-header">
-
-          <span>
-            LEARN
-          </span>
-
-          <h1>
-            Continue Learning
-          </h1>
-
-          <p>
-            Preparing your course...
-          </p>
-
-        </div>
-
-        <div className="lesson-loading">
-
-          <div className="lesson-spinner"></div>
-
-          <h3>
-            Preparing your course
-          </h3>
-
-          <p>
-            Loading modules, topics and lessons...
-          </p>
-
-        </div>
-
-      </div>
-    );
-  }
-
-  // =========================================================
-  // LESSON PAGE
-  // =========================================================
-
-  if (selectedLesson) {
-    const totalLessons =
-      currentLessons.length;
-
-    const currentLessonNumber =
-      currentLessonIndex + 1;
-
-    const isLastLesson =
-      currentLessonIndex ===
-      totalLessons - 1;
-
-    return (
-      <div className="continue-learning-page">
-
-        <div className="continue-learning-header">
-
-          <span>
-            LESSON
-          </span>
-
-          <h1>
-            {selectedLesson.title}
-          </h1>
-
-          <p>
-            {selectedLesson.type ||
-              "Learning Lesson"}
-          </p>
-
-        </div>
-
-        <div className="lesson-progress-info">
-
-          <span>
-            Lesson{" "}
-            {currentLessonNumber}{" "}
-            of{" "}
-            {totalLessons}
-          </span>
-
-        </div>
-
-        <div className="lesson-content">
-
-          <h2>
-            {selectedLesson.title}
-          </h2>
-
-          <p>
-            {selectedLesson.content}
-          </p>
-
-          {/* TIMER UI COMPLETELY REMOVED */}
-
-          <div className="lesson-navigation">
-
-            <button
-              onClick={
-                handleBackToCourses
-              }
-            >
-              ← Back to Courses
-            </button>
-
-            {!isLastLesson && (
-              <button
-                onClick={
-                  handleNextLesson
-                }
-              >
-                Next Lesson →
-              </button>
-            )}
-
-            {isLastLesson && (
-              <button
-                onClick={
-                  handleNextLesson
-                }
-              >
-                Complete Course ✓
-              </button>
-            )}
-
+            <p>
+              Loading course content...
+            </p>
           </div>
-
         </div>
-
-      </div>
+      </section>
     );
   }
 
   // =========================================================
-  // COURSE LIST
+  // UI
   // =========================================================
 
   return (
-    <div className="continue-learning-page">
+    <section className="learning-page">
 
-      <div className="continue-learning-header">
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
-        <span>
-          LEARN
-        </span>
+      <div className="learning-header">
+        <div>
+          <h1>
+            {course.title}
+          </h1>
 
-        <h1>
-          Continue Learning
-        </h1>
-
-        <p>
-          Continue your courses from where
-          you left off.
-        </p>
-
+          <p>
+            Learn step by step with ILMI
+          </p>
+        </div>
       </div>
 
-      <div className="continue-course-list">
+      {/* =====================================================
+          LEARNING LAYOUT
+      ===================================================== */}
 
-        {courses.map((course) => {
+      <div className="learning-layout">
 
-          const progressInfo =
-            progressData[
-              course.id
-            ];
+        {/* ===================================================
+            LEFT SIDEBAR
+        =================================================== */}
 
-          const progressRows =
-            progressInfo?.progressRows ||
-            [];
+        <aside className="learning-sidebar">
 
-          const validLessonIds =
-            courseStats[
-              course.id
-            ]?.lessonIds ||
-            new Set();
+          <h2>
+            Course Content
+          </h2>
 
-          const completedLessonIds =
-            new Set(
-              progressRows
-                .filter(
-                  (item) =>
-                    item.is_completed ===
-                      true &&
-                    validLessonIds.has(
-                      item.lesson_id
+          {course.sections?.map(
+            (section) => (
+              <div
+                className="learning-section"
+                key={section.id}
+              >
+
+                {/* SECTION */}
+
+                <div
+                  className="learning-section-title"
+                  onClick={() =>
+                    setOpenSection(
+                      openSection ===
+                      section.id
+                        ? null
+                        : section.id
                     )
-                )
-                .map(
-                  (item) =>
-                    item.lesson_id
-                )
-            );
+                  }
+                >
+                  <span>
+                    {section.title}
+                  </span>
 
-          const completedCount =
-            completedLessonIds.size;
-
-          const totalLessons =
-            courseStats[
-              course.id
-            ]?.totalLessons ||
-            0;
-
-          const progress =
-            totalLessons > 0
-              ? Math.min(
-                  100,
-                  Math.round(
-                    (completedCount /
-                      totalLessons) *
-                      100
-                  )
-                )
-              : 0;
-
-          return (
-            <div
-              className="continue-course-card"
-              key={course.id}
-            >
-
-              <div className="continue-course-info">
-
-                <div className="continue-course-icon">
-                  {course.icon}
+                  <span>
+                    {openSection ===
+                    section.id
+                      ? "⌃"
+                      : "⌄"}
+                  </span>
                 </div>
 
-                <div className="continue-course-details">
+                {/* MODULES */}
 
-                  <h2>
-                    {course.title}
-                  </h2>
+                {openSection ===
+                  section.id && (
+                  <div className="learning-topics">
 
-                  <p>
-                    {course.description}
-                  </p>
+                    {section.modules?.map(
+                      (module) => {
 
-                  <div className="continue-progress">
+                        const moduleTopics =
+                          getModuleTopics(
+                            module.id
+                          );
 
-                    <div className="continue-progress-bar">
+                        return (
+                          <div
+                            key={
+                              module.id
+                            }
+                          >
 
-                      <div
-                        className="continue-progress-fill"
-                        style={{
-                          width: `${progress}%`,
-                        }}
-                      ></div>
+                            {/* MODULE */}
 
-                    </div>
+                            <div
+                              className="learning-topic"
+                              onClick={() =>
+                                setOpenModule(
+                                  openModule ===
+                                  module.id
+                                    ? null
+                                    : module.id
+                                )
+                              }
+                            >
+                              <span>
+                                {module.title}
+                              </span>
 
-                    <span>
-                      {progress}%
-                    </span>
+                              <span>
+                                {openModule ===
+                                module.id
+                                  ? "⌃"
+                                  : "⌄"}
+                              </span>
+                            </div>
+
+                            {/* TOPICS */}
+
+                            {openModule ===
+                              module.id && (
+                              <div className="module-lessons">
+
+                                {moduleTopics.length ===
+                                0 ? (
+                                  <div className="lesson-item">
+                                    No topics available.
+                                  </div>
+                                ) : (
+                                  moduleTopics.map(
+                                    (topic) => {
+
+                                      const topicLessons =
+                                        getTopicLessons(
+                                          topic.id
+                                        );
+
+                                      return (
+                                        <div
+                                          key={
+                                            topic.id
+                                          }
+                                        >
+
+                                          {/* TOPIC */}
+
+                                          <div
+                                            className={`learning-topic ${
+                                              selectedTopic?.id ===
+                                              topic.id
+                                                ? "active-topic"
+                                                : ""
+                                            }`}
+                                            onClick={() =>
+                                              handleTopicClick(
+                                                topic,
+                                                module.id
+                                              )
+                                            }
+                                          >
+                                            {topic.title}
+                                          </div>
+
+                                          {/* LESSONS */}
+
+                                          {selectedTopic?.id ===
+                                            topic.id && (
+                                            <div className="lesson-list">
+
+                                              {topicLessons.length ===
+                                              0 ? (
+                                                <div className="lesson-item">
+                                                  No lessons available.
+                                                </div>
+                                              ) : (
+                                                topicLessons.map(
+                                                  (
+                                                    lesson
+                                                  ) => (
+                                                    <div
+                                                      key={
+                                                        lesson.id
+                                                      }
+                                                      className={`lesson-item ${
+                                                        selectedLesson?.id ===
+                                                        lesson.id
+                                                          ? "active-lesson"
+                                                          : ""
+                                                      }`}
+                                                      onClick={() =>
+                                                        handleLessonClick(
+                                                          lesson,
+                                                          topic
+                                                        )
+                                                      }
+                                                    >
+                                                      {
+                                                        lesson.title
+                                                      }
+                                                    </div>
+                                                  )
+                                                )
+                                              )}
+
+                                            </div>
+                                          )}
+
+                                        </div>
+                                      );
+                                    }
+                                  )
+                                )}
+
+                              </div>
+                            )}
+
+                          </div>
+                        );
+                      }
+                    )}
 
                   </div>
+                )}
 
-                  {completedCount > 0 && (
-                    <small>
-                      {completedCount}{" "}
-                      lesson
-                      {completedCount !== 1
-                        ? "s"
-                        : ""}{" "}
-                      completed
-                    </small>
-                  )}
+              </div>
+            )
+          )}
 
-                </div>
+        </aside>
+
+        {/* ===================================================
+            RIGHT CONTENT
+        =================================================== */}
+
+        <main className="learning-content">
+
+          {selectedLesson ? (
+            <>
+
+              {/* CONTENT LABEL */}
+
+              <span className="content-label">
+                COURSE LESSON
+              </span>
+
+              {/* LESSON TITLE */}
+
+              <h2>
+                {selectedLesson.title}
+              </h2>
+
+              {/* TOPIC */}
+
+              <p className="content-description">
+                {selectedTopic?.title}
+              </p>
+
+              {/* =================================================
+                  LESSON CONTENT
+              ================================================= */}
+
+              <div className="lesson-content">
+
+                {selectedLesson.content ? (
+
+                  isHtmlContent(
+                    selectedLesson.content
+                  )
+                    ? formatHtmlLesson(
+                        selectedLesson.content
+                      )
+                    : formatPlainTextLesson(
+                        selectedLesson.content
+                      )
+
+                ) : (
+
+                  <p>
+                    Lesson content will be
+                    available here.
+                  </p>
+
+                )}
 
               </div>
 
-              <div className="continue-course-action">
+              {/* =================================================
+                  NAVIGATION
+              ================================================= */}
 
-                <p>
-                  {completedCount === 0
-                    ? "Start this course"
-                    : completedCount >=
-                      totalLessons
-                    ? "Course completed"
-                    : `${completedCount} of ${totalLessons} lessons completed`}
-                </p>
+              <div className="lesson-navigation">
 
                 <button
-                  onClick={() =>
-                    handleContinue(
-                      course.id
-                    )
+                  onClick={
+                    goToPreviousLesson
                   }
                   disabled={
-                    lessonLoading
+                    currentLessonIndex <=
+                    0
                   }
                 >
-                  {lessonLoading
-                    ? "Loading..."
-                    : completedCount === 0
-                    ? "Start"
-                    : "Continue"}
+                  ← Previous Lesson
+                </button>
+
+                <button
+                  onClick={
+                    goToNextLesson
+                  }
+                  disabled={
+                    currentLessonIndex ===
+                    allLessons.length - 1
+                  }
+                >
+                  Next Lesson →
                 </button>
 
               </div>
 
+            </>
+          ) : (
+
+            <div className="lesson-content empty-lesson">
+
+              <h3>
+                No lesson selected
+              </h3>
+
+              <p>
+                Add lessons from the
+                database to start
+                learning this course.
+              </p>
+
             </div>
-          );
-        })}
+
+          )}
+
+        </main>
 
       </div>
 
-    </div>
+    </section>
   );
 }
 
-export default ContinueLearning;
+export default CourseLearning;

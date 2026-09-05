@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
+import "./App.css";
+
 import Header from "./components/Header";
 import Courses from "./components/Courses";
 import Explore from "./components/Explore";
 import Learn from "./components/Learn";
-
 import ContinueLearning from "./components/ContinueLearning";
 import CollegeSyllabus from "./components/CollegeSyllabus";
 
@@ -35,22 +36,109 @@ import { supabase } from "./lib/supabaseClient";
 
 function App() {
 
+  // =========================================
+  // GENERAL STATE
+  // =========================================
+
   const [darkMode, setDarkMode] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const [currentPage, setCurrentPage] = useState("home");
 
 
   // =========================================
-  // AUTH USER
+  // SEARCH BACK STATE
+  // =========================================
+
+  const [searchPreviousPage, setSearchPreviousPage] = useState(null);
+
+
+  // =========================================
+  // AUTH STATE
   // =========================================
 
   const [user, setUser] = useState(null);
-
   const [userRole, setUserRole] = useState(null);
-
   const [authLoading, setAuthLoading] = useState(true);
+
+  // =========================================
+  // CUSTOM SCROLLBAR
+  // =========================================
+
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+
+    const updateScrollUI = () => {
+
+      const scrollTop = window.scrollY || window.pageYOffset;
+
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+      const progress =
+        maxScroll > 0
+          ? Math.min(Math.max(scrollTop / maxScroll, 0), 1)
+          : 0;
+
+      setScrollProgress(progress);
+
+      const header = document.querySelector(".sticky-header");
+
+      if (header) {
+        document.documentElement.style.setProperty(
+          "--ilmi-header-height",
+          `${header.offsetHeight}px`
+        );
+      }
+    };
+
+    updateScrollUI();
+
+    window.addEventListener("scroll", updateScrollUI, { passive: true });
+    window.addEventListener("resize", updateScrollUI);
+
+    const header = document.querySelector(".sticky-header");
+    let resizeObserver;
+
+    if (header && typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(updateScrollUI);
+      resizeObserver.observe(header);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", updateScrollUI);
+      window.removeEventListener("resize", updateScrollUI);
+
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
+
+  }, []);
+
+
+  const handleScrollbarClick = (event) => {
+
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    const ratio = Math.min(
+      Math.max((event.clientY - rect.top) / rect.height, 0),
+      1
+    );
+
+    const maxScroll =
+      document.documentElement.scrollHeight - window.innerHeight;
+
+    window.scrollTo({
+      top: ratio * Math.max(maxScroll, 0),
+      behavior: "smooth",
+    });
+
+  };
 
 
   // =========================================
@@ -60,22 +148,15 @@ function App() {
   const fetchUserRole = async (currentUser) => {
 
     if (!currentUser) {
-
       setUserRole(null);
-
       return null;
     }
 
-
-    const {
-      data: profile,
-      error
-    } = await supabase
+    const { data: profile, error } = await supabase
       .from("profiles")
       .select("role")
       .eq("user_id", currentUser.id)
       .single();
-
 
     if (error) {
 
@@ -89,10 +170,8 @@ function App() {
       return "student";
     }
 
-
     const role =
       profile?.role || "student";
-
 
     setUserRole(role);
 
@@ -108,18 +187,14 @@ function App() {
 
     let mounted = true;
 
-
     const getCurrentUser = async () => {
 
       try {
 
         const {
-          data: {
-            user: currentUser
-          },
-          error
+          data: { user: currentUser },
+          error,
         } = await supabase.auth.getUser();
-
 
         if (error) {
 
@@ -129,27 +204,17 @@ function App() {
           );
 
           if (mounted) {
-
             setAuthLoading(false);
-
           }
 
           return;
         }
 
-
         if (!mounted) {
-
           return;
         }
 
-
         setUser(currentUser);
-
-
-        // =====================================
-        // INITIAL SESSION
-        // =====================================
 
         if (currentUser) {
 
@@ -158,46 +223,24 @@ function App() {
               currentUser
             );
 
-
           if (!mounted) {
-
             return;
           }
 
-
-          // ===================================
-          // ADMIN
-          // ===================================
-
           if (role === "admin") {
-
             setCurrentPage("admin");
-
-          }
-
-          // ===================================
-          // STUDENT
-          // ===================================
-
-          else {
-
+          } else {
             setCurrentPage("home");
-
           }
 
-        }
-
-        else {
+        } else {
 
           setUserRole(null);
-
           setCurrentPage("home");
 
         }
 
-
         setAuthLoading(false);
-
 
       } catch (error) {
 
@@ -206,11 +249,8 @@ function App() {
           error
         );
 
-
         if (mounted) {
-
           setAuthLoading(false);
-
         }
 
       }
@@ -226,20 +266,15 @@ function App() {
     // =========================================
 
     const {
-      data: {
-        subscription
-      }
+      data: { subscription },
     } = supabase.auth.onAuthStateChange(
       async (event, session) => {
 
         const currentUser =
           session?.user ?? null;
 
-
         if (!mounted) {
-
           return;
-
         }
 
 
@@ -257,10 +292,15 @@ function App() {
 
           setSearchQuery("");
 
+          setSearchResults([]);
+
+          setSearchLoading(false);
+
+          setSearchPreviousPage(null);
+
           setAuthLoading(false);
 
           return;
-
         }
 
 
@@ -272,7 +312,6 @@ function App() {
 
           setUser(currentUser);
 
-
           if (currentUser) {
 
             const role =
@@ -280,28 +319,25 @@ function App() {
                 currentUser
               );
 
-
             if (!mounted) {
-
               return;
-
             }
 
-
-            // =================================
-            // ADMIN LOGIN
-            // =================================
-
             if (role === "admin") {
-
               setCurrentPage("admin");
-
+            } else {
+              setCurrentPage("home");
             }
 
           }
 
-
           setSearchQuery("");
+
+          setSearchResults([]);
+
+          setSearchLoading(false);
+
+          setSearchPreviousPage(null);
 
           setAuthLoading(false);
 
@@ -328,21 +364,14 @@ function App() {
 
   const getParentPage = (page) => {
 
-    // FOOTER PAGES
-
     if (
       page === "about" ||
       page === "contact" ||
       page === "privacy" ||
       page === "terms"
     ) {
-
       return "home";
-
     }
-
-
-    // MAIN NAVIGATION
 
     if (
       page === "explore" ||
@@ -350,78 +379,49 @@ function App() {
       page === "build" ||
       page === "grow"
     ) {
-
       return "home";
-
     }
-
-
-    // EXPLORE CHILDREN
 
     if (
       page === "courses" ||
       page === "college-syllabus"
     ) {
-
       return "explore";
-
     }
-
-
-    // LEARN CHILDREN
 
     if (
       page === "continue-learning" ||
       page === "my-progress" ||
       page === "practice-quizzes"
     ) {
-
       return "learn";
-
     }
-
-
-    // BUILD CHILDREN
 
     if (
       page === "projects" ||
       page === "practice-projects" ||
       page === "challenges"
     ) {
-
       return "build";
-
     }
-
-
-    // GROW CHILDREN
 
     if (
       page === "roadmaps" ||
       page === "resources"
     ) {
-
       return "grow";
-
     }
-
-
-    // PROFILE
 
     if (page === "profile") {
-
       return "home";
-
     }
 
-
     return "home";
-
   };
 
 
   // =========================================
-  // NAVIGATION
+  // NORMAL NAVIGATION
   // =========================================
 
   const navigateTo = (page) => {
@@ -429,6 +429,12 @@ function App() {
     setCurrentPage(page);
 
     setSearchQuery("");
+
+    setSearchResults([]);
+
+    setSearchLoading(false);
+
+    setSearchPreviousPage(null);
 
   };
 
@@ -441,13 +447,15 @@ function App() {
 
     setSearchQuery("");
 
+    setSearchResults([]);
+
+    setSearchLoading(false);
+
+    setSearchPreviousPage(null);
 
     const {
-      data: {
-        user: loggedInUser
-      }
+      data: { user: loggedInUser },
     } = await supabase.auth.getUser();
-
 
     if (!loggedInUser) {
 
@@ -458,20 +466,14 @@ function App() {
       setCurrentPage("home");
 
       return;
-
     }
 
-
     setUser(loggedInUser);
-
 
     const role =
       await fetchUserRole(
         loggedInUser
       );
-
-
-    // ADMIN LOGIN
 
     if (role === "admin") {
 
@@ -480,9 +482,6 @@ function App() {
       return;
 
     }
-
-
-    // STUDENT LOGIN
 
     setCurrentPage("home");
 
@@ -495,10 +494,8 @@ function App() {
 
   const handleLogout = async () => {
 
-    const {
-      error
-    } = await supabase.auth.signOut();
-
+    const { error } =
+      await supabase.auth.signOut();
 
     if (error) {
 
@@ -508,9 +505,7 @@ function App() {
       );
 
       return;
-
     }
-
 
     setUser(null);
 
@@ -520,23 +515,54 @@ function App() {
 
     setSearchQuery("");
 
+    setSearchResults([]);
+
+    setSearchLoading(false);
+
+    setSearchPreviousPage(null);
+
   };
 
 
   // =========================================
-  // BACK BUTTON
+  // SEARCH BACK BUTTON
+  // =========================================
+
+  const goBackFromSearch = () => {
+
+    const previousPage =
+      searchPreviousPage || "home";
+
+    setSearchQuery("");
+
+    setSearchResults([]);
+
+    setSearchLoading(false);
+
+    setSearchPreviousPage(null);
+
+    setCurrentPage(previousPage);
+
+  };
+
+
+  // =========================================
+  // NORMAL PAGE BACK BUTTON
   // =========================================
 
   const goBack = () => {
 
-    if (currentPage === "home") {
+    if (searchQuery) {
+
+      goBackFromSearch();
 
       return;
 
     }
 
-
-    // AUTH → HOME
+    if (currentPage === "home") {
+      return;
+    }
 
     if (currentPage === "auth") {
 
@@ -544,29 +570,34 @@ function App() {
 
       setSearchQuery("");
 
+      setSearchResults([]);
+
+      setSearchLoading(false);
+
+      setSearchPreviousPage(null);
+
       return;
 
     }
-
-
-    // ADMIN
 
     if (currentPage === "admin") {
-
       return;
-
     }
-
 
     const parent =
       getParentPage(
         currentPage
       );
 
-
     setCurrentPage(parent);
 
     setSearchQuery("");
+
+    setSearchResults([]);
+
+    setSearchLoading(false);
+
+    setSearchPreviousPage(null);
 
   };
 
@@ -575,71 +606,946 @@ function App() {
   // BACK BUTTON VISIBILITY
   // =========================================
 
-  const showBackButton =
+  const showNormalBackButton =
+    !searchQuery &&
     currentPage !== "home" &&
     currentPage !== "admin";
 
 
+  const showSearchBackButton =
+    Boolean(searchQuery);
+
+
   // =========================================
-  // SEARCH
+  // GLOBAL SEARCH
   // =========================================
 
-  const handleSearch = (query) => {
+  const handleSearch = async (query) => {
 
-    setSearchQuery(query);
+    const cleanQuery =
+      String(query || "").trim();
+
+
+    // =====================================
+    // EMPTY SEARCH
+    // =====================================
+
+    if (!cleanQuery) {
+
+      setSearchQuery("");
+
+      setSearchResults([]);
+
+      setSearchLoading(false);
+
+      setSearchPreviousPage(null);
+
+      return;
+
+    }
+
+
+    // =====================================
+    // SAVE PAGE BEFORE SEARCH
+    // =====================================
+
+    if (!searchQuery) {
+
+      setSearchPreviousPage(
+        currentPage
+      );
+
+    }
+
+
+    setSearchQuery(cleanQuery);
+
+    setSearchResults([]);
+
+    setSearchLoading(true);
+
+
+    try {
+
+      console.log(
+        "================================="
+      );
+
+      console.log(
+        "🔥 ILMI GLOBAL SEARCH:",
+        cleanQuery
+      );
+
+      console.log(
+        "🔥 SEARCH STARTED FROM:",
+        currentPage
+      );
+
+      console.log(
+        "================================="
+      );
+
+
+      // =====================================
+      // SEARCH TEXT
+      // =====================================
+
+      const searchText =
+        cleanQuery
+          .toLowerCase()
+          .replace(/\s+/g, " ")
+          .trim();
+
+
+      if (!searchText) {
+
+        setSearchResults([]);
+
+        return;
+
+      }
+
+
+      // =====================================
+      // SEARCH ALL TABLES
+      // =====================================
+
+      const [
+        coursesResponse,
+        yearsResponse,
+        semestersResponse,
+        subjectsResponse,
+        unitsResponse,
+        topicsResponse,
+        topicContentsResponse,
+      ] = await Promise.all([
+
+        // COURSES
+
+        supabase
+          .from("courses")
+          .select(
+            "id, title, description, category, icon, display_order"
+          )
+          .eq("is_active", true),
+
+        // YEARS
+
+        supabase
+          .from("years")
+          .select(
+            "id, year_number"
+          ),
+
+        // SEMESTERS
+
+        supabase
+          .from("semesters")
+          .select(
+            "id, year_id, title"
+          ),
+
+        // SUBJECTS
+
+        supabase
+          .from("subjects")
+          .select(
+            "id, semester_id, subject_name"
+          ),
+
+        // UNITS
+
+        supabase
+          .from("units")
+          .select(
+            "id, subject_id, unit_name"
+          ),
+
+        // TOPICS
+
+        supabase
+          .from("topics")
+          .select(
+            "id, unit_id, topic_number, topic_name, short_description, display_order"
+          )
+          .eq("is_active", true),
+
+        // TOPIC CONTENT
+
+        supabase
+          .from("topic_contents")
+          .select(
+            "id, topic_id, title, content, display_order"
+          )
+          .eq("is_published", true),
+
+      ]);
+
+
+      // =====================================
+      // CHECK ERRORS
+      // =====================================
+
+      const databaseErrors = [
+
+        {
+          table: "courses",
+          error: coursesResponse.error,
+        },
+
+        {
+          table: "years",
+          error: yearsResponse.error,
+        },
+
+        {
+          table: "semesters",
+          error: semestersResponse.error,
+        },
+
+        {
+          table: "subjects",
+          error: subjectsResponse.error,
+        },
+
+        {
+          table: "units",
+          error: unitsResponse.error,
+        },
+
+        {
+          table: "topics",
+          error: topicsResponse.error,
+        },
+
+        {
+          table: "topic_contents",
+          error: topicContentsResponse.error,
+        },
+
+      ];
+
+
+      const databaseError =
+        databaseErrors.find(
+          (item) => item.error
+        );
+
+
+      if (databaseError) {
+
+        console.error(
+          "❌ ILMI SEARCH DATABASE ERROR:",
+          databaseError.table,
+          databaseError.error
+        );
+
+        setSearchResults([]);
+
+        return;
+
+      }
+
+
+      // =====================================
+      // DATA
+      // =====================================
+
+      const courses =
+        coursesResponse.data || [];
+
+      const years =
+        yearsResponse.data || [];
+
+      const semesters =
+        semestersResponse.data || [];
+
+      const subjects =
+        subjectsResponse.data || [];
+
+      const units =
+        unitsResponse.data || [];
+
+      const topics =
+        topicsResponse.data || [];
+
+      const topicContents =
+        topicContentsResponse.data || [];
+
+
+      // =====================================
+      // MAPS
+      // =====================================
+
+      const yearMap =
+        new Map(
+          years.map((year) => [
+            year.id,
+            year,
+          ])
+        );
+
+      const semesterMap =
+        new Map(
+          semesters.map((semester) => [
+            semester.id,
+            semester,
+          ])
+        );
+
+      const subjectMap =
+        new Map(
+          subjects.map((subject) => [
+            subject.id,
+            subject,
+          ])
+        );
+
+      const unitMap =
+        new Map(
+          units.map((unit) => [
+            unit.id,
+            unit,
+          ])
+        );
+
+      const topicMap =
+        new Map(
+          topics.map((topic) => [
+            topic.id,
+            topic,
+          ])
+        );
+
+
+      // =====================================
+      // SEARCH HELPER
+      // =====================================
+
+      const containsSearchText = (value) => {
+
+        if (
+          value === null ||
+          value === undefined
+        ) {
+          return false;
+        }
+
+        return String(value)
+          .toLowerCase()
+          .includes(searchText);
+
+      };
+
+
+      // =====================================
+      // RESULTS
+      // =====================================
+
+      const results = [];
+
+
+      // =====================================
+      // 1. COURSES
+      // =====================================
+
+      courses.forEach((course) => {
+
+        const matched =
+          containsSearchText(
+            course.title
+          ) ||
+          containsSearchText(
+            course.description
+          ) ||
+          containsSearchText(
+            course.category
+          );
+
+        if (!matched) {
+          return;
+        }
+
+        results.push({
+
+          id:
+            `course-${course.id}`,
+
+          title:
+            course.title,
+
+          type:
+            "Course",
+
+          description:
+            course.description ||
+            "Explore this course on ILMI.",
+
+          icon:
+            course.icon ||
+            "📚",
+
+          courseId:
+            course.id,
+
+          subject: "",
+          unit: "",
+          semester: "",
+          year: "",
+
+          sortOrder: 1,
+
+        });
+
+      });
+
+
+      // =====================================
+      // 2. YEARS
+      // =====================================
+
+      years.forEach((year) => {
+
+        if (
+          !containsSearchText(
+            year.year_number
+          )
+        ) {
+          return;
+        }
+
+        results.push({
+
+          id:
+            `year-${year.id}`,
+
+          title:
+            `Year ${year.year_number}`,
+
+          type:
+            "Year",
+
+          description:
+            "Explore subjects and topics available in this academic year.",
+
+          icon:
+            "📅",
+
+          courseId: null,
+
+          subject: "",
+          unit: "",
+          semester: "",
+
+          year:
+            year.year_number,
+
+          sortOrder: 2,
+
+        });
+
+      });
+
+
+      // =====================================
+      // 3. SEMESTERS
+      // =====================================
+
+      semesters.forEach((semester) => {
+
+        const year =
+          yearMap.get(
+            semester.year_id
+          );
+
+        const matched =
+          containsSearchText(
+            semester.title
+          );
+
+        if (!matched) {
+          return;
+        }
+
+        results.push({
+
+          id:
+            `semester-${semester.id}`,
+
+          title:
+            semester.title ||
+            "Semester",
+
+          type:
+            "Semester",
+
+          description:
+            "Explore subjects and learning topics in this semester.",
+
+          icon:
+            "🎓",
+
+          courseId: null,
+
+          subject: "",
+          unit: "",
+
+          semester:
+            semester.title ||
+            "Semester",
+
+          year:
+            year?.year_number || "",
+
+          sortOrder: 3,
+
+        });
+
+      });
+
+
+      // =====================================
+      // 4. SUBJECTS
+      // =====================================
+
+      subjects.forEach((subject) => {
+
+        if (
+          !containsSearchText(
+            subject.subject_name
+          )
+        ) {
+          return;
+        }
+
+        const semester =
+          semesterMap.get(
+            subject.semester_id
+          );
+
+        const year =
+          semester
+            ? yearMap.get(
+                semester.year_id
+              )
+            : null;
+
+        results.push({
+
+          id:
+            `subject-${subject.id}`,
+
+          title:
+            subject.subject_name,
+
+          type:
+            "Subject",
+
+          description:
+            "Explore this subject and its complete syllabus.",
+
+          icon:
+            "📘",
+
+          courseId: null,
+
+          subject:
+            subject.subject_name,
+
+          unit: "",
+
+          semester:
+            semester?.title || "",
+
+          year:
+            year?.year_number || "",
+
+          sortOrder: 4,
+
+        });
+
+      });
+
+
+      // =====================================
+      // 5. UNITS
+      // =====================================
+
+      units.forEach((unit) => {
+
+        if (
+          !containsSearchText(
+            unit.unit_name
+          )
+        ) {
+          return;
+        }
+
+        const subject =
+          subjectMap.get(
+            unit.subject_id
+          );
+
+        const semester =
+          subject
+            ? semesterMap.get(
+                subject.semester_id
+              )
+            : null;
+
+        const year =
+          semester
+            ? yearMap.get(
+                semester.year_id
+              )
+            : null;
+
+        results.push({
+
+          id:
+            `unit-${unit.id}`,
+
+          title:
+            unit.unit_name,
+
+          type:
+            "Unit",
+
+          description:
+            "Explore topics and learning content inside this unit.",
+
+          icon:
+            "📂",
+
+          courseId: null,
+
+          subject:
+            subject?.subject_name || "",
+
+          unit:
+            unit.unit_name || "",
+
+          semester:
+            semester?.title || "",
+
+          year:
+            year?.year_number || "",
+
+          sortOrder: 5,
+
+        });
+
+      });
+
+
+      // =====================================
+      // 6. TOPICS
+      // =====================================
+
+      topics.forEach((topic) => {
+
+        const matched =
+          containsSearchText(
+            topic.topic_name
+          ) ||
+          containsSearchText(
+            topic.short_description
+          ) ||
+          containsSearchText(
+            topic.topic_number
+          );
+
+        if (!matched) {
+          return;
+        }
+
+        const unit =
+          unitMap.get(
+            topic.unit_id
+          );
+
+        const subject =
+          unit
+            ? subjectMap.get(
+                unit.subject_id
+              )
+            : null;
+
+        const semester =
+          subject
+            ? semesterMap.get(
+                subject.semester_id
+              )
+            : null;
+
+        const year =
+          semester
+            ? yearMap.get(
+                semester.year_id
+              )
+            : null;
+
+        results.push({
+
+          id:
+            `topic-${topic.id}`,
+
+          title:
+            topic.topic_name,
+
+          type:
+            "Topic",
+
+          description:
+            topic.short_description ||
+            "Explore this topic and improve your skills.",
+
+          icon:
+            "📚",
+
+          courseId: null,
+
+          subject:
+            subject?.subject_name || "",
+
+          unit:
+            unit?.unit_name || "",
+
+          semester:
+            semester?.title || "",
+
+          year:
+            year?.year_number || "",
+
+          topicId:
+            topic.id,
+
+          sortOrder: 6,
+
+        });
+
+      });
+
+
+      // =====================================
+      // 7. TOPIC CONTENT
+      // =====================================
+
+      topicContents.forEach(
+        (contentItem) => {
+
+          const matched =
+            containsSearchText(
+              contentItem.title
+            ) ||
+            containsSearchText(
+              contentItem.content
+            );
+
+          if (!matched) {
+            return;
+          }
+
+          const topic =
+            topicMap.get(
+              contentItem.topic_id
+            );
+
+          const unit =
+            topic
+              ? unitMap.get(
+                  topic.unit_id
+                )
+              : null;
+
+          const subject =
+            unit
+              ? subjectMap.get(
+                  unit.subject_id
+                )
+              : null;
+
+          const semester =
+            subject
+              ? semesterMap.get(
+                  subject.semester_id
+                )
+              : null;
+
+          const year =
+            semester
+              ? yearMap.get(
+                  semester.year_id
+                )
+              : null;
+
+          let description =
+            "Explore this learning content.";
+
+          if (contentItem.content) {
+
+            description =
+              String(
+                contentItem.content
+              )
+                .replace(
+                  /<[^>]*>/g,
+                  " "
+                )
+                .replace(
+                  /\s+/g,
+                  " "
+                )
+                .trim()
+                .slice(
+                  0,
+                  180
+                );
+
+          }
+
+          results.push({
+
+            id:
+              `content-${contentItem.id}`,
+
+            title:
+              contentItem.title ||
+              "Learning Content",
+
+            type:
+              "Lesson",
+
+            description:
+              description,
+
+            icon:
+              "📝",
+
+            courseId: null,
+
+            subject:
+              subject?.subject_name || "",
+
+            unit:
+              unit?.unit_name || "",
+
+            semester:
+              semester?.title || "",
+
+            year:
+              year?.year_number || "",
+
+            topic:
+              topic?.topic_name || "",
+
+            topicId:
+              topic?.id || null,
+
+            sortOrder: 7,
+
+          });
+
+        }
+      );
+
+
+      // =====================================
+      // REMOVE DUPLICATES
+      // =====================================
+
+      const uniqueResults =
+        Array.from(
+
+          new Map(
+
+            results.map(
+              (item) => [
+                item.id,
+                item,
+              ]
+            )
+
+          ).values()
+
+        );
+
+
+      // =====================================
+      // SORT
+      // =====================================
+
+      uniqueResults.sort(
+        (a, b) => {
+
+          if (
+            a.sortOrder !==
+            b.sortOrder
+          ) {
+
+            return (
+              a.sortOrder -
+              b.sortOrder
+            );
+
+          }
+
+          return String(
+            a.title
+          ).localeCompare(
+            String(
+              b.title
+            )
+          );
+
+        }
+      );
+
+
+      // =====================================
+      // MAX 50 RESULTS
+      // =====================================
+
+      const finalResults =
+        uniqueResults.slice(
+          0,
+          50
+        );
+
+      console.log(
+        "🔥 TOTAL SEARCH RESULTS:",
+        finalResults.length
+      );
+
+      console.log(
+        "🔥 ILMI SEARCH RESULTS:",
+        finalResults
+      );
+
+      setSearchResults(
+        finalResults
+      );
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "❌ ILMI GLOBAL SEARCH ERROR:",
+        error
+      );
+
+      setSearchResults([]);
+
+    }
+
+    finally {
+
+      setSearchLoading(false);
+
+    }
 
   };
-
-
-  // =========================================
-  // SEARCH DATA
-  // =========================================
-
-  const searchData = [
-
-    {
-      title: "Dart Programming",
-      type: "Tutorial",
-      description:
-        "Learn Dart programming from basics to advanced concepts.",
-      icon: "💻",
-    },
-
-    {
-      title: "HTML",
-      type: "Course",
-      description:
-        "Learn HTML and build the structure of modern websites.",
-      icon: "🌐",
-    },
-
-    {
-      title: "CSS",
-      type: "Course",
-      description:
-        "Learn CSS and create beautiful website designs.",
-      icon: "🎨",
-    },
-
-    {
-      title: "JavaScript",
-      type: "Tutorial",
-      description:
-        "Learn JavaScript and make websites interactive.",
-      icon: "⚡",
-    },
-
-  ];
-
-
-  const filteredResults =
-    searchData.filter((item) =>
-      item.title
-        .toLowerCase()
-        .includes(
-          searchQuery.toLowerCase()
-        )
-    );
 
 
   // =========================================
@@ -654,9 +1560,7 @@ function App() {
 
         <div>
 
-          <strong>
-            EDUVANTA
-          </strong>
+          <strong>IlmI</strong>
 
           <span>
             Loading...
@@ -707,96 +1611,145 @@ function App() {
       }
     >
 
-
       {/* =====================================
-          HEADER
+          STICKY HEADER AREA
       ===================================== */}
 
-      <Header
+      <div className="sticky-header">
 
-        darkMode={darkMode}
+        {/* HEADER */}
 
-        setDarkMode={setDarkMode}
+        <Header
 
-        onSearch={handleSearch}
+          darkMode={darkMode}
 
-        onSignIn={() =>
-          navigateTo("auth")
-        }
+          setDarkMode={
+            setDarkMode
+          }
 
-        user={user}
+          onSearch={
+            handleSearch
+          }
 
-        onLogout={handleLogout}
+          onSignIn={() =>
+            navigateTo("auth")
+          }
 
-        onProfile={() =>
-          navigateTo("profile")
-        }
+          user={user}
 
-      />
+          onLogout={
+            handleLogout
+          }
+
+          onProfile={() =>
+            navigateTo("profile")
+          }
+
+        />
+
+
+        {/* NAVIGATION */}
+
+        <nav className="navigation">
+
+          <a
+            href="#"
+            onClick={(e) => {
+
+              e.preventDefault();
+
+              navigateTo("explore");
+
+            }}
+          >
+            Explore
+          </a>
+
+
+          <a
+            href="#"
+            onClick={(e) => {
+
+              e.preventDefault();
+
+              navigateTo("learn");
+
+            }}
+          >
+            Learn
+          </a>
+
+
+          <a
+            href="#"
+            onClick={(e) => {
+
+              e.preventDefault();
+
+              navigateTo("build");
+
+            }}
+          >
+            Build
+          </a>
+
+
+          <a
+            href="#"
+            onClick={(e) => {
+
+              e.preventDefault();
+
+              navigateTo("grow");
+
+            }}
+          >
+            Grow
+          </a>
+
+        </nav>
+
+      </div>
 
 
       {/* =====================================
-          NAVIGATION
+          CUSTOM LINE SCROLLBAR
       ===================================== */}
 
-      <nav className="navigation">
+      <div
+        className="custom-scrollbar"
+        onClick={handleScrollbarClick}
+        role="scrollbar"
+        aria-label="Page scroll position"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow={Math.round(scrollProgress * 100)}
+        tabIndex="0"
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown" || event.key === "PageDown") {
+            window.scrollBy({ top: window.innerHeight * 0.8, behavior: "smooth" });
+          }
 
-        <a
-          href="#"
-          onClick={(e) => {
+          if (event.key === "ArrowUp" || event.key === "PageUp") {
+            window.scrollBy({ top: -window.innerHeight * 0.8, behavior: "smooth" });
+          }
+        }}
+      >
+        <div className="scrollbar-lines">
+          {Array.from({ length: 32 }).map((_, index) => {
+            const activeIndex = Math.round(scrollProgress * 31);
 
-            e.preventDefault();
-
-            navigateTo("explore");
-
-          }}
-        >
-          Explore
-        </a>
-
-
-        <a
-          href="#"
-          onClick={(e) => {
-
-            e.preventDefault();
-
-            navigateTo("learn");
-
-          }}
-        >
-          Learn
-        </a>
-
-
-        <a
-          href="#"
-          onClick={(e) => {
-
-            e.preventDefault();
-
-            navigateTo("build");
-
-          }}
-        >
-          Build
-        </a>
-
-
-        <a
-          href="#"
-          onClick={(e) => {
-
-            e.preventDefault();
-
-            navigateTo("grow");
-
-          }}
-        >
-          Grow
-        </a>
-
-      </nav>
+            return (
+              <span
+                key={index}
+                className={`scroll-line ${
+                  index === activeIndex ? "active" : ""
+                }`}
+              />
+            );
+          })}
+        </div>
+      </div>
 
 
       {/* =====================================
@@ -806,9 +1759,33 @@ function App() {
       <main className="main-content">
 
 
-        {/* BACK BUTTON */}
+        {/* SEARCH BACK BUTTON */}
 
-        {showBackButton && (
+        {showSearchBackButton && (
+
+          <button
+            className="search-back-button"
+            onClick={
+              goBackFromSearch
+            }
+          >
+
+            <span className="search-back-arrow">
+              ←
+            </span>
+
+            <span>
+              Back
+            </span>
+
+          </button>
+
+        )}
+
+
+        {/* NORMAL BACK BUTTON */}
+
+        {showNormalBackButton && (
 
           <button
             className="back-button"
@@ -828,265 +1805,380 @@ function App() {
         )}
 
 
-        {/* ABOUT */}
+        {/* SEARCH RESULTS */}
 
-        {currentPage === "about" ? (
+        {searchQuery ? (
 
-          <About />
+          <section
+            className="search-results-section"
+          >
 
+            <h2>
+              Search Results for "
+              {searchQuery}
+              "
+            </h2>
 
-        /* CONTACT */
 
-        ) : currentPage === "contact" ? (
+            {searchLoading ? (
 
-          <Contact />
+              <div className="no-results">
 
+                <div className="no-results-icon">
+                  🔍
+                </div>
 
-        /* PRIVACY */
+                <h3>
+                  Searching...
+                </h3>
 
-        ) : currentPage === "privacy" ? (
+                <p>
+                  Searching all ILMI learning content.
+                </p>
 
-          <Privacy />
+              </div>
 
+            ) : searchResults.length === 0 ? (
 
-        /* TERMS */
+              <div className="no-results">
 
-        ) : currentPage === "terms" ? (
+                <div className="no-results-icon">
+                  🔍
+                </div>
 
-          <Terms />
+                <h3>
+                  No results found
+                </h3>
 
+                <p>
+                  We couldn't find anything for "
+                  {searchQuery}
+                  ".
+                </p>
 
-        /* AUTH */
+              </div>
 
-        ) : currentPage === "auth" ? (
+            ) : (
 
-          <Auth
-            onLogin={handleLoginSuccess}
-          />
+              <div className="search-results-grid">
 
+                {searchResults.map(
+                  (item) => (
 
-        /* PROFILE */
+                    <div
+                      className="search-card"
+                      key={item.id}
+                    >
 
-        ) : currentPage === "profile" ? (
+                      <div className="search-card-icon">
+                        {item.icon}
+                      </div>
 
-          <Profile
-            user={user}
-            onLogout={handleLogout}
-          />
+                      <span className="search-card-type">
+                        {item.type}
+                      </span>
 
+                      <h3>
+                        {item.title}
+                      </h3>
 
-        /* EXPLORE */
+                      <p>
+                        {item.description}
+                        {item.description?.length >= 180
+                          ? "..."
+                          : ""}
+                      </p>
 
-        ) : currentPage === "explore" ? (
+                      <div className="search-card-meta">
 
-          <Explore
-            setCurrentPage={navigateTo}
-          />
+                        {item.year && (
 
+                          <span>
+                            📅 Year{" "}
+                            {item.year}
+                          </span>
 
-        /* COURSES */
+                        )}
 
-        ) : currentPage === "courses" ? (
+                        {item.semester && (
 
-          <Courses />
+                          <span>
+                            🎓{" "}
+                            {item.semester}
+                          </span>
 
+                        )}
 
-        /* COLLEGE SYLLABUS */
+                        {item.subject && (
 
-        ) : currentPage === "college-syllabus" ? (
+                          <span>
+                            📘{" "}
+                            {item.subject}
+                          </span>
 
-          <CollegeSyllabus />
+                        )}
 
+                        {item.unit && (
 
-        /* LEARN */
+                          <span>
+                            📂{" "}
+                            {item.unit}
+                          </span>
 
-        ) : currentPage === "learn" ? (
+                        )}
 
-          <Learn
-            setCurrentPage={navigateTo}
-          />
+                        {item.topic && (
 
+                          <span>
+                            📚{" "}
+                            {item.topic}
+                          </span>
 
-        ) : currentPage === "continue-learning" ? (
+                        )}
 
-          <ContinueLearning />
+                      </div>
 
+                      <button
+                        onClick={() =>
+                          navigateTo(
+                            "college-syllabus"
+                          )
+                        }
+                      >
+                        View in Syllabus →
+                      </button>
 
-        ) : currentPage === "my-progress" ? (
+                    </div>
 
-          <MyProgress
-            setCurrentPage={navigateTo}
-          />
+                  )
+                )}
 
+              </div>
 
-        ) : currentPage === "practice-quizzes" ? (
+            )}
 
-          <PracticeQuizzes />
-
-
-        /* BUILD */
-
-        ) : currentPage === "build" ? (
-
-          <Build
-            setCurrentPage={navigateTo}
-          />
-
-
-        ) : currentPage === "projects" ? (
-
-          <Projects />
-
-
-        ) : currentPage === "practice-projects" ? (
-
-          <PracticeProjects />
-
-
-        ) : currentPage === "challenges" ? (
-
-          <Challenges />
-
-
-        /* GROW */
-
-        ) : currentPage === "grow" ? (
-
-          <Grow
-            setCurrentPage={navigateTo}
-          />
-
-
-        ) : currentPage === "roadmaps" ? (
-
-          <Roadmaps />
-
-
-        ) : currentPage === "resources" ? (
-
-          <Resources />
-
-
-        /* =====================================
-           HOME
-        ===================================== */
+          </section>
 
         ) : (
 
           <>
 
-            {/* SEARCH RESULTS */}
+            {/* ABOUT */}
 
-            {searchQuery && (
+            {currentPage === "about" ? (
 
-              <section className="search-results-section">
+              <About />
 
-                <h2>
-                  Search Results for "{searchQuery}"
-                </h2>
+            )
 
+            /* CONTACT */
 
-                {filteredResults.length === 0 ? (
+            : currentPage === "contact" ? (
 
-                  <div className="no-results">
+              <Contact />
 
-                    <div className="no-results-icon">
-                      🔍
-                    </div>
+            )
 
-                    <h3>
-                      No results found
-                    </h3>
+            /* PRIVACY */
 
-                    <p>
-                      We couldn't find anything for
-                      "{searchQuery}".
-                    </p>
+            : currentPage === "privacy" ? (
 
-                  </div>
+              <Privacy />
 
-                ) : (
+            )
 
-                  <div className="search-results-grid">
+            /* TERMS */
 
-                    {filteredResults.map(
-                      (item, index) => (
+            : currentPage === "terms" ? (
 
-                        <div
-                          className="search-card"
-                          key={index}
-                        >
+              <Terms />
 
-                          <div className="search-card-icon">
-                            {item.icon}
-                          </div>
+            )
 
-                          <span className="search-card-type">
-                            {item.type}
-                          </span>
+            /* AUTH */
 
-                          <h3>
-                            {item.title}
-                          </h3>
+            : currentPage === "auth" ? (
 
-                          <p>
-                            {item.description}
-                          </p>
+              <Auth
+                onLogin={
+                  handleLoginSuccess
+                }
+              />
 
-                          <button>
-                            Start Learning
-                          </button>
+            )
 
-                        </div>
+            /* PROFILE */
 
-                      )
-                    )}
+            : currentPage === "profile" ? (
 
-                  </div>
+              <Profile
+                user={user}
+                onLogout={
+                  handleLogout
+                }
+              />
 
-                )}
+            )
 
-              </section>
+            /* EXPLORE */
 
-            )}
+            : currentPage === "explore" ? (
 
+              <Explore
+                setCurrentPage={
+                  navigateTo
+                }
+              />
 
-            {/* =================================
-                HOME HERO
-            ================================= */}
+            )
 
-            {!searchQuery && (
+            /* COURSES */
+
+            : currentPage === "courses" ? (
+
+              <Courses />
+
+            )
+
+            /* COLLEGE SYLLABUS */
+
+            : currentPage === "college-syllabus" ? (
+
+              <CollegeSyllabus />
+
+            )
+
+            /* LEARN */
+
+            : currentPage === "learn" ? (
+
+              <Learn
+                setCurrentPage={
+                  navigateTo
+                }
+              />
+
+            )
+
+            /* CONTINUE LEARNING */
+
+            : currentPage === "continue-learning" ? (
+
+              <ContinueLearning />
+
+            )
+
+            /* MY PROGRESS */
+
+            : currentPage === "my-progress" ? (
+
+              <MyProgress
+                setCurrentPage={
+                  navigateTo
+                }
+              />
+
+            )
+
+            /* PRACTICE */
+
+            : currentPage === "practice-quizzes" ? (
+
+              <PracticeQuizzes />
+
+            )
+
+            /* BUILD */
+
+            : currentPage === "build" ? (
+
+              <Build
+                setCurrentPage={
+                  navigateTo
+                }
+              />
+
+            )
+
+            /* PROJECTS */
+
+            : currentPage === "projects" ? (
+
+              <Projects />
+
+            )
+
+            /* PRACTICE PROJECTS */
+
+            : currentPage === "practice-projects" ? (
+
+              <PracticeProjects />
+
+            )
+
+            /* CHALLENGES */
+
+            : currentPage === "challenges" ? (
+
+              <Challenges />
+
+            )
+
+            /* GROW */
+
+            : currentPage === "grow" ? (
+
+              <Grow
+                setCurrentPage={
+                  navigateTo
+                }
+              />
+
+            )
+
+            /* ROADMAPS */
+
+            : currentPage === "roadmaps" ? (
+
+              <Roadmaps />
+
+            )
+
+            /* RESOURCES */
+
+            : currentPage === "resources" ? (
+
+              <Resources />
+
+            )
+
+            /* HOME */
+
+            : (
 
               <>
 
                 <section className="home-hero">
 
-
-                  {/* LEFT IMAGE */}
-
                   <div className="hero-image hero-image-left">
 
                     <img
-                      src="/image/bg1.jpg"
+                      src="/image/bg1.jpg?v=2"
                       alt=""
                     />
 
                   </div>
 
-
-                  {/* RIGHT IMAGE */}
 
                   <div className="hero-image hero-image-right">
 
                     <img
-                      src="/image/bg2.jpg"
+                      src="/image/bg2.jpg?v=2"
                       alt=""
                     />
 
                   </div>
 
-
-                  {/* CENTER CONTENT */}
 
                   <div className="hero-content">
 
@@ -1095,18 +2187,26 @@ function App() {
                     </h2>
 
                     <p className="learning-path">
-                      Since 2026
                     </p>
 
                     <p className="hero-description">
-                      Learn programming, strengthen your skills,
-                      practice with real challenges, build meaningful
-                      projects, and grow your knowledge with ILMI.
+
+                      Learn programming,
+                      strengthen your skills,
+                      practice with real
+                      challenges, build meaningful
+                      projects, and grow your
+                      knowledge with ILMI.
+
                     </p>
 
                     <p className="welcome-tagline">
-                      Learn at your own pace. Practice what you learn.
-                      Build real skills for your future.
+
+                      Learn at your own pace.
+                      Practice what you learn.
+                      Build real skills for
+                      your future.
+
                     </p>
 
                   </div>
@@ -1114,14 +2214,7 @@ function App() {
                 </section>
 
 
-                {/* =================================
-                    HOME CARDS
-                ================================= */}
-
                 <section className="cards">
-
-
-                  {/* CONTINUE LEARNING */}
 
                   <div className="card">
 
@@ -1134,8 +2227,12 @@ function App() {
                     </h3>
 
                     <p>
-                      Continue your course from where you
-                      left off and keep improving your skills.
+
+                      Continue your course
+                      from where you left off
+                      and keep improving your
+                      skills.
+
                     </p>
 
                     <button
@@ -1151,8 +2248,6 @@ function App() {
                   </div>
 
 
-                  {/* PRACTICE */}
-
                   <div className="card">
 
                     <div className="card-icon">
@@ -1164,8 +2259,11 @@ function App() {
                     </h3>
 
                     <p>
-                      Practice your knowledge with questions,
-                      exercises and coding challenges.
+
+                      Practice your knowledge
+                      with questions, exercises
+                      and coding challenges.
+
                     </p>
 
                     <button
@@ -1181,8 +2279,6 @@ function App() {
                   </div>
 
 
-                  {/* MY PROGRESS */}
-
                   <div className="card">
 
                     <div className="card-icon">
@@ -1194,8 +2290,11 @@ function App() {
                     </h3>
 
                     <p>
-                      Track your learning progress and see
-                      how much you have completed.
+
+                      Track your learning
+                      progress and see how much
+                      you have completed.
+
                     </p>
 
                     <button
@@ -1209,7 +2308,6 @@ function App() {
                     </button>
 
                   </div>
-
 
                 </section>
 
@@ -1231,9 +2329,9 @@ function App() {
       <footer className="footer">
 
         <p>
-          © 2026 Ilmi. All rights reserved.
+          © 2026 ILMI, By Mr Musaddique.
+          All rights reserved.
         </p>
-
 
         <div>
 

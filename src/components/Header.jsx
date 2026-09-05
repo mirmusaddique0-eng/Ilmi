@@ -87,8 +87,8 @@ function Header({
 
       <div className="logo-container">
 
-        <img
-  src="/web-logo.png?v=2"
+       <img
+  src={darkMode ? "/image/ilmi-logo-dark.png" : "/web-logo.png?v=2"}
   alt="Ilmi"
   className="header-logo"
 />

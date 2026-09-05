@@ -5,7 +5,7 @@ function Explore({ setCurrentPage }) {
     <section className="explore-page">
 
       <div className="explore-header">
-        <h1>Explore EDUVANTA</h1>
+        <h1>Explore IlMI</h1>
 
         <p>
           Discover courses, programming languages,

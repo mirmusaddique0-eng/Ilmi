@@ -1,6 +1,5 @@
-
 /* =========================================
-   CONTACT PAGE
+   COMMON INFO PAGES
 ========================================= */
 
 .info-page {
@@ -8,11 +7,12 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 30px 20px 45px;
+  box-sizing: border-box;
 }
 
 
 /* =========================================
-   CONTACT HEADER
+   COMMON PAGE HEADER
 ========================================= */
 
 .info-page-header {
@@ -22,13 +22,15 @@
 
 .info-page-header h1 {
   font-size: 30px;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
+  color: #111827;
 }
 
 .info-page-header p {
   font-size: 14px;
   line-height: 1.6;
   margin: 0 auto;
+  color: #6b7280;
 }
 
 
@@ -53,12 +55,14 @@
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   background: #ffffff;
+  box-sizing: border-box;
 }
 
 .contact-info h2,
 .contact-form h2 {
   font-size: 20px;
-  margin-bottom: 10px;
+  margin: 0 0 10px;
+  color: #111827;
 }
 
 
@@ -70,6 +74,7 @@
   font-size: 14px;
   line-height: 1.6;
   margin-bottom: 20px;
+  color: #4b5563;
 }
 
 .contact-detail {
@@ -80,12 +85,14 @@
   display: block;
   font-size: 13px;
   margin-bottom: 3px;
+  color: #111827;
 }
 
 .contact-detail p {
   font-size: 14px;
   line-height: 1.5;
   margin: 0;
+  color: #4b5563;
 }
 
 
@@ -108,20 +115,26 @@
 .form-group label {
   font-size: 13px;
   font-weight: 600;
+  color: #374151;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
   padding: 9px 11px;
-
   border: 1px solid #d1d5db;
   border-radius: 6px;
-
   font-size: 14px;
   font-family: inherit;
-
   outline: none;
+  background: #ffffff;
+  color: #111827;
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9ca3af;
 }
 
 .form-group textarea {
@@ -142,18 +155,13 @@
 .contact-form button {
   width: 100%;
   padding: 10px 16px;
-
   border: none;
   border-radius: 6px;
-
   background: #2563eb;
   color: #ffffff;
-
   font-size: 14px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -163,27 +171,43 @@
 
 
 /* =========================================
-   MOBILE
+   CONTACT SUCCESS
 ========================================= */
 
-@media (max-width: 700px) {
-
-  .contact-container {
-    grid-template-columns: 1fr;
-  }
-
-  .info-page {
-    padding: 25px 15px 40px;
-  }
-
+.contact-success {
+  margin-bottom: 20px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 
+/* =========================================
+   CONTACT ERROR
+========================================= */
+
+.contact-error {
+  margin-bottom: 20px;
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 14px;
+  line-height: 1.5;
+}
 
 
+/* =========================================
+   CONTACT BUTTON DISABLED
+========================================= */
 
-
-
+.contact-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 
 /* =========================================
@@ -212,22 +236,23 @@
 
 .about-section {
   padding: 20px 22px;
-
   border: 1px solid #e5e7eb;
   border-radius: 10px;
-
   background: #ffffff;
+  box-sizing: border-box;
 }
 
 .about-section h2 {
   font-size: 20px;
-  margin-bottom: 9px;
+  margin: 0 0 9px;
+  color: #111827;
 }
 
 .about-section p {
   font-size: 14px;
   line-height: 1.7;
   margin-bottom: 9px;
+  color: #4b5563;
 }
 
 .about-section p:last-child {
@@ -248,33 +273,8 @@
   font-size: 14px;
   line-height: 1.8;
   margin-bottom: 3px;
+  color: #4b5563;
 }
-
-
-/* =========================================
-   ABOUT MOBILE
-========================================= */
-
-@media (max-width: 700px) {
-
-  .about-section {
-    padding: 18px;
-  }
-
-  .about-section h2 {
-    font-size: 18px;
-  }
-
-}
-
-
-
-
-
-
-
-
-
 
 
 /* =========================================
@@ -303,59 +303,28 @@
 
 .privacy-section {
   padding: 18px 22px;
-
   border: 1px solid #e5e7eb;
   border-radius: 10px;
-
   background: #ffffff;
+  box-sizing: border-box;
 }
 
 .privacy-section h2 {
   font-size: 19px;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
+  color: #111827;
 }
 
 .privacy-section p {
   font-size: 14px;
   line-height: 1.7;
   margin-bottom: 8px;
+  color: #4b5563;
 }
 
 .privacy-section p:last-child {
   margin-bottom: 0;
 }
-
-
-/* =========================================
-   PRIVACY MOBILE
-========================================= */
-
-@media (max-width: 700px) {
-
-  .privacy-section {
-    padding: 17px 18px;
-  }
-
-  .privacy-section h2 {
-    font-size: 18px;
-  }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* =========================================
@@ -366,6 +335,7 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 30px 20px 45px;
+  box-sizing: border-box;
 }
 
 
@@ -386,11 +356,10 @@
 
 .terms-section {
   background: #ffffff;
-
   border: 1px solid #e5e7eb;
   border-radius: 10px;
-
   padding: 18px 22px;
+  box-sizing: border-box;
 }
 
 
@@ -401,6 +370,7 @@
 .terms-section h2 {
   font-size: 19px;
   margin: 0 0 8px;
+  color: #111827;
 }
 
 
@@ -411,16 +381,221 @@
 .terms-section p {
   font-size: 14px;
   line-height: 1.7;
-
   margin: 0;
+  color: #4b5563;
 }
 
 
 /* =========================================
-   TERMS MOBILE
+   DARK MODE
+========================================= */
+
+.app.dark .info-page {
+  color: #f3f4f6;
+}
+
+
+/* =========================================
+   DARK PAGE HEADER
+========================================= */
+
+.app.dark .info-page-header h1 {
+  color: #f9fafb;
+}
+
+.app.dark .info-page-header p {
+  color: #9ca3af;
+}
+
+
+/* =========================================
+   DARK CONTACT
+========================================= */
+
+.app.dark .contact-info,
+.app.dark .contact-form {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .contact-info h2,
+.app.dark .contact-form h2 {
+  color: #f9fafb;
+}
+
+.app.dark .contact-info > p {
+  color: #9ca3af;
+}
+
+.app.dark .contact-detail strong {
+  color: #e5e7eb;
+}
+
+.app.dark .contact-detail p {
+  color: #9ca3af;
+}
+
+
+/* =========================================
+   DARK FORM
+========================================= */
+
+.app.dark .form-group label {
+  color: #d1d5db;
+}
+
+.app.dark .form-group input,
+.app.dark .form-group textarea {
+  background: #1f2937;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.app.dark .form-group input::placeholder,
+.app.dark .form-group textarea::placeholder {
+  color: #6b7280;
+}
+
+.app.dark .form-group input:focus,
+.app.dark .form-group textarea:focus {
+  background: #1f2937;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.12);
+}
+
+
+/* =========================================
+   DARK CONTACT BUTTON
+========================================= */
+
+.app.dark .contact-form button {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.app.dark .contact-form button:hover {
+  background: #1d4ed8;
+}
+
+
+/* =========================================
+   DARK SUCCESS
+========================================= */
+
+.app.dark .contact-success {
+  background: #052e16;
+  border: 1px solid #166534;
+  color: #86efac;
+}
+
+
+/* =========================================
+   DARK ERROR
+========================================= */
+
+.app.dark .contact-error {
+  background: #450a0a;
+  border: 1px solid #7f1d1d;
+  color: #fca5a5;
+}
+
+
+/* =========================================
+   DARK ABOUT
+========================================= */
+
+.app.dark .about-section {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .about-section h2 {
+  color: #f9fafb;
+}
+
+.app.dark .about-section p {
+  color: #9ca3af;
+}
+
+.app.dark .about-section li {
+  color: #d1d5db;
+}
+
+
+/* =========================================
+   DARK PRIVACY
+========================================= */
+
+.app.dark .privacy-section {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .privacy-section h2 {
+  color: #f9fafb;
+}
+
+.app.dark .privacy-section p {
+  color: #9ca3af;
+}
+
+
+/* =========================================
+   DARK TERMS
+========================================= */
+
+.app.dark .terms-section {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .terms-section h2 {
+  color: #f9fafb;
+}
+
+.app.dark .terms-section p {
+  color: #9ca3af;
+}
+
+
+/* =========================================
+   MOBILE
 ========================================= */
 
 @media (max-width: 700px) {
+
+  .info-page {
+    padding: 25px 15px 40px;
+  }
+
+  .info-page-header h1 {
+    font-size: 27px;
+  }
+
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-info,
+  .contact-form {
+    padding: 20px;
+  }
+
+  .about-section {
+    padding: 18px;
+  }
+
+  .about-section h2 {
+    font-size: 18px;
+  }
+
+  .privacy-section {
+    padding: 17px 18px;
+  }
+
+  .privacy-section h2 {
+    font-size: 18px;
+  }
 
   .terms-page {
     padding: 25px 15px 40px;
@@ -437,5 +612,31 @@
   .terms-section p {
     font-size: 14px;
   }
+}
 
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .info-page-header h1 {
+    font-size: 24px;
+  }
+
+  .info-page-header p {
+    font-size: 13px;
+  }
+
+  .contact-info,
+  .contact-form {
+    padding: 17px;
+  }
+
+  .about-section,
+  .privacy-section,
+  .terms-section {
+    padding: 16px;
+  }
 }

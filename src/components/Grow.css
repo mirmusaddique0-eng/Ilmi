@@ -7,8 +7,8 @@
   min-height: calc(100vh - 80px);
   padding: 45px 6%;
   box-sizing: border-box;
+  color: #111827;
 }
-
 
 /* =========================
    HEADER
@@ -19,6 +19,7 @@
 }
 
 .grow-label {
+  display: inline-block;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -29,6 +30,7 @@
   margin: 8px 0 8px;
   font-size: 38px;
   font-weight: 700;
+  color: #111827;
 }
 
 .grow-header p {
@@ -36,7 +38,6 @@
   font-size: 16px;
   color: #666;
 }
-
 
 /* =========================
    SECTION
@@ -49,23 +50,24 @@
 
   border: 1px solid #e5e7eb;
   border-radius: 18px;
-
   background: #ffffff;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 25px;
 
-  transition: 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .grow-section:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
 }
-
 
 /* =========================
    CONTENT
@@ -75,6 +77,8 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  flex: 1;
+  min-width: 0;
 }
 
 .grow-icon {
@@ -84,7 +88,6 @@
   flex-shrink: 0;
 
   border-radius: 14px;
-
   background: #f1f5ff;
 
   display: flex;
@@ -94,26 +97,22 @@
   font-size: 26px;
 }
 
-
 /* =========================
    TEXT
 ========================= */
 
 .grow-section h2 {
   margin: 0 0 7px;
-
   font-size: 21px;
   font-weight: 700;
+  color: #111827;
 }
 
 .grow-section p {
   margin: 0 0 12px;
-
   color: #666;
-
   line-height: 1.5;
 }
-
 
 /* =========================
    META
@@ -131,13 +130,11 @@
   border-radius: 7px;
 
   background: #f8fafc;
-
   color: #64748b;
 
   font-size: 12px;
   font-weight: 600;
 }
-
 
 /* =========================
    BUTTON
@@ -159,20 +156,93 @@
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .grow-action-btn:hover {
   background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(37, 99, 235, 0.2);
 }
 
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+.app.dark .grow-page {
+  color: #f3f4f6;
+}
+
+/* Header */
+
+.app.dark .grow-label {
+  color: #60a5fa;
+}
+
+.app.dark .grow-header h1 {
+  color: #f9fafb;
+}
+
+.app.dark .grow-header p {
+  color: #9ca3af;
+}
+
+/* Sections */
+
+.app.dark .grow-section {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .grow-section:hover {
+  background: #151f32;
+  border-color: #4b5563;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* Icon */
+
+.app.dark .grow-icon {
+  background: #172554;
+}
+
+/* Section Text */
+
+.app.dark .grow-section h2 {
+  color: #f9fafb;
+}
+
+.app.dark .grow-section p {
+  color: #9ca3af;
+}
+
+/* Meta */
+
+.app.dark .grow-meta span {
+  background: #1e293b;
+  color: #93c5fd;
+}
+
+/* Button */
+
+.app.dark .grow-action-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.app.dark .grow-action-btn:hover {
+  background: #1d4ed8;
+  box-shadow: 0 5px 12px rgba(37, 99, 235, 0.3);
+}
 
 /* =========================
    RESPONSIVE
 ========================= */
 
 @media (max-width: 800px) {
-
   .grow-section {
     align-items: flex-start;
     flex-direction: column;
@@ -183,9 +253,11 @@
   }
 }
 
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 500px) {
-
   .grow-page {
     padding: 35px 5%;
   }
@@ -194,11 +266,34 @@
     font-size: 30px;
   }
 
+  .grow-header p {
+    font-size: 14px;
+  }
+
   .grow-section {
     padding: 22px;
   }
 
   .grow-section-content {
     align-items: flex-start;
+    gap: 16px;
+  }
+
+  .grow-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .grow-section h2 {
+    font-size: 20px;
+  }
+
+  .grow-section p {
+    font-size: 14px;
+  }
+
+  .grow-action-btn {
+    width: 100%;
   }
 }

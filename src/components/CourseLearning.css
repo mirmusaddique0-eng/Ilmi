@@ -1,455 +1,543 @@
-/* =========================
-   FULL SCREEN LEARNING PAGE
-========================= */
+/* =========================================================
+   COURSE LEARNING PAGE
+   ========================================================= */
 
 .learning-page {
   position: relative;
-
   width: 100vw;
   min-width: 100vw;
-
   height: calc(100vh - 80px);
   min-height: 0;
-
   margin-top: 0 !important;
   margin-bottom: 0;
   margin-left: calc((100% - 100vw) / 2);
-
   padding: 0;
-
   background: #ffffff;
-
   box-sizing: border-box;
-
   overflow: hidden;
 }
 
-
-/* =========================
-   TOP COURSE HEADER
-========================= */
+/* =========================================================
+   LEARNING HEADER
+   ========================================================= */
 
 .learning-header {
   width: 100%;
   height: 82px;
   min-height: 82px;
-
   padding: 0 32px;
-
   box-sizing: border-box;
-
   display: flex;
   align-items: center;
   gap: 25px;
-
   background: #ffffff;
-
   border-bottom: 1px solid #e5e7eb;
 }
 
-
-/* =========================
-   BACK BUTTON
-========================= */
-
-.back-course-btn {
-  border: 1px solid #d0d5dd;
-
-  background: #ffffff;
-
-  color: #344054;
-
-  padding: 9px 15px;
-
-  border-radius: 8px;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-.back-course-btn:hover {
-  background: #f5f5f5;
-
-  color: #4f46e5;
-}
-
-
-/* =========================
-   HEADER TITLE
-========================= */
-
 .learning-header h1 {
   margin: 0;
-
-  font-size: 28px;
-
-  color: #111827;
+  font-size: 24px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: #101828;
 }
 
 .learning-header p {
   margin: 4px 0 0;
-
   font-size: 14px;
-
+  line-height: 1.5;
   color: #667085;
 }
 
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
 
-/* =========================
-   MAIN LEARNING AREA
-========================= */
-
-.learning-layout {
-  width: 100%;
-
-  height: calc(100% - 82px);
-  min-height: 0;
-
-  display: grid;
-
-  grid-template-columns: 300px minmax(0, 1fr);
-
-  overflow: hidden;
-}
-
-
-/* =========================
-   LEFT COURSE SIDEBAR
-========================= */
-
-.learning-sidebar {
-  width: 300px;
-
-  height: 100%;
-  min-height: 0;
-
-  box-sizing: border-box;
-
-  padding: 25px 12px;
-
-  background: #f8fafc;
-
-  border-right: 1px solid #e5e7eb;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  position: relative;
-
-  align-self: stretch;
-}
-
-
-/* =========================
-   SIDEBAR TITLE
-========================= */
-
-.learning-sidebar h2 {
-  margin: 0;
-
-  padding: 5px 15px 18px;
-
-  font-size: 18px;
-
-  color: #111827;
-}
-
-
-/* =========================
-   SECTION
-========================= */
-
-.learning-section {
-  margin-bottom: 4px;
-}
-
-
-/* =========================
-   SECTION HEADER
-========================= */
-
-.learning-section-title {
-  width: 100%;
-
-  box-sizing: border-box;
-
-  padding: 12px 15px;
-
-  display: flex;
-
+.back-course-btn {
+  display: inline-flex;
   align-items: center;
-
-  justify-content: space-between;
-
-  border-radius: 7px;
-
+  justify-content: center;
+  min-width: 120px;
+  height: 42px;
+  padding: 0 18px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  background: #ffffff;
   color: #344054;
-
-  font-size: 15px;
-
+  font-size: 14px;
   font-weight: 600;
-
   cursor: pointer;
-
-  transition: 0.15s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.learning-section-title:hover {
-  background: #e9eef5;
-
+.back-course-btn:hover {
+  background: #f9fafb;
+  border-color: #98a2b3;
   color: #4f46e5;
 }
 
-
-/* =========================
-   TOPICS
-========================= */
-
-.learning-topics {
-  padding: 2px 8px 7px 15px;
+.back-course-btn:active {
+  transform: scale(0.98);
 }
 
+/* =========================================================
+   MAIN LEARNING LAYOUT
+   ========================================================= */
+
+.learning-layout {
+  width: 100%;
+  height: calc(100% - 82px);
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  overflow: hidden;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.learning-sidebar {
+  width: 300px;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: 25px 12px;
+  background: #f8fafc;
+  border-right: 1px solid #e5e7eb;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  align-self: stretch;
+}
+
+.learning-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.learning-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.learning-sidebar::-webkit-scrollbar-thumb {
+  background: #d0d5dd;
+  border-radius: 10px;
+}
+
+.learning-sidebar h2 {
+  margin: 0 10px 24px;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #101828;
+}
+
+/* =========================================================
+   SIDEBAR SECTIONS
+   ========================================================= */
+
+.learning-section {
+  margin-bottom: 10px;
+}
+
+.learning-section-title {
+  width: 100%;
+  padding: 12px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: #344054;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.learning-section-title:hover {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+/* =========================================================
+   TOPICS
+   ========================================================= */
+
+.learning-topics {
+  margin: 4px 0 8px;
+}
 
 .learning-topic {
-  padding: 10px 14px;
-
-  margin: 2px 0;
-
+  width: 100%;
+  padding: 10px 12px 10px 22px;
+  display: block;
+  border: none;
   border-left: 3px solid transparent;
-
+  background: transparent;
   color: #475467;
-
-  font-size: 14px;
-
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
   cursor: pointer;
-
-  transition: 0.15s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .learning-topic:hover {
   background: #eef2ff;
-
   color: #4f46e5;
 }
 
-
-/* =========================
-   ACTIVE TOPIC
-========================= */
-
 .active-topic {
-  background: #e8edff;
-
-  border-left-color: #4f46e5;
-
+  background: #eef2ff;
+  border-left-color: #6366f1;
   color: #4f46e5;
-
   font-weight: 600;
 }
 
+/* =========================================================
+   LESSON LIST
+   ========================================================= */
 
-/* =========================
+.learning-lessons {
+  margin: 3px 0 10px;
+}
+
+.learning-lesson {
+  width: 100%;
+  padding: 8px 10px 8px 36px;
+  display: block;
+  border: none;
+  background: transparent;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.learning-lesson:hover {
+  background: #f2f4f7;
+  color: #4f46e5;
+}
+
+.active-lesson {
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* =========================================================
+   LESSON ITEMS
+   ========================================================= */
+
+.module-lessons {
+  width: 100%;
+}
+
+.lesson-list {
+  width: 100%;
+  margin: 2px 0 8px;
+}
+
+.lesson-item {
+  width: 100%;
+  padding: 8px 10px 8px 42px;
+  display: block;
+  background: transparent;
+  border: none;
+  color: #667085;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.lesson-item:hover {
+  background: #f2f4f7;
+  color: #4f46e5;
+}
+
+.lesson-item.active-lesson {
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+/* =========================================================
    MAIN CONTENT
-========================= */
+   ========================================================= */
 
 .learning-content {
   width: 100%;
-
   min-width: 0;
   min-height: 0;
-
   height: 100%;
-
   box-sizing: border-box;
-
   padding: 60px 8% 40px;
-
   background: #ffffff;
-
   display: flex;
-
   flex-direction: column;
-
   overflow-y: auto;
   overflow-x: hidden;
 }
 
+.learning-content::-webkit-scrollbar {
+  width: 7px;
+}
 
-/* =========================
+.learning-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.learning-content::-webkit-scrollbar-thumb {
+  background: #d0d5dd;
+  border-radius: 10px;
+}
+
+/* =========================================================
    CONTENT LABEL
-========================= */
+   ========================================================= */
 
 .content-label {
   display: block;
-
   margin-bottom: 12px;
-
   color: #4f46e5;
-
   font-size: 12px;
-
   font-weight: 700;
-
   letter-spacing: 1.2px;
 }
 
-
-/* =========================
-   CONTENT HEADING
-========================= */
+/* =========================================================
+   LESSON TITLE
+   ========================================================= */
 
 .learning-content h2 {
-  margin: 0 0 20px;
-
+  max-width: 950px;
+  margin: 0 0 18px;
   font-size: 44px;
-
   line-height: 1.15;
-
+  font-weight: 700;
+  letter-spacing: -0.5px;
   color: #101828;
 }
 
-
-/* =========================
-   DESCRIPTION
-========================= */
+/* =========================================================
+   TOPIC DESCRIPTION
+   ========================================================= */
 
 .content-description {
   max-width: 900px;
-
   margin: 0;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #667085;
+}
+
+/* =========================================================
+   LESSON CONTENT
+   ========================================================= */
+
+.lesson-content {
+  width: 100%;
+  max-width: 950px;
+  margin-top: 38px;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 
   font-size: 18px;
+  line-height: 1.9;
+  color: #344054;
 
-  line-height: 1.8;
-
-  color: #475467;
+  /* Important for preserving database text */
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
+/* =========================================================
+   NORMAL DATABASE TEXT
+   ========================================================= */
 
-/* =========================
-   LESSON CONTENT
-========================= */
+.lesson-content-line {
+  display: block;
+  width: 100%;
+  max-width: 900px;
 
-.lesson-box {
-  max-width: 950px;
+  margin: 0 0 20px;
+  padding: 0 !important;
 
-  margin-top: 42px;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 
-  padding: 32px 35px;
+  font-size: 18px;
+  line-height: 1.9;
+  color: #344054;
 
-  background: #f8fafc;
-
-  border: 1px solid #e4e7ec;
-
-  border-radius: 12px;
+  /*
+    Important:
+    Original database line breaks are preserved
+    using <br>.
+  */
+  white-space: normal;
 }
 
+.lesson-raw-line {
+  white-space: pre-wrap;
+}
 
-/* =========================
-   LESSON HEADING
-========================= */
+/* =========================================================
+   EMPTY SPACES
+   ========================================================= */
 
-.lesson-box h3 {
-  margin: 0 0 22px;
+.lesson-content-space {
+  width: 100%;
+  height: 8px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* =========================================================
+   FLOW / DIAGRAM
+   ========================================================= */
+
+.lesson-flow {
+  width: 100%;
+  max-width: 900px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  margin: 30px 0 35px;
+}
+
+/* Flow heading */
+
+.lesson-flow-heading {
+  width: 100%;
+
+  text-align: center;
+
+  font-size: 1.25rem;
+  font-weight: 700;
+
+  line-height: 1.5;
+
+  margin: 0 0 18px;
+}
+
+/* Flow item */
+
+.lesson-flow-item {
+  width: fit-content;
+  max-width: 100%;
+
+  text-align: center;
+
+  font-size: 1.05rem;
+  font-weight: 600;
+
+  line-height: 1.6;
+
+  padding: 2px 10px;
+
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* Flow arrow */
+
+.lesson-flow-arrow {
+  width: fit-content;
+
+  text-align: center;
+
+  font-size: 1.35rem;
+  line-height: 1.5;
+
+  font-weight: 600;
+
+  padding: 2px 10px;
+
+  white-space: pre-wrap;
+}
+
+/* =========================================================
+   EMPTY LESSON
+   ========================================================= */
+
+.empty-lesson {
+  max-width: 900px;
+  margin-top: 38px;
+
+  padding: 0 !important;
+
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  color: #667085;
+}
+
+.empty-lesson h3 {
+  margin: 0 0 12px;
 
   font-size: 24px;
+  line-height: 1.4;
 
   color: #101828;
 }
 
-
-/* =========================
-   LESSON CONTENT TEXT
-========================= */
-
-.lesson-content {
+.empty-lesson p {
   margin: 0;
 
-  width: 100%;
-
-  white-space: normal;
-
-  word-break: normal;
-
-  overflow-wrap: break-word;
-
-  font-size: 18px;
-
+  font-size: 17px;
   line-height: 1.8;
 
-  color: #4b5563;
+  color: #667085;
 }
 
-
-.lesson-content-line {
-  display: block;
-
-  margin-bottom: 18px;
-
-  white-space: normal;
-}
-
-
-.lesson-content-space {
-  height: 10px;
-}
-
-
-/* =========================
-   LESSON PARAGRAPH
-========================= */
-
-.lesson-box p {
-  margin: 0;
-
-  font-size: 16px;
-
-  line-height: 1.8;
-
-  color: #475467;
-}
-
-
-/* =========================
-   LESSON LIST
-========================= */
-
-.lesson-box ul {
-  margin: 0;
-
-  padding-left: 24px;
-}
-
-.lesson-box li {
-  margin-bottom: 13px;
-
-  font-size: 16px;
-
-  line-height: 1.7;
-
-  color: #475467;
-}
-
-
-/* =========================
+/* =========================================================
    LESSON NAVIGATION
-========================= */
+   ========================================================= */
 
 .lesson-navigation {
   width: 100%;
+  max-width: 950px;
 
-  margin-top: auto;
-
+  margin-top: 55px;
   padding-top: 28px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
 
   gap: 20px;
@@ -457,107 +545,47 @@
   border-top: 1px solid #e5e7eb;
 }
 
-
-/* =========================
-   NAVIGATION BUTTONS
-========================= */
-
 .lesson-navigation button {
-  min-width: 180px;
+  min-width: 120px;
 
-  height: 52px;
-
-  padding: 0 24px;
+  padding: 11px 18px;
 
   border: 1px solid #d0d5dd;
-
-  border-radius: 12px;
+  border-radius: 8px;
 
   background: #ffffff;
-
   color: #344054;
 
   font-size: 14px;
-
   font-weight: 600;
 
   cursor: pointer;
 
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-
-  transition: all 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
-
-/* =========================
-   BUTTON HOVER
-========================= */
-
-.lesson-navigation button:hover:not(:disabled) {
-  background: #4f46e5;
-
-  border-color: #4f46e5;
-
-  color: #ffffff;
-
-  transform: translateY(-2px);
-
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+.lesson-navigation button:hover {
+  background: #f9fafb;
+  border-color: #98a2b3;
+  color: #4f46e5;
 }
 
-
-/* =========================
-   DISABLED BUTTON
-========================= */
+.lesson-navigation button:active {
+  transform: scale(0.98);
+}
 
 .lesson-navigation button:disabled {
-  background: #f3f4f6;
-
-  border-color: #e5e7eb;
-
-  color: #9ca3af;
-
+  opacity: 0.45;
   cursor: not-allowed;
-
-  box-shadow: none;
-
-  transform: none;
 }
 
-
-/* =========================
-   SCROLLBAR
-========================= */
-
-.learning-sidebar::-webkit-scrollbar,
-.learning-content::-webkit-scrollbar {
-  width: 7px;
-}
-
-
-.learning-sidebar::-webkit-scrollbar-thumb,
-.learning-content::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-
-  border-radius: 10px;
-}
-
-
-.learning-sidebar::-webkit-scrollbar-track,
-.learning-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-
-/* =========================
+/* =========================================================
    DARK MODE
-========================= */
+   ========================================================= */
 
 .app.dark .learning-page {
   background: #111827;
@@ -565,7 +593,6 @@
 
 .app.dark .learning-header {
   background: #1f2937;
-
   border-color: #374151;
 }
 
@@ -577,17 +604,28 @@
   color: #d1d5db;
 }
 
+/* =========================================================
+   DARK MODE — BACK BUTTON
+   ========================================================= */
+
 .app.dark .back-course-btn {
   background: #1f2937;
-
   border-color: #4b5563;
-
   color: #f9fafb;
 }
 
+.app.dark .back-course-btn:hover {
+  background: #374151;
+  border-color: #6b7280;
+  color: #a5b4fc;
+}
+
+/* =========================================================
+   DARK MODE — SIDEBAR
+   ========================================================= */
+
 .app.dark .learning-sidebar {
   background: #111827;
-
   border-color: #374151;
 }
 
@@ -601,7 +639,6 @@
 
 .app.dark .learning-section-title:hover {
   background: #1f2937;
-
   color: #a5b4fc;
 }
 
@@ -611,17 +648,47 @@
 
 .app.dark .learning-topic:hover {
   background: #1e1b4b;
-
   color: #a5b4fc;
 }
 
 .app.dark .active-topic {
   background: #1e1b4b;
-
   border-left-color: #818cf8;
-
   color: #a5b4fc;
 }
+
+.app.dark .learning-lesson {
+  color: #9ca3af;
+}
+
+.app.dark .learning-lesson:hover {
+  background: #1f2937;
+  color: #a5b4fc;
+}
+
+.app.dark .active-lesson {
+  background: #1e1b4b;
+  color: #a5b4fc;
+}
+
+.app.dark .lesson-item {
+  color: #9ca3af;
+  background: transparent;
+}
+
+.app.dark .lesson-item:hover {
+  background: #1f2937;
+  color: #a5b4fc;
+}
+
+.app.dark .lesson-item.active-lesson {
+  background: #1e1b4b;
+  color: #a5b4fc;
+}
+
+/* =========================================================
+   DARK MODE — MAIN CONTENT
+   ========================================================= */
 
 .app.dark .learning-content {
   background: #1f2937;
@@ -635,32 +702,62 @@
   color: #d1d5db;
 }
 
-.app.dark .lesson-box {
-  background: #111827;
+/* =========================================================
+   DARK MODE — LESSON CONTENT
+   ========================================================= */
 
-  border-color: #374151;
+.app.dark .lesson-content {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #d1d5db;
 }
 
-.app.dark .lesson-box h3 {
+.app.dark .lesson-content-line {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #d1d5db;
+}
+
+.app.dark .lesson-content-space {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.app.dark .lesson-flow-heading {
   color: #f9fafb;
 }
 
-
-/* =========================
-   DARK MODE LESSON CONTENT
-========================= */
-
-.app.dark .lesson-content {
-  color: #d1d5db;
+.app.dark .lesson-flow-item {
+  color: #f9fafb;
 }
 
-.app.dark .lesson-box p {
-  color: #d1d5db;
+.app.dark .lesson-flow-arrow {
+  color: #f9fafb;
 }
 
-.app.dark .lesson-box li {
-  color: #d1d5db;
+.app.dark .empty-lesson {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #9ca3af;
 }
+
+.app.dark .empty-lesson h3 {
+  color: #f9fafb;
+}
+
+.app.dark .empty-lesson p {
+  color: #9ca3af;
+}
+
+/* =========================================================
+   DARK MODE — NAVIGATION
+   ========================================================= */
 
 .app.dark .lesson-navigation {
   border-color: #374151;
@@ -668,35 +765,21 @@
 
 .app.dark .lesson-navigation button {
   background: #1f2937;
-
   border-color: #4b5563;
-
   color: #f9fafb;
 }
 
-.app.dark .lesson-navigation button:hover:not(:disabled) {
-  background: #4f46e5;
-
-  border-color: #4f46e5;
-
-  color: #ffffff;
+.app.dark .lesson-navigation button:hover {
+  background: #374151;
+  border-color: #6b7280;
+  color: #a5b4fc;
 }
 
-.app.dark .lesson-navigation button:disabled {
-  background: #111827;
-
-  border-color: #374151;
-
-  color: #6b7280;
-}
-
-
-/* =========================
-   RESPONSIVE
-========================= */
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
 
 @media (max-width: 900px) {
-
   .learning-layout {
     grid-template-columns: 240px minmax(0, 1fr);
   }
@@ -713,66 +796,83 @@
     font-size: 36px;
   }
 
+  .lesson-content {
+    font-size: 17px;
+    line-height: 1.85;
+  }
+
+  .lesson-content-line {
+    font-size: 17px;
+    line-height: 1.85;
+  }
 }
 
-
-/* =========================
-   MOBILE
-========================= */
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
 
 @media (max-width: 700px) {
-
   .learning-page {
-    height: auto;
+    width: 100%;
+    min-width: 0;
 
+    height: auto;
     min-height: calc(100vh - 80px);
+
+    margin-left: 0;
 
     overflow: visible;
   }
+
+  /* HEADER */
 
   .learning-header {
     height: auto;
     min-height: 82px;
 
-    padding: 18px;
+    padding: 18px 20px;
 
     flex-direction: column;
-
     align-items: flex-start;
+
+    gap: 12px;
   }
 
-  .learning-layout {
-    display: block;
+  .learning-header h1 {
+    font-size: 21px;
+  }
 
+  /* LAYOUT */
+
+  .learning-layout {
     height: auto;
+
+    display: block;
 
     overflow: visible;
   }
 
+  /* SIDEBAR */
+
   .learning-sidebar {
     width: 100%;
-
     height: auto;
 
     max-height: 400px;
 
-    position: relative;
-
-    top: auto;
+    padding: 20px 12px;
 
     border-right: none;
-
     border-bottom: 1px solid #e5e7eb;
-
-    overflow-y: auto;
   }
+
+  /* CONTENT */
 
   .learning-content {
     width: 100%;
-
     height: auto;
 
-    min-height: 0;
+    min-height: 500px;
 
     padding: 35px 22px 40px;
 
@@ -781,26 +881,100 @@
 
   .learning-content h2 {
     font-size: 30px;
+    line-height: 1.2;
   }
 
+  .content-description {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* LESSON */
+
+  .lesson-content {
+    margin-top: 30px;
+
+    padding: 0 !important;
+
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .lesson-content-line {
+    margin-bottom: 17px;
+
+    padding: 0 !important;
+
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .lesson-flow {
+    margin: 25px 0 30px;
+  }
+
+  .lesson-flow-heading {
+    font-size: 1.15rem;
+  }
+
+  .lesson-flow-item {
+    font-size: 1rem;
+  }
+
+  .lesson-flow-arrow {
+    font-size: 1.2rem;
+  }
+
+  /* NAVIGATION */
+
   .lesson-navigation {
-    margin-top: 50px;
+    margin-top: 40px;
+    padding-top: 22px;
 
     flex-direction: column;
-
     align-items: stretch;
   }
 
   .lesson-navigation button {
     width: 100%;
   }
-
 }
 
+/* =========================================================
+   EXTRA SMALL DEVICES
+   ========================================================= */
 
-/* =========================
-   BOX SIZING
-========================= */
+@media (max-width: 420px) {
+  .learning-header {
+    padding: 16px;
+  }
+
+  .learning-content {
+    padding: 28px 16px 35px;
+  }
+
+  .learning-content h2 {
+    font-size: 27px;
+  }
+
+  .lesson-content {
+    font-size: 15.5px;
+    line-height: 1.8;
+  }
+
+  .lesson-content-line {
+    font-size: 15.5px;
+    line-height: 1.8;
+  }
+
+  .back-course-btn {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   FINAL BOX-SIZING
+   ========================================================= */
 
 .learning-page,
 .learning-page * {

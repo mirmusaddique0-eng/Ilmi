@@ -1,24 +1,25 @@
-/* =========================
+/* =====================================================
    FEATURE PAGE
-========================= */
+===================================================== */
 
 .feature-page {
   width: 100%;
   min-height: calc(100vh - 80px);
   padding: 45px 6%;
   box-sizing: border-box;
+  color: #111827;
 }
 
-
-/* =========================
+/* =====================================================
    HEADER
-========================= */
+===================================================== */
 
 .feature-header {
   margin-bottom: 35px;
 }
 
-.feature-header span {
+.feature-header > span {
+  display: inline-block;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -28,443 +29,731 @@
 .feature-header h1 {
   margin: 8px 0;
   font-size: 38px;
+  line-height: 1.2;
+  color: #111827;
 }
 
 .feature-header p {
   margin: 0;
+  max-width: 750px;
   color: #666;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-
-/* =========================
+/* =====================================================
    CONTENT
-========================= */
+===================================================== */
 
 .feature-content {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  width: 100%;
+  max-width: 1200px;
 }
 
+.feature-content h2 {
+  margin: 0 0 18px;
+  color: #111827;
+  font-size: 23px;
+}
 
-/* =========================
-   ROW
-========================= */
+/* =====================================================
+   FEATURE LIST
+===================================================== */
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
 .feature-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 
-  gap: 25px;
-
-  padding: 24px;
+  padding: 18px 20px;
 
   border: 1px solid #e5e7eb;
-  border-radius: 16px;
+  border-radius: 12px;
 
-  background: #fff;
+  background: #ffffff;
+  color: #111827;
 
-  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  text-align: left;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .feature-row:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+  border-color: #2563eb;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
 }
 
-.feature-row h2 {
-  margin: 0 0 7px;
-  font-size: 20px;
-}
-
-.feature-row p {
-  margin: 0 0 12px;
-  color: #666;
-  line-height: 1.5;
-}
-
-
-/* =========================
-   TAG
-========================= */
+/* =====================================================
+   FEATURE TAG
+===================================================== */
 
 .feature-tag {
-  font-size: 13px;
+  display: inline-block;
+
+  padding: 5px 9px;
+
+  border-radius: 7px;
+
+  background: #eff6ff;
   color: #2563eb;
+
+  font-size: 12px;
   font-weight: 600;
 }
 
-
-/* =========================
+/* =====================================================
    DIFFICULTY
-========================= */
+===================================================== */
 
 .difficulty {
-  flex-shrink: 0;
+  display: inline-block;
 
-  padding: 7px 12px;
+  padding: 5px 9px;
 
-  border-radius: 8px;
+  border-radius: 7px;
 
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .beginner {
-  background: #eff6ff;
-  color: #2563eb;
+  background: #ecfdf5;
+  color: #059669;
 }
 
 .intermediate {
-  background: #fef3c7;
-  color: #92400e;
+  background: #fffbeb;
+  color: #d97706;
 }
 
 .advanced {
-  background: #f3e8ff;
-  color: #7e22ce;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
+/* =====================================================
+   PRACTICE LIST
+===================================================== */
 
-/* =========================
-   RESPONSIVE
-========================= */
+.practice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 
-@media (max-width: 700px) {
+.practice-item {
+  width: 100%;
+  box-sizing: border-box;
 
+  padding: 20px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.practice-item:hover {
+  transform: translateY(-2px);
+
+  border-color: #dbeafe;
+
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+}
+
+/* =====================================================
+   PRACTICE BUTTON
+===================================================== */
+
+.practice-primary-btn {
+  border: none;
+  border-radius: 9px;
+
+  padding: 10px 17px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.practice-primary-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* =====================================================
+   PRACTICE QUESTION
+===================================================== */
+
+.practice-question {
+  margin: 0 0 18px;
+
+  color: #111827;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.5;
+}
+
+/* =====================================================
+   PRACTICE OPTIONS
+===================================================== */
+
+.practice-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.practice-option {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 13px 15px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.practice-option:hover {
+  border-color: #93c5fd;
+  background: #f8fbff;
+}
+
+.practice-option span {
+  color: #374151;
+  font-size: 14px;
+}
+
+.practice-option.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+/* =====================================================
+   PRACTICE RESULT
+===================================================== */
+
+.practice-result {
+  margin-top: 20px;
+
+  padding: 20px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  background: #ffffff;
+}
+
+.practice-score {
+  font-size: 24px;
+  font-weight: 700;
+
+  color: #2563eb;
+}
+
+/* =====================================================
+   ROADMAP CARDS
+===================================================== */
+
+.roadmap-clickable {
+  width: 100%;
+  box-sizing: border-box;
+
+  min-height: 72px;
+
+  padding: 18px 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+
+  background: #ffffff;
+  color: #111827;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.roadmap-clickable strong {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #111827;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.roadmap-clickable span {
+  flex-shrink: 0;
+
+  color: #2563eb;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.roadmap-clickable:hover {
+  transform: translateY(-2px);
+
+  border-color: #2563eb;
+
+  background: #ffffff;
+
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.08);
+}
+
+/* =====================================================
+   ROADMAP IMAGE
+===================================================== */
+
+.roadmap-image-wrapper {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: 25px 0;
+  padding: 10px;
+
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+
+  overflow: hidden;
+}
+
+.roadmap-image {
+  display: block;
+
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+
+  object-fit: contain;
+
+  border-radius: 8px;
+}
+
+.roadmap-empty {
+  padding: 30px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+
+  background: #ffffff;
+}
+
+.roadmap-empty h2 {
+  margin-top: 0;
+  color: #111827;
+}
+
+.roadmap-empty p {
+  color: #64748b;
+}
+
+/* =====================================================
+   RESOURCES
+===================================================== */
+
+.resource-section {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-bottom: 25px;
+}
+
+.resource-description {
+  margin: 0 0 20px;
+
+  max-width: 800px;
+
+  color: #666;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.resource-section .feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resource-section .feature-row {
+  cursor: default;
+}
+
+.resource-section .feature-row:hover {
+  cursor: default;
+}
+
+/* Resource links */
+
+.resource-section a {
+  color: #2563eb;
+
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+.resource-section a:hover {
+  text-decoration: underline;
+}
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+.app.dark .feature-page {
+  color: #f3f4f6;
+}
+
+/* Header */
+
+.app.dark .feature-header > span {
+  color: #60a5fa;
+}
+
+.app.dark .feature-header h1 {
+  color: #f9fafb;
+}
+
+.app.dark .feature-header p {
+  color: #9ca3af;
+}
+
+/* Content headings */
+
+.app.dark .feature-content h2 {
+  color: #f9fafb;
+}
+
+/* Feature rows */
+
+.app.dark .feature-row {
+  background: #111827;
+  border-color: #374151;
+  color: #f9fafb;
+}
+
+.app.dark .feature-row:hover {
+  background: #151f32;
+  border-color: #3b82f6;
+
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+}
+
+/* Feature tag */
+
+.app.dark .feature-tag {
+  background: #172554;
+  color: #60a5fa;
+}
+
+/* Difficulty */
+
+.app.dark .beginner {
+  background: #052e1b;
+  color: #6ee7b7;
+}
+
+.app.dark .intermediate {
+  background: #422006;
+  color: #fbbf24;
+}
+
+.app.dark .advanced {
+  background: #450a0a;
+  color: #fca5a5;
+}
+
+/* =====================================================
+   PRACTICE DARK MODE
+===================================================== */
+
+.app.dark .practice-item {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .practice-item:hover {
+  background: #151f32;
+  border-color: #4b5563;
+
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+}
+
+.app.dark .practice-question {
+  color: #f9fafb;
+}
+
+.app.dark .practice-option {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .practice-option:hover {
+  background: #172033;
+  border-color: #60a5fa;
+}
+
+.app.dark .practice-option span {
+  color: #d1d5db;
+}
+
+.app.dark .practice-option.selected {
+  background: #172554;
+  border-color: #3b82f6;
+}
+
+.app.dark .practice-result {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .practice-score {
+  color: #60a5fa;
+}
+
+/* =====================================================
+   ROADMAP DARK MODE
+===================================================== */
+
+.app.dark .roadmap-clickable {
+  background: #111827;
+  border-color: #374151;
+  color: #f9fafb;
+}
+
+.app.dark .roadmap-clickable strong {
+  color: #f9fafb;
+}
+
+.app.dark .roadmap-clickable span {
+  color: #60a5fa;
+}
+
+.app.dark .roadmap-clickable:hover {
+  background: #151f32;
+  border-color: #3b82f6;
+
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+}
+
+/* Roadmap image */
+
+.app.dark .roadmap-image-wrapper {
+  background: #111827;
+  border-color: #374151;
+}
+
+/* Empty roadmap */
+
+.app.dark .roadmap-empty {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .roadmap-empty h2 {
+  color: #f9fafb;
+}
+
+.app.dark .roadmap-empty p {
+  color: #9ca3af;
+}
+
+/* =====================================================
+   RESOURCES DARK MODE
+===================================================== */
+
+.app.dark .resource-description {
+  color: #9ca3af;
+}
+
+.app.dark .resource-section .feature-row {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .resource-section .feature-row:hover {
+  background: #151f32;
+  border-color: #4b5563;
+}
+
+.app.dark .resource-section a {
+  color: #60a5fa;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 800px) {
+  .feature-page {
+    padding: 40px 5%;
+  }
+
+  .feature-header h1 {
+    font-size: 34px;
+  }
+
+  .feature-row {
+    gap: 15px;
+  }
+
+  .roadmap-clickable {
+    align-items: flex-start;
+  }
+}
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
   .feature-page {
     padding: 35px 5%;
+  }
+
+  .feature-header {
+    margin-bottom: 28px;
   }
 
   .feature-header h1 {
     font-size: 30px;
   }
 
-  .feature-row {
-    align-items: flex-start;
-    flex-direction: column;
+  .feature-header p {
+    font-size: 14px;
   }
 
+  .feature-row {
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-}
-/* =========================
-   PRACTICE
-========================= */
-
-.practice-list {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.practice-item {
-  padding: 24px;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  background: #ffffff;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 25px;
-}
-
-.practice-item h3 {
-  margin: 0 0 8px;
-  font-size: 19px;
-}
-
-.practice-item p {
-  margin: 0;
-  color: #666;
-  line-height: 1.5;
-}
-
-
-/* =========================
-   BUTTON
-========================= */
-
-.practice-primary-btn {
-  border: none;
-  border-radius: 10px;
-  padding: 11px 20px;
-
-  background: #2563eb;
-  color: white;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-  transition: 0.2s ease;
-
-  white-space: nowrap;
-}
-
-.practice-primary-btn:hover {
-  background: #1d4ed8;
-}
-
-.practice-primary-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-
-/* =========================
-   QUESTION
-========================= */
-
-.practice-question {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.practice-question h2 {
-  margin-bottom: 25px;
-  font-size: 24px;
-  line-height: 1.5;
-}
-
-
-/* =========================
-   OPTIONS
-========================= */
-
-.practice-options {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 25px;
-}
-
-.practice-option {
-  width: 100%;
-  padding: 15px 18px;
-
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-
-  background: #ffffff;
-
-  text-align: left;
-  font-size: 15px;
-
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.practice-option:hover {
-  border-color: #2563eb;
-}
-
-.practice-option span {
-  display: inline-flex;
-
-  width: 30px;
-  height: 30px;
-
-  margin-right: 12px;
-
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: #f1f5ff;
-  color: #2563eb;
-
-  font-weight: 600;
-}
-
-.practice-option.selected {
-  border-color: #2563eb;
-  background: #f1f5ff;
-}
-
-
-/* =========================
-   RESULT
-========================= */
-
-.practice-result {
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 35px;
-
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-
-  background: #ffffff;
-
-  text-align: center;
-}
-
-.practice-result h2 {
-  margin-bottom: 15px;
-}
-
-.practice-score {
-  font-size: 48px;
-  font-weight: 700;
-  color: #2563eb;
-
-  margin: 15px 0;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 700px) {
+  .feature-row > span {
+    font-size: 13px;
+  }
 
   .practice-item {
+    padding: 17px;
+  }
+
+  .practice-question {
+    font-size: 16px;
+  }
+
+  .roadmap-clickable {
+    padding: 16px;
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .practice-primary-btn {
-    width: 100%;
+  .roadmap-clickable strong {
+    font-size: 15px;
   }
 
-  .practice-question h2 {
-    font-size: 20px;
+  .roadmap-clickable span {
+    font-size: 13px;
   }
 
-}
-/* =========================
-   ROADMAP
-========================= */
-
-.roadmap-clickable {
-  width: 100%;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  font: inherit;
-}
-
-.roadmap-clickable:hover {
-  transform: translateX(3px);
-}
-
-.roadmap-image-wrapper {
-  width: 100%;
-  margin-top: 25px;
-  overflow-x: auto;
-}
-
-.roadmap-image {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto;
-}
-
-.roadmap-empty {
-  padding: 50px 20px;
-  text-align: center;
-  border: 1px dashed #d1d5db;
-  border-radius: 12px;
-}
-
-.roadmap-empty h2 {
-  margin-bottom: 10px;
-}
-
-.roadmap-empty p {
-  color: #777;
-}
-/* =========================
-   RESOURCES
-========================= */
-
-.resource-section {
-  margin-bottom: 35px;
-}
-
-.resource-section h2 {
-  margin: 0 0 8px;
-  font-size: 24px;
-}
-
-.resource-description {
-  margin: 0 0 18px;
-  color: #666;
-  line-height: 1.5;
-}
-
-.resource-section .feature-list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.resource-section .feature-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 25px;
-  padding: 20px 22px;
-}
-
-.resource-section .feature-row > div {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.resource-section .feature-row strong {
-  font-size: 17px;
-}
-
-.resource-section .feature-row span {
-  color: #666;
-  line-height: 1.5;
-}
-
-.resource-section .feature-row small {
-  color: #2563eb;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.resource-section .feature-row a {
-  flex-shrink: 0;
-  text-decoration: none;
-  color: #2563eb;
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.resource-section .feature-row a:hover {
-  text-decoration: underline;
-}
-
-
-/* =========================
-   RESOURCES MOBILE
-========================= */
-
-@media (max-width: 700px) {
-
-  .resource-section h2 {
-    font-size: 21px;
+  .roadmap-image-wrapper {
+    padding: 6px;
+    margin: 20px 0;
   }
 
-  .resource-section .feature-row {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 15px;
+  .roadmap-empty {
+    padding: 22px;
+  }
+}
+
+/* =====================================================
+   EXTRA SMALL MOBILE
+===================================================== */
+
+@media (max-width: 400px) {
+  .feature-page {
+    padding: 28px 4%;
   }
 
-  .resource-section .feature-row a {
-    align-self: flex-start;
+  .feature-header h1 {
+    font-size: 27px;
   }
 
+  .feature-row {
+    padding: 14px;
+  }
+
+  .roadmap-clickable {
+    padding: 14px;
+  }
+
+  .practice-item {
+    padding: 15px;
+  }
 }

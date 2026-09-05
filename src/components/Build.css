@@ -7,8 +7,9 @@
   min-height: calc(100vh - 80px);
   padding: 45px 6%;
   box-sizing: border-box;
+  background: transparent;
+  color: #111827;
 }
-
 
 /* =========================
    HEADER
@@ -19,6 +20,7 @@
 }
 
 .build-label {
+  display: inline-block;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -26,94 +28,104 @@
 }
 
 .build-header h1 {
-  margin: 8px 0 8px;
+  margin: 8px 0;
   font-size: 38px;
-  font-weight: 700;
+  line-height: 1.2;
+  color: #111827;
 }
 
 .build-header p {
   margin: 0;
-  font-size: 16px;
+  max-width: 700px;
   color: #666;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-
 /* =========================
-   BUILD SECTION
+   BUILD SECTIONS
 ========================= */
 
 .build-section {
-  min-height: 150px;
-  padding: 24px 28px;
-
+  width: 100%;
+  box-sizing: border-box;
+  padding: 25px;
   margin-bottom: 18px;
-
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-
-  background: #ffffff;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 25px;
+  gap: 30px;
 
-  transition: 0.25s ease;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .build-section:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
 }
 
-
 /* =========================
-   CONTENT
+   LEFT CONTENT
 ========================= */
 
 .build-section-content {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
+  flex: 1;
+  min-width: 0;
 }
 
+/* =========================
+   ICON
+========================= */
+
 .build-icon {
-  width: 54px;
-  height: 54px;
-
+  width: 55px;
+  height: 55px;
   flex-shrink: 0;
-
-  border-radius: 14px;
-
-  background: #f1f5ff;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  font-size: 26px;
+  border-radius: 14px;
+  background: #eff6ff;
+
+  font-size: 27px;
 }
 
-
 /* =========================
-   TEXT
+   TITLE
 ========================= */
 
 .build-section h2 {
-  margin: 0 0 7px;
-
+  margin: 0 0 8px;
   font-size: 21px;
-  font-weight: 700;
+  line-height: 1.3;
+  color: #111827;
 }
+
+/* =========================
+   DESCRIPTION
+========================= */
 
 .build-section p {
-  margin: 0 0 12px;
-
+  margin: 0;
+  max-width: 700px;
   color: #666;
-
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.6;
 }
-
 
 /* =========================
    META
@@ -121,26 +133,26 @@
 
 .build-meta {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
 }
 
 .build-meta span {
-  padding: 5px 10px;
+  display: inline-block;
+  padding: 6px 10px;
 
   border-radius: 7px;
 
-  background: #f8fafc;
-
-  color: #64748b;
+  background: #f1f5ff;
+  color: #2563eb;
 
   font-size: 12px;
   font-weight: 600;
 }
 
-
 /* =========================
-   BUTTON
+   ACTION BUTTON
 ========================= */
 
 .build-action-btn {
@@ -149,58 +161,203 @@
   border: none;
   border-radius: 10px;
 
-  padding: 11px 18px;
+  padding: 11px 19px;
 
   background: #2563eb;
-  color: white;
+  color: #ffffff;
 
   font-size: 14px;
   font-weight: 600;
 
   cursor: pointer;
+  white-space: nowrap;
 
-  transition: 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .build-action-btn:hover {
   background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(37, 99, 235, 0.2);
 }
 
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+.app.dark .build-page {
+  color: #f3f4f6;
+}
+
+/* Header */
+
+.app.dark .build-label {
+  color: #60a5fa;
+}
+
+.app.dark .build-header h1 {
+  color: #f9fafb;
+}
+
+.app.dark .build-header p {
+  color: #9ca3af;
+}
+
+/* Build Cards */
+
+.app.dark .build-section {
+  background: #111827;
+  border-color: #374151;
+}
+
+.app.dark .build-section:hover {
+  background: #151f32;
+  border-color: #4b5563;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+/* Titles */
+
+.app.dark .build-section h2 {
+  color: #f9fafb;
+}
+
+/* Description */
+
+.app.dark .build-section p {
+  color: #9ca3af;
+}
+
+/* Icons */
+
+.app.dark .build-icon {
+  background: #172554;
+}
+
+/* Meta Tags */
+
+.app.dark .build-meta span {
+  background: #172554;
+  color: #60a5fa;
+}
+
+/* Button */
+
+.app.dark .build-action-btn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.app.dark .build-action-btn:hover {
+  background: #1d4ed8;
+  box-shadow: 0 5px 12px rgba(37, 99, 235, 0.3);
+}
 
 /* =========================
-   RESPONSIVE
+   TABLET
 ========================= */
 
-@media (max-width: 800px) {
+@media (max-width: 850px) {
+  .build-page {
+    padding: 40px 5%;
+  }
 
   .build-section {
-    align-items: flex-start;
-    flex-direction: column;
+    gap: 20px;
   }
 
-  .build-action-btn {
-    width: fit-content;
+  .build-section-content {
+    gap: 16px;
   }
 
+  .build-header h1 {
+    font-size: 34px;
+  }
 }
 
+/* =========================
+   MOBILE
+========================= */
 
-@media (max-width: 500px) {
-
+@media (max-width: 700px) {
   .build-page {
     padding: 35px 5%;
+  }
+
+  .build-header {
+    margin-bottom: 28px;
   }
 
   .build-header h1 {
     font-size: 30px;
   }
 
+  .build-header p {
+    font-size: 14px;
+  }
+
   .build-section {
-    padding: 22px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 21px;
+    gap: 20px;
   }
 
   .build-section-content {
-    align-items: flex-start;
+    width: 100%;
   }
 
+  .build-action-btn {
+    width: 100%;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+  .build-page {
+    padding: 28px 4%;
+  }
+
+  .build-header h1 {
+    font-size: 27px;
+  }
+
+  .build-section {
+    padding: 18px;
+    border-radius: 15px;
+  }
+
+  .build-section-content {
+    gap: 13px;
+  }
+
+  .build-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    font-size: 23px;
+  }
+
+  .build-section h2 {
+    font-size: 19px;
+  }
+
+  .build-section p {
+    font-size: 14px;
+  }
+
+  .build-meta {
+    gap: 7px;
+  }
+
+  .build-meta span {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
 }

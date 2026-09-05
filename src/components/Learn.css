@@ -29,6 +29,7 @@
   margin: 8px 0 8px;
   font-size: 38px;
   font-weight: 700;
+  color: #111827;
 }
 
 .learn-header p {
@@ -59,11 +60,9 @@
   border: 1px solid #e5e7eb;
   border-radius: 18px;
   background: #ffffff;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   transition: 0.25s ease;
 }
 
@@ -80,14 +79,11 @@
 .learn-card-icon {
   width: 52px;
   height: 52px;
-
   border-radius: 14px;
   background: #f1f5ff;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-size: 25px;
 }
 
@@ -99,6 +95,7 @@
 .learn-card-content h2 {
   margin: 22px 0 8px;
   font-size: 21px;
+  color: #111827;
 }
 
 .learn-card-content p {
@@ -114,20 +111,14 @@
 
 .learn-card-btn {
   width: fit-content;
-
   border: none;
   border-radius: 10px;
-
   padding: 11px 18px;
-
   background: #2563eb;
   color: white;
-
   font-size: 14px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -137,11 +128,59 @@
 
 
 /* =========================
+   DARK MODE
+========================= */
+
+.app.dark .learn-page {
+  color: #e5e7eb;
+}
+
+.app.dark .learn-header h1 {
+  color: #f9fafb;
+}
+
+.app.dark .learn-header p {
+  color: #cbd5e1;
+}
+
+.app.dark .learn-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.app.dark .learn-card:hover {
+  background: #243244;
+  border-color: #4b5563;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.app.dark .learn-card-icon {
+  background: #374151;
+}
+
+.app.dark .learn-card-content h2 {
+  color: #f9fafb;
+}
+
+.app.dark .learn-card-content p {
+  color: #cbd5e1;
+}
+
+.app.dark .learn-card-btn {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.app.dark .learn-card-btn:hover {
+  background: #2563eb;
+}
+
+
+/* =========================
    RESPONSIVE
 ========================= */
 
 @media (max-width: 900px) {
-
   .learn-grid {
     grid-template-columns: 1fr;
   }
@@ -149,12 +188,10 @@
   .learn-page {
     padding: 35px 5%;
   }
-
 }
 
 
 @media (max-width: 500px) {
-
   .learn-header h1 {
     font-size: 30px;
   }
@@ -162,5 +199,4 @@
   .learn-card {
     padding: 22px;
   }
-
 }

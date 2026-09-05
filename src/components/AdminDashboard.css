@@ -12,7 +12,6 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
 /* =========================================
    SIDEBAR
 ========================================= */
@@ -24,19 +23,14 @@
   position: fixed;
   left: 0;
   top: 0;
-
   display: flex;
   flex-direction: column;
-
   background: #111827;
   color: white;
-
   padding: 28px 16px;
   box-sizing: border-box;
-
   z-index: 100;
 }
-
 
 /* LOGO */
 
@@ -50,14 +44,11 @@
 .admin-logo span {
   display: block;
   margin-top: 5px;
-
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 1.5px;
-
   color: #9ca3af;
 }
-
 
 /* =========================================
    SIDEBAR NAVIGATION
@@ -69,28 +60,20 @@
   gap: 6px;
 }
 
-
 .admin-nav-item {
   width: 100%;
   min-height: 48px;
-
   display: flex;
   align-items: center;
   gap: 14px;
-
   padding: 0 16px;
-
   border: none;
   border-radius: 9px;
-
   background: transparent;
   color: #d1d5db;
-
   font-size: 15px;
   font-weight: 500;
-
   text-align: left;
-
   cursor: pointer;
 
   transition:
@@ -99,12 +82,10 @@
     transform 0.2s ease;
 }
 
-
 .admin-nav-item:hover {
   background: #1f2937;
   color: white;
 }
-
 
 .admin-nav-item.active {
   background: #2563eb;
@@ -112,11 +93,9 @@
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
-
 .admin-nav-item span {
   white-space: nowrap;
 }
-
 
 /* =========================================
    SIDEBAR BOTTOM
@@ -124,45 +103,33 @@
 
 .admin-sidebar-bottom {
   margin-top: auto;
-
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-
 .admin-logout {
   width: 100%;
   min-height: 48px;
-
   display: flex;
   align-items: center;
   gap: 14px;
-
   padding: 0 16px;
-
   border: none;
   border-radius: 9px;
-
   background: transparent;
   color: #fca5a5;
-
   font-size: 15px;
   font-weight: 500;
-
   text-align: left;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
-
 
 .admin-logout:hover {
   background: rgba(239, 68, 68, 0.12);
   color: #f87171;
 }
-
 
 /* =========================================
    MAIN AREA
@@ -171,12 +138,9 @@
 .admin-main {
   width: calc(100% - 260px);
   margin-left: 260px;
-
   min-height: 100vh;
-
   background: #f5f7fb;
 }
-
 
 /* =========================================
    TOP BAR
@@ -184,38 +148,27 @@
 
 .admin-topbar {
   min-height: 88px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 20px 38px;
-
   background: white;
-
   border-bottom: 1px solid #e5e7eb;
-
   box-sizing: border-box;
 }
 
-
 .admin-topbar h1 {
   margin: 0;
-
   font-size: 27px;
   font-weight: 700;
-
   color: #111827;
 }
 
-
 .admin-topbar p {
   margin: 5px 0 0;
-
   font-size: 14px;
   color: #6b7280;
 }
-
 
 /* =========================================
    ADMIN USER
@@ -227,44 +180,32 @@
   gap: 12px;
 }
 
-
 .admin-avatar {
   width: 44px;
   height: 44px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 50%;
-
   background: #2563eb;
   color: white;
-
   font-size: 17px;
   font-weight: 700;
 }
 
-
 .admin-user strong {
   display: block;
-
   font-size: 14px;
   font-weight: 700;
-
   color: #111827;
 }
 
-
 .admin-user span {
   display: block;
-
   margin-top: 3px;
-
   font-size: 12px;
   color: #6b7280;
 }
-
 
 /* =========================================
    CONTENT
@@ -272,14 +213,10 @@
 
 .admin-content {
   max-width: 1400px;
-
   margin: 0 auto;
-
   padding: 32px 38px 60px;
-
   box-sizing: border-box;
 }
-
 
 /* =========================================
    WELCOME
@@ -289,25 +226,18 @@
   margin-bottom: 28px;
 }
 
-
 .admin-welcome h2 {
   margin: 0 0 7px;
-
   font-size: 22px;
   font-weight: 700;
-
   color: #111827;
 }
 
-
 .admin-welcome p {
   margin: 0;
-
   font-size: 14px;
-
   color: #6b7280;
 }
-
 
 /* =========================================
    STAT CARDS
@@ -315,31 +245,21 @@
 
 .admin-stats {
   display: grid;
-
   grid-template-columns:
     repeat(4, minmax(0, 1fr));
-
   gap: 18px;
-
   margin-bottom: 38px;
 }
 
-
 .admin-stat-card {
   min-height: 105px;
-
   display: flex;
   align-items: center;
-
   gap: 15px;
-
   padding: 20px;
-
   background: white;
-
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-
   box-sizing: border-box;
 
   transition:
@@ -347,50 +267,35 @@
     box-shadow 0.2s ease;
 }
 
-
 .admin-stat-card:hover {
   transform: translateY(-2px);
-
   box-shadow:
     0 8px 24px rgba(15, 23, 42, 0.07);
 }
 
-
 .admin-stat-icon {
   width: 46px;
   height: 46px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 10px;
-
   background: #eff6ff;
-
   font-size: 22px;
 }
 
-
 .admin-stat-card span {
   display: block;
-
   margin-bottom: 5px;
-
   font-size: 13px;
-
   color: #6b7280;
 }
 
-
 .admin-stat-card strong {
   display: block;
-
   font-size: 25px;
-
   color: #111827;
 }
-
 
 /* =========================================
    SECTION
@@ -400,30 +305,22 @@
   margin-bottom: 38px;
 }
 
-
 .admin-section-header {
   margin-bottom: 18px;
 }
 
-
 .admin-section-header h2 {
   margin: 0;
-
   font-size: 19px;
   font-weight: 700;
-
   color: #111827;
 }
 
-
 .admin-section-header p {
   margin: 5px 0 0;
-
   font-size: 13px;
-
   color: #6b7280;
 }
-
 
 /* =========================================
    MANAGEMENT GRID
@@ -431,22 +328,16 @@
 
 .admin-management-grid {
   display: grid;
-
   grid-template-columns:
     repeat(3, minmax(0, 1fr));
-
   gap: 18px;
 }
 
-
 .admin-management-card {
   padding: 22px;
-
   background: white;
-
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-
   box-sizing: border-box;
 
   transition:
@@ -454,75 +345,52 @@
     box-shadow 0.2s ease;
 }
 
-
 .admin-management-card:hover {
   transform: translateY(-3px);
-
   box-shadow:
     0 10px 25px rgba(15, 23, 42, 0.08);
 }
 
-
 .management-icon {
   width: 42px;
   height: 42px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   margin-bottom: 15px;
-
   border-radius: 9px;
-
   background: #eff6ff;
-
   font-size: 20px;
 }
 
-
 .admin-management-card h3 {
   margin: 0 0 8px;
-
   font-size: 17px;
   font-weight: 700;
-
   color: #111827;
 }
 
-
 .admin-management-card p {
   min-height: 42px;
-
   margin: 0 0 18px;
-
   font-size: 13px;
   line-height: 1.6;
-
   color: #6b7280;
 }
 
-
 .admin-management-card button {
   border: none;
-
   padding: 9px 0;
-
   background: transparent;
-
   color: #2563eb;
-
   font-size: 13px;
   font-weight: 600;
-
   cursor: pointer;
 }
-
 
 .admin-management-card button:hover {
   color: #1d4ed8;
 }
-
 
 /* =========================================
    RECENT ACTIVITY
@@ -531,77 +399,54 @@
 .admin-activity {
   display: flex;
   flex-direction: column;
-
   background: white;
-
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-
   overflow: hidden;
 }
-
 
 .activity-item {
   display: flex;
   align-items: center;
-
   gap: 15px;
-
   padding: 18px 20px;
-
   border-bottom: 1px solid #f1f5f9;
 }
-
 
 .activity-item:last-child {
   border-bottom: none;
 }
 
-
 .activity-icon {
   width: 38px;
   height: 38px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
-
   border-radius: 9px;
-
   background: #f3f4f6;
-
   font-size: 18px;
 }
 
-
 .activity-item strong {
   display: block;
-
   margin-bottom: 4px;
-
   font-size: 14px;
-
   color: #111827;
 }
 
-
 .activity-item p {
   margin: 0;
-
   font-size: 12px;
-
   color: #6b7280;
 }
-
 
 /* =========================================
    RESPONSIVE
 ========================================= */
 
 @media (max-width: 1100px) {
-
   .admin-stats {
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
@@ -611,12 +456,9 @@
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
   }
-
 }
 
-
 @media (max-width: 800px) {
-
   .admin-sidebar {
     width: 220px;
     min-width: 220px;
@@ -634,22 +476,17 @@
   .admin-content {
     padding: 25px 24px 50px;
   }
-
 }
 
-
 @media (max-width: 650px) {
-
   .admin-sidebar {
     width: 70px;
     min-width: 70px;
-
     padding: 20px 10px;
   }
 
   .admin-logo {
     padding: 0 8px 25px;
-
     font-size: 0;
   }
 
@@ -666,7 +503,6 @@
   .admin-nav-item,
   .admin-logout {
     justify-content: center;
-
     padding: 0;
   }
 
@@ -703,8 +539,8 @@
   .admin-management-grid {
     grid-template-columns: 1fr;
   }
-
 }
+
 /* =========================================
    COURSE TOOLBAR
 ========================================= */
@@ -756,7 +592,6 @@
   opacity: 0.9;
 }
 
-
 /* =========================================
    COURSE SUMMARY
 ========================================= */
@@ -781,7 +616,6 @@
   color: #111827;
 }
 
-
 /* =========================================
    COURSE CARD
 ========================================= */
@@ -797,7 +631,6 @@
 .admin-course-card.course-hidden h3 {
   color: #64748b;
 }
-
 
 /* =========================================
    COURSE ACTIONS
@@ -849,7 +682,6 @@
 .admin-course-show-btn:hover {
   opacity: 0.85;
 }
-
 
 /* =========================================
    COURSE MODAL
@@ -904,7 +736,6 @@
   color: #64748b;
 }
 
-
 /* =========================================
    COURSE FORM
 ========================================= */
@@ -948,6 +779,65 @@
   resize: vertical;
 }
 
+/* =========================================
+   LESSON CONTENT EDITOR
+   PRESERVE SPACING / BULLETS / FLOWS
+========================================= */
+
+.lesson-content-editor {
+  width: 100%;
+  min-height: 260px;
+
+  box-sizing: border-box;
+
+  font-family:
+    Consolas,
+    "Courier New",
+    monospace;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  white-space: pre;
+
+  tab-size: 4;
+
+  resize: vertical;
+
+  overflow-x: auto;
+  overflow-y: auto;
+
+  word-break: normal;
+  overflow-wrap: normal;
+
+  padding: 14px 16px !important;
+
+  background: #ffffff;
+  color: #111827;
+
+  border: 1px solid #dfe3e8;
+  border-radius: 9px;
+
+  outline: none;
+
+  caret-color: #2563eb;
+}
+
+.lesson-content-editor:focus {
+  border-color: #2563eb;
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+/*
+   Keep empty lines visible and preserve
+   spaces/tabs exactly as typed or pasted.
+*/
+
+.lesson-content-editor::placeholder {
+  color: #94a3b8;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
 /* =========================================
    ACTIVE TOGGLE
@@ -966,7 +856,6 @@
   width: 17px;
   height: 17px;
 }
-
 
 /* =========================================
    MODAL ACTIONS
@@ -1005,13 +894,11 @@
   cursor: not-allowed;
 }
 
-
 /* =========================================
    MOBILE
 ========================================= */
 
 @media (max-width: 700px) {
-
   .admin-course-toolbar {
     flex-direction: column;
     align-items: stretch;
@@ -1035,6 +922,252 @@
 
   .admin-course-manage-btn {
     flex: none;
+  }
+
+  .lesson-content-editor {
+    min-height: 220px;
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   WORD DOCUMENT UPLOAD
+   ========================================================= */
+
+.word-upload-box {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.word-upload-header {
+  margin-bottom: 14px;
+}
+
+.word-upload-header strong {
+  display: block;
+  font-size: 14px;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.word-upload-header p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.word-upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.word-upload-button:hover {
+  background: #1d4ed8;
+}
+
+.word-upload-button input {
+  display: none;
+}
+
+.word-file-name {
+  margin-top: 12px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  font-size: 12px;
+  color: #334155;
+  word-break: break-word;
+}
+
+.word-file-name span {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.word-converting {
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.word-upload-box small {
+  display: block;
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   WORD / MANUAL EDITOR DIVIDER
+   ========================================================= */
+
+.lesson-editor-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 12px;
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.lesson-editor-divider::before,
+.lesson-editor-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.lesson-editor-divider span {
+  white-space: nowrap;
+}
+
+/* =========================================================
+   WORD PREVIEW
+   ========================================================= */
+
+.word-preview-wrapper {
+  margin-top: 16px;
+  border: 1px solid #dbe3ec;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.word-preview-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.word-preview-title strong {
+  font-size: 12px;
+  color: #334155;
+}
+
+.word-preview-title span {
+  font-size: 11px;
+  font-weight: 600;
+  color: #16a34a;
+}
+
+.word-preview-content {
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #1e293b;
+}
+
+/* Word headings */
+
+.word-preview-content h1,
+.word-preview-content h2,
+.word-preview-content h3,
+.word-preview-content h4 {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  color: #0f172a;
+}
+
+.word-preview-content h1:first-child,
+.word-preview-content h2:first-child,
+.word-preview-content h3:first-child,
+.word-preview-content h4:first-child {
+  margin-top: 0;
+}
+
+/* Word paragraphs */
+
+.word-preview-content p {
+  margin: 0 0 10px;
+}
+
+/* Word lists */
+
+.word-preview-content ul,
+.word-preview-content ol {
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding-left: 24px;
+}
+
+.word-preview-content li {
+  margin-bottom: 5px;
+}
+
+/* Bold / italic */
+
+.word-preview-content strong {
+  font-weight: 700;
+}
+
+.word-preview-content em {
+  font-style: italic;
+}
+
+/* Code */
+
+.word-preview-content code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  font-family:
+    Consolas,
+    "Courier New",
+    monospace;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .word-upload-box {
+    padding: 14px;
+  }
+
+  .word-upload-button {
+    width: 100%;
+  }
+
+  .word-preview-title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .word-preview-content {
+    padding: 14px;
+    font-size: 13px;
   }
 
 }
